@@ -7,3 +7,12 @@
 *.log
 
 **/.DS_Store
+
+## vim-generated
+
+config/plug/*
+shared/*
+
+## needed
+
+!shared/site/autoload/plug.vim
