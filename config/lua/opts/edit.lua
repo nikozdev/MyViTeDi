@@ -2,7 +2,10 @@
 
 vim.cmd("syntax enable")
 
+--do not make backup files
 vim.opt["backup"] = false
+--do not add the end of the line for explicity
+vim.opt["fixendofline"] = false
 
 --do not turn spaces into tabs
 vim.opt["expandtab"] = true
