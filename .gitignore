@@ -1,6 +1,4 @@
-# main #
-
-## general
+# general
 
 !.aaa
 
@@ -8,11 +6,11 @@
 
 **/.DS_Store
 
-## vim-generated
+# vim-generated
 
 config/plug/*
 shared/*
 
-## needed
+# needed
 
 !shared/site/autoload/plug.vim
