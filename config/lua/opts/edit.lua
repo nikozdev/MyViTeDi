@@ -15,6 +15,9 @@ vim.opt["autoindent"] = true
 vim.opt["tabstop"] = 4
 --how many spaces to use in auto indent
 vim.opt["shiftwidth"] = 4
+--custom tabs for other langs
+vim.cmd([[ autocmd Filetype html setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2 ]])
+
 
 --auto complete menu
 vim.opt["wildmenu"] = true
