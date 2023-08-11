@@ -1,19 +1,30 @@
-NAME:=vimotedi
+vProjName:=MyViTeDi
+vProjVnum:=0.0.0
 
-SROOT:=.
-TROOT:=$(HOME)
+vFileRoot:=..
+vFileCode:=$(vFileRoot)/code
+vFileDest?=$(HOME)
+ifeq $(vFileDestRoot) ""
+vFileDestRoot:=$(UserProfile)
+endif
+ifeq $(vFileDestRoot) ""
+$(info failed destination resolution)
+endif
 
-CP:=cp -rivu
-RM:=rm -riv
+vCmdCp:=cp -rivu
+vCmdRm:=rm -riv
 
 print:
-	$(info "[SROOT]=$(SROOT))
-	$(info "[TROOT]=$(TROOT))
+	$(info "[vProjName]=$(vProjName))
+	$(info "[vProjVnum]=$(vProjVnum))
+	$(info "[vFileRoot]=$(vFileRoot))
+	$(info "[vFileCode]=$(vFileCode))
+	$(info "[vFileDest]=$(vFileDest))
 
 setup:
-	$(CP) $(SROOT)/config $(TROOT)/.config/nvim
-	$(CP) $(SROOT)/shared $(TROOT)/.local/share/nvim
+	$(vCmdCp) $(vFileCode)/config/* $(vFileDest)/.config/nvim
+	$(vCmdCp) $(vFileCode)/share/* $(vFileDest)/.local/share/nvim
 
 reset:
-#	$(RM) $(TROOT)/.config/nvim $(TROOT)/.local/share/nvim
-	$(info "we do not have a clean way to reset $(NAME)")
+#	$(vCmdRm) $(vFileDest)/.config/nvim $(vFileDest)/.local/share/nvim
+	$(info "we do not have a clean way to reset $(vProjName)")
