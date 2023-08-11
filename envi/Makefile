@@ -1,17 +1,17 @@
 vProjName:=MyViTeDi
-vProjVnum:=0.0.0
+vProjVnum:=1.0.0
 
 vFileRoot:=..
 vFileCode:=$(vFileRoot)/code
 vFileDest?=$(HOME)
-ifeq $(vFileDestRoot) ""
+ifeq ($(vFileDestRoot),)
 vFileDestRoot:=$(UserProfile)
 endif
-ifeq $(vFileDestRoot) ""
+ifeq ($(vFileDestRoot),)
 $(info failed destination resolution)
 endif
 
-vCmdCp:=cp -rivu
+vCmdCp:=cp -riv
 vCmdRm:=rm -riv
 
 print:
