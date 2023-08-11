@@ -1,15 +1,11 @@
 # general
 
-!.aaa
-
-*.log
-
-**/.DS_Store
+.DS_Store
 
 # vim-generated
 
-config/plug/*
-shared/*
+config/plug/
+shared/
 
 # needed
 
