@@ -1,6 +1,6 @@
 --lua/plug/comp.lua - completion plugin
 
--- [=[
+--[=[
 local cmp = require("cmp")
 
 cmp.setup({

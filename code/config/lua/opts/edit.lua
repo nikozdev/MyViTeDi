@@ -12,12 +12,11 @@ vim.opt["expandtab"] = true
 --same indentation on the next line
 vim.opt["autoindent"] = true
 --tabbing moves 4 spaces
-vim.opt["tabstop"] = 4
+vim.opt["tabstop"] = 2
 --how many spaces to use in auto indent
-vim.opt["shiftwidth"] = 4
+vim.opt["shiftwidth"] = 2
 --custom tabs for other langs
 vim.cmd([[ autocmd Filetype html setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2 ]])
-
 
 --auto complete menu
 vim.opt["wildmenu"] = true

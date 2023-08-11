@@ -4,5 +4,6 @@ require("opts")
 require("plug")
 require("lspc")
 require("keys")
+require("cmdl")
 
 --endf
