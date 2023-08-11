@@ -23,7 +23,7 @@ print:
 
 setup:
 	$(vCmdCp) $(vFileCode)/config/* $(vFileDest)/.config/nvim
-	$(vCmdCp) $(vFileCode)/share/* $(vFileDest)/.local/share/nvim
+	$(vCmdCp) $(vFileCode)/shared/* $(vFileDest)/.local/share/nvim
 
 reset:
 #	$(vCmdRm) $(vFileDest)/.config/nvim $(vFileDest)/.local/share/nvim

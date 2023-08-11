@@ -4,9 +4,9 @@
 
 # vim-generated
 
-config/plug/
-shared/
+code/config/plug/
+code/shared/
 
 # needed
 
-!shared/site/autoload/plug.vim
+!code/shared/site/autoload/plug.vim
