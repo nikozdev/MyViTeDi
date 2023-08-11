@@ -15,7 +15,7 @@ vim.opt["cursorbind"] = false
 vim.opt["scrollbind"] = false
 vim.opt["scrolloff"] = 1024
 
-vim.opt["colorcolumn"] = "70"
+vim.opt["colorcolumn"] = "80"
 vim.opt["signcolumn"] = "yes"
 
 --endf
