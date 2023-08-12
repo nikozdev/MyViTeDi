@@ -83,9 +83,10 @@ lspc_setup("clangd", {
   filetypes = { "c", "cpp", "cxx", "h", "hpp", "hxx", },
   settings = { arguments = { "enable-config" }, },
   on_attach = function(client, bufnum)
+    on_attach(client, bufnum)
     local bufopt = { noremap = true, silent = true, buffer = bufnum }
     vim.keymap.set('n','<c-l><c-f>', function()
-      vim.cmd[[! clang-format --style=file:./envi/clang-format.yaml %]]
+      vim.cmd[[! clang-format --style=file:./envi/clang-format.yaml -i %]]
     end, bufopt)
   end
 })

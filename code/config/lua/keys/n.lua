@@ -9,13 +9,21 @@ vim.keymap.set("n", "U", "<cmd>redo<cr>", {
   ["desc"] = "revert the last undo",
 })
 
-vim.keymap.set("n", "<c-w>e", "<cmd>Explore<cr>", {
+vim.keymap.set("n", "<c-w><c-e>", "<cmd>Explore<cr>", {
   ["remap"] = false,
-  ["desc"] = "focus on file explorer",
+  ["desc"] = "open window of explorer",
+})
+vim.keymap.set("n", "<c-w><c-e>", "<cmd>Explore<cr>", {
+  ["remap"] = false,
+  ["desc"] = "open window of explorer",
+})
+vim.keymap.set("n", "<c-w><c-t>", "<cmd>split term://$SHELL<cr>", {
+  ["remap"] = false,
+  ["desc"] = "open window of terminal",
 })
 vim.keymap.set("n", "<c-w>t", "<cmd>split term://$SHELL<cr>", {
   ["remap"] = false,
-  ["desc"] = "focus on integrated terminal",
+  ["desc"] = "open window of terminal",
 })
 
 vim.keymap.set("n", "fc", "<cmd>Telescope commands<cr>", {
