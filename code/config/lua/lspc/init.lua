@@ -45,9 +45,6 @@ local on_attach = function(client, bufnum)
   --[[
   vim.keymap.set('n','<c-l><c-f>', vim.lsp.buf.formatting, bufopt)
   --]]
-  vim.keymap.set('n','<c-l><c-f>', function()
-    vim.cmd[[! clang-format --style=file:./envi/clang-format.yaml %]]
-  end, bufopt)
 end
 
 mason.setup({})
@@ -56,7 +53,7 @@ mason_lspc.setup({
   ensure_installed = {
     "marksman",
     "clangd",
-    "lua-language-server",
+    "lua_ls",
   },
 })
 
@@ -85,6 +82,12 @@ lspc_setup("clangd", {
   cmd = { "clangd", "--enable-config", "--compile-commands-dir=./make", },
   filetypes = { "c", "cpp", "cxx", "h", "hpp", "hxx", },
   settings = { arguments = { "enable-config" }, },
+  on_attach = function(client, bufnum)
+    local bufopt = { noremap = true, silent = true, buffer = bufnum }
+    vim.keymap.set('n','<c-l><c-f>', function()
+      vim.cmd[[! clang-format --style=file:./envi/clang-format.yaml %]]
+    end, bufopt)
+  end
 })
 
 lspc_setup("pyright", {})
@@ -135,18 +138,13 @@ lspc_setup("lua_ls", {
       end
     end
 
+    local bufopt = { noremap = true, silent = true, buffer = bufnum }
+    vim.keymap.set('n','<c-l><c-f>', function()
+      vim.cmd[[! stylua %]]
+    end, bufopt)
+
   end,
 
-})
-
-vim.api.nvim_create_autocmd({
-	"BufWritePost",
-}, {
-	group = "nikozdev",
-	pattern = "*.lua",
-	callback = function()
-		vim.cmd([[! stylua %]])
-	end,
 })
 
 --custom
