@@ -31,6 +31,5 @@ tele.setup({
 		}, --layout_config
 	}, --defaults
 }) --tele
-tele.load_extension("fzf")
 
 --endf
