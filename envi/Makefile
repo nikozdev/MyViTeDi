@@ -1,5 +1,5 @@
 vProjName:=MyViTeDi
-vProjVnum:=1.0.0
+vProjVnum:=1.1.0
 
 vFileRoot:=..
 vFileCode:=$(vFileRoot)/code
