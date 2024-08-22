@@ -53,7 +53,6 @@ mason_lspc.setup({
   ensure_installed = {
     "marksman",
     "clangd",
-    "lua_ls",
   },
 })
 
@@ -93,7 +92,8 @@ lspc_setup("clangd", {
 
 lspc_setup("pyright", {})
 
-lspc_setup("lua_ls", {
+--[=[
+lspc_setup("sumneko_lua", {
   --[[
   cmd = {
     lsp_lua_bin,
@@ -131,7 +131,7 @@ lspc_setup("lua_ls", {
     on_attach(client, bufnum)
 
     local clients = vim.lsp.buf_get_clients()
-    if #clients == 2 then
+    if #clients > 0 then
       for index, bufclient in pairs(clients) do
         if bufclient == client then
           bufclient.stop()
@@ -141,12 +141,13 @@ lspc_setup("lua_ls", {
 
     local bufopt = { noremap = true, silent = true, buffer = bufnum }
     vim.keymap.set('n','<c-l><c-f>', function()
-      vim.cmd[[! stylua %]]
+      vim.cmd[[! stylua -f stylua.toml %]]
     end, bufopt)
 
   end,
 
 })
+--]=]
 
 --custom
 
@@ -185,11 +186,74 @@ lspc_setup("luau", {
 
 })
 
+lspc_setup("rust_analyzer", {
+  settings = {
+    ["rust-analyzer"] = {
+      imports = {
+        granularity = {
+          group = "module",
+        },
+        prefix = "self",
+      },
+      cargo = {
+        buildScripts = {
+          enable = true,
+        },
+      },
+      procMacro = {
+        enable = true
+      },
+    }
+  }
+})
+
 require("rust-tools").setup({
   server = {
-    on_attach = function(_, bufnr)
+    on_attach = function(client, bufnum)
+      on_attach(client, bufnum)
     end,
   },
 })
+
+lspc_setup("gopls", { })
+
+lspc_setup("ols", { })
+
+lspc_setup("julials", { })
+
+local mojo_ls = {
+  "czheo/mojo.vim",
+  ft = { "mojo" },
+  init = function()
+    vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+      pattern = { "*.mojo" },
+      callback = function()
+        if vim.bo.filetype ~= "mojo" then
+          vim.bo.filetype = "mojo"
+        end
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "mojo",
+      callback = function()
+        local modular = vim.env.MODULAR_HOME
+        local lsp_cmd = modular .. "/pkg/packages.modular.com_mojo/bin/mojo-lsp-server"
+
+        vim.bo.expandtab = true
+        vim.bo.shiftwidth = 4
+        vim.bo.softtabstop = 4
+
+        vim.lsp.start({
+          name = "mojo",
+          cmd = { lsp_cmd },
+        })
+      end,
+    })
+  end,
+}
+mojo_ls.init()
+
+lspc_setup("tsserver", { })
 
 --endf
