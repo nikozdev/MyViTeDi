@@ -11,4 +11,20 @@ vim.opt["visualbell"] = true
 
 vim.opt["lazyredraw"] = true
 
+--[=[
+vim.cmd([[
+  augroup remember_folds
+    autocmd!
+    autocmd BufWinLeave *.py mkview
+    autocmd BufWinEnter *.py silent! loadview
+    autocmd BufWinLeave *.cpp mkview
+    autocmd BufWinEnter *.cpp silent! loadview
+    autocmd BufWinLeave *.hpp mkview
+    autocmd BufWinEnter *.hpp silent! loadview
+    autocmd BufWinLeave *.lua mkview
+    autocmd BufWinEnter *.lua silent! loadview
+  augroup END
+]])
+--]=]
+
 --endf
