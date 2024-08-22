@@ -30,11 +30,11 @@ vim.keymap.set("n", "fc", "<cmd>Telescope commands<cr>", {
   ["remap"] = false,
   ["desc"] = "fuzzy find a command",
 })
-vim.keymap.set("n", "ff", "<cmd>Telescope find_files<cr>", {
+vim.keymap.set("n", "ff", "<cmd>Telescope find_files hidden=true<cr>", {
   ["remap"] = false,
   ["desc"] = "fuzzy find a file",
 })
-vim.keymap.set("n", "fe", "<cmd>Telescope live_grep<cr>", {
+vim.keymap.set("n", "fe", "<cmd>Telescope live_grep hidden=true<cr>", {
   ["remap"] = false,
   ["desc"] = "fuzzy find an expression in files",
 })
