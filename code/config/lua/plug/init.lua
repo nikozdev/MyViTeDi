@@ -39,7 +39,13 @@ Plug 'mfussenegger/nvim-dap'
 
 Plug 'RaafatTurki/hex.nvim'
 
+Plug 'Mofiqul/dracula.nvim'
+Plug 'UtkarshVerma/molokai.nvim'
+
+Plug 'ellisonleao/gruvbox.nvim'
+
 ]])
+
 vim.call("plug#end")
 
 require("plug.find")
@@ -48,5 +54,6 @@ require("plug.comp")
 require("plug.glow")
 require("plug.dbug")
 require("plug.heks")
+require("plug.view")
 
 --endf
