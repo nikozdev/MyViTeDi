@@ -15,12 +15,15 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'BurntSushi/ripgrep'
 
 Plug 'nvim-lualine/lualine.nvim'
+Plug 'vim-scripts/restore_view.vim'
 
 Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'simrat39/rust-tools.nvim'
+Plug 'czheo/mojo.vim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-path'
