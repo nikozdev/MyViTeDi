@@ -423,7 +423,7 @@ pDap.configurations.cpp = {
 
 require("hex").setup({})
 
-require('restore_view').setup({})
+--require('restore_view').setup({})
 
 --]=]
 
@@ -432,10 +432,6 @@ require('restore_view').setup({})
 local pLspConfig = require("lspconfig")
 local pLspConfigTable = require("lspconfig.configs")
 local pLspConfigUtils = require("lspconfig.util")
-
-local vEnVarHome = os.getenv("HOME")
-local vEnVarConf = vEnVarHome .. "/.config"
-local vEnVarNvim = vEnVarConf .. "/nvim"
 
 local vPackageFpath = vim.split(package.path, ";")
 table.insert(vPackageFpath, "lua/?.lua")
@@ -460,7 +456,7 @@ local function fRunLspSetup(vName, vConfigTable)
   call this code
   only when ls is attached
   --]===]
-  local fForLspAttach function(vClient, vBufferIndex)
+  local fForLspAttach = function(vClient, vBufferIndex)
       -- see `:help vim.lsp.*`
       local vOptionTable = { noremap = true, silent = true, buffer = vBufferIndex }
 
@@ -485,9 +481,14 @@ local function fRunLspSetup(vName, vConfigTable)
     vConfigTable.on_attach = fForLspAttach
   end
 
-  local vSuccess, vMessage = pcall(pLspConfigTable[vName].setup, vConfigTable)
-  if not vSuccess then
-    print(vMessage)
+  vLspConfig = pLspConfig[vName]
+  if vLspConfig then
+    local vSuccess, vMessage = pcall(vLspConfig.setup, vConfigTable)
+    if not vSuccess then
+      print(vMessage)
+    end
+  else
+    print("The LSP config \"" .. vName .. "\" was not found")
   end
 end
 
@@ -500,24 +501,20 @@ require("mason-lspconfig").setup({
   },
 })
 
-fRunLspSetup("bashls", {
-  cmd = { "bash-language-server", "start" },
-  filetypes = { "sh", "bash", "zsh", },
-})
+fRunLspSetup("marksman", { })
+fRunLspSetup("bashls", { })
 
-fRunLspSetup("marksman", {})
-fRunLspSetup("html", {})
+fRunLspSetup("html", { })
 
 fRunLspSetup("clangd", {
   cmd = { "clangd", "--enable-config", "--compile-commands-dir=./make", },
   filetypes = { "c", "cpp", "cxx", "h", "hpp", "hxx", },
   settings = { arguments = { "enable-config" }, },
-  on_attach = function(client, bufnum)
-    on_attach(client, bufnum)
-    local bufopt = { noremap = true, silent = true, buffer = bufnum }
+  on_attach = function(vClient, vBufferIndex)
+    local vOptionTable = { noremap = true, silent = true, buffer = vBufferIndex }
     vim.keymap.set('n','<c-l><c-f>', function()
       vim.cmd[[! clang-format --style=file:./envi/clang-format.yaml -i %]]
-    end, bufopt)
+    end, vOptionTable)
   end
 })
 
@@ -558,8 +555,6 @@ fRunLspSetup("sumneko_lua", {
   },
 
   on_attach = function(client, bufnum)
-
-    on_attach(client, bufnum)
 
     local clients = vim.lsp.buf_get_clients()
     if #clients > 0 then
@@ -602,11 +597,7 @@ fRunLspSetup("rust_analyzer", {
 })
 
 require("rust-tools").setup({
-  server = {
-    on_attach = function(client, bufnum)
-      on_attach(client, bufnum)
-    end,
-  },
+  server = { },
 })
 
 fRunLspSetup("gopls", { })
@@ -751,7 +742,7 @@ vim.keymap.set("n", "!", ":! ", {
 -- [==[ terminal mode
 
 vim.keymap.set("t","<c-]>","<c-\\><c-n>",{
-    ["desc"]="switch from terminal to normal mode"
+    ["desc"]="switch from terminal to normal mode;"
 })
 
 --]==]
