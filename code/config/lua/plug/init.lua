@@ -16,6 +16,7 @@ Plug 'BurntSushi/ripgrep'
 
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'vim-scripts/restore_view.vim'
+Plug 'folke/which-key.nvim'
 
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/nvim-treesitter-context'
@@ -34,10 +35,11 @@ Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 
 Plug 'ellisonleao/glow.nvim'
+Plug 'RaafatTurki/hex.nvim'
 
 Plug 'mfussenegger/nvim-dap'
 
-Plug 'RaafatTurki/hex.nvim'
+Plug 'vimwiki/vimwiki'
 
 ]])
 vim.call("plug#end")
