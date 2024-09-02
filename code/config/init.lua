@@ -170,6 +170,141 @@ vim.opt["ignorecase"] = true
 
 vim.opt["compatible"] = false
 
+local vLazyFpath = vim.fn.stdpath("config") .. "/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(vLazyFpath) then
+  local vLazyWpath = "https://github.com/folke/lazy.nvim.git"
+  local vGitOutput = vim.fn.system({
+    "git", "clone", "--filter=blob:none", "--branch=stable", vLazyWpath, vLazyFpath
+  })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { vGitOutput, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(vLazyFpath)
+
+vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
+  spec = {
+    {
+      "vhyrro/luarocks.nvim",
+      -- very high priority is required;
+      -- should run as the first plugin in your config;
+      priority = 1000,
+      config = true,
+    },
+    {
+      "nvim-treesitter/nvim-treesitter",
+      build = ":TSUpdate",
+      config = function()
+        require("nvim-treesitter.configs").setup({
+          highlight = {
+            enable = true,
+          },
+        })
+      end,
+    },
+    {
+      "folke/which-key.nvim",
+      event = 'VeryLazy',
+      opts = {
+      },
+      keys = {
+        {
+          "<leader>?",
+          function()
+            require("which-key").show({ global = false })
+          end,
+          desc = "Buffer Local Keymaps (which-key)",
+        },
+      },
+    },
+    -- [===[
+    {
+      "nvim-neorg/neorg",
+      -- Disable lazy loading;
+      -- Some `lazy.nvim` distributions set `lazy = true` by default;
+      lazy = false,
+      -- Pin Neorg to the latest stable release;
+      version = "*",
+      dependencies = {
+        "luarocks.nvim",
+        "nvim-lua/plenary.nvim",
+        "nvim-treesitter/nvim-treesitter",
+        "kyazdani42/nvim-web-devicons",
+      },
+      rocks = { "lua-utils.nvim", "nvim-nio", "nui.nvim" },
+      config = function()
+        require("neorg").setup({
+          -- Your Neorg configuration here
+        })
+      end,
+    },
+    --]===]
+    {
+      'nvim-orgmode/orgmode',
+      event = 'VeryLazy',
+      ft = { 'org' },
+      config = function()
+        -- Setup orgmode
+        require('orgmode').setup({
+          org_agenda_files = vim.fn.stdpath('data') .. '/orgfiles/**/*',
+          org_default_notes_file = vim.fn.stdpath("data") .. '/orgfiles/refile.org',
+        })
+      end,
+    },
+    {
+      'nvim-tree/nvim-web-devicons',
+      event = 'VeryLazy',
+    },
+    {
+      'echasnovski/mini.nvim',
+      event = 'VeryLazy',
+      version = false,
+    },
+    -- [===[
+    {
+      "vimwiki/vimwiki",
+      lazy = true,
+      event = "VeryLazy",
+      keys = {
+        {
+          "<leader>wl",
+          ":VimwikiGenerateLinks<CR>",
+          desc = "make links here;",
+        },
+      },
+      init = function()
+        vim.g.vimwiki_list = {
+          {
+            --path = "~/vimwiki/",
+            --syntax = "wiki",
+            --ext = ".wiki",
+            on_attach = function(vClient, vBufferIndex)
+            end,
+          },
+        }
+      end,
+    },
+    --]===]
+  },
+  -- colorscheme that will be used when installing plugins;
+  install = { colorscheme = { "habamax" } },
+  -- automatically check for plugin updates;
+  checker = { enabled = true },
+})
+if not vLazyPcallSuccess then
+  vim.api.nvim_echo({
+    { "Failed to setup lazy.nvim:\n", "ErrorMsg" },
+    { vLazyPcallMessage, "WarningMsg" },
+    { "\nPress any key to exit..." },
+  }, true, {})
+end
+
 vim.call("plug#begin","~/.config/nvim/plug")
 vim.cmd([[
 
@@ -182,10 +317,6 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 Plug 'BurntSushi/ripgrep'
 
-Plug 'nvim-lualine/lualine.nvim'
-Plug 'vim-scripts/restore_view.vim'
-Plug 'folke/which-key.nvim'
-
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'neovim/nvim-lspconfig'
@@ -193,6 +324,7 @@ Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'czheo/mojo.vim'
+Plug 'mfussenegger/nvim-dap'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-path'
@@ -202,12 +334,11 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'vim-scripts/restore_view.vim'
+
 Plug 'ellisonleao/glow.nvim'
 Plug 'RaafatTurki/hex.nvim'
-
-Plug 'mfussenegger/nvim-dap'
-
-Plug 'vimwiki/vimwiki'
 
 ]])
 vim.call("plug#end")
@@ -421,9 +552,11 @@ pDap.configurations.cpp = {
 
 --]==]
 
-require("hex").setup({})
+require('hex').setup({})
 
 --require('restore_view').setup({})
+
+require('neorg').setup({})
 
 --]=]
 
@@ -485,10 +618,10 @@ local function fRunLspSetup(vName, vConfigTable)
   if vLspConfig then
     local vSuccess, vMessage = pcall(vLspConfig.setup, vConfigTable)
     if not vSuccess then
-      print(vMessage)
+      vim.api.nvim_echo(vMessage)
     end
   else
-    print("The LSP config \"" .. vName .. "\" was not found")
+    vim.api.nvim_echo("The LSP config \"" .. vName .. "\" was not found")
   end
 end
 
@@ -501,7 +634,7 @@ require("mason-lspconfig").setup({
   },
 })
 
-fRunLspSetup("marksman", { })
+--fRunLspSetup("marksman", { })
 fRunLspSetup("bashls", { })
 
 fRunLspSetup("html", { })
