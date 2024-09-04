@@ -78,6 +78,8 @@ vim.opt["signcolumn"] = "yes"
 
 vim.cmd("syntax enable")
 
+vim.opt.clipboard = "unnamedplus"
+
 --do not make backup files
 vim.opt["backup"] = false
 --do not add the end of the line for explicity
@@ -228,13 +230,13 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       'williamboman/mason.nvim',
       config = true,
       lazy = true,
-      cmd = "Mason",
     },
     {
       'williamboman/mason-lspconfig.nvim',
       enabled = true,
       lazy = true,
-      cmd = "Mason",
+      event = 'VeryLazy',
+      cmd = 'Mason',
       dependencies = {
         'williamboman/mason.nvim',
       },
@@ -462,6 +464,47 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       'mfussenegger/nvim-dap',
       enabled = true,
       lazy = true,
+      cmd = 'DapNew',
+      config = function()
+        local pDap = require("dap")
+
+        pDap.adapters.cppdbg = {
+          id = "cppdbg",
+          type = "executable",
+          command = "/home/nikozdev/.local/share/"
+          .. "cpptools/extension/debugAdapters/bin/OpenDebugAD7",
+        }
+
+        pDap.setupCommands = {
+        }
+
+        pDap.configurations.cpp = {
+          {
+            name = "launch",
+            type = "cppdbg",
+            request = "launch",
+            program = function()
+              local prompt = vim.fn.getcwd() .. "/bin/"
+              return vim.fn.input("execpath: ", prompt, "file")
+            end,
+            cwd = "${workspaceFolder}",
+            stopAtEntry = true,
+          },
+          {
+            name = "attach",
+            type = "cppdbg",
+            request = "launch",
+            MIMode = "gdb",
+            miDebuggerServerAddress = "localhost:1234",
+            miDebuggerPath = "/usr/bin/gdb",
+            program = function()
+              local prompt = vim.fn.getcwd() .. "/bin/"
+              return vim.fn.input("execpath: ", prompt, "file")
+            end,
+            cwd = "${workspaceFolder}",
+          },
+        }
+      end,
     },
     {
       "neoclide/coc.nvim",
@@ -553,6 +596,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       dependencies = {
         'nvim-lua/plenary.nvim',
         {
+          'junegunn/fzf.vim',
           'nvim-telescope/telescope-fzf-native.nvim',
           build = 'make',
         }
@@ -732,6 +776,9 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
     {
       'akinsho/bufferline.nvim',
       version = "*",
+      enable = true,
+      lazy = true,
+      event = "BufEnter",
       dependencies = 'nvim-tree/nvim-web-devicons',
       init = function()
         vim.opt.termguicolors = true
@@ -739,9 +786,15 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       config = function()
         require('bufferline').setup({
           options = {
-            numbers = "none", -- or "ordinal"
-            close_command = "bdelete! %d", -- command to close the buffer
-            right_mouse_command = "bdelete! %d", -- command for right mouse click
+            numbers = "both",
+            close_command = "Bdelete! %d",
+            right_mouse_command = "Bdelete! %d",
+            color_icons = true,
+            show_buffer_icons = true,
+            show_buffer_close_icons = false,
+            show_close_icon = false,
+            show_tab_indicators = true,
+            show_duplicate_prefix = true,
             indicator_icon = '▎',
             buffer_close_icon = 'x',
             modified_icon = '●',
@@ -755,21 +808,44 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 separator = true,
               }
             },
+            max_name_length = 12,
+            max_prefix_length = 8,
+            truncate_names = true,
+            tab_size = 16,
+            diagnostics = "nvim_lsp",
+            persist_buffer_sort = true,
+            move_wraps_at_ends = true,
+            always_show_bufferline = true,
+            auto_toggle_bufferline = false,
+            sort_by = 'id',
+          },
+          highlights = {
+            -- buffer_selected = { fg = "#ffffff", bg = "#282c34", bold = true },
+            tab_selected = { fg = "#ffffff", bg = "#aaaaaa", bold = true },
           },
         })
       end,
+      keys = {
+        { "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "switch to the picked buffer;" },
+        { '<leader>bc', '<cmd>BufferLinePickClose<cr>', desc = "close the picked buffer;" },
+        { "<leader>bm", "<cmd>BufferLineMoveNext<cr>", desc = "move buffer next;" },
+        { "<leader>bM", "<cmd>BufferLineMovePrev<cr>", desc = "move buffer prev;" },
+        { "gb", "<cmd>BufferLineCycleNext<cr>", desc = "switch to the next buffer;" },
+        { "gB", "<cmd>BufferLineCyclePrev<cr>", desc = "switch to the prev buffer;" },
+      },
     },
     {
       'famiu/bufdelete.nvim',
       enabled = true,
       lazy = true,
-      event = "BufEnter",
+      keys = {
+        { 'gd', '<cmd>Bdelete<cr>', desc = "quit the current buffer;" },
+      },
     },
     {
       'vim-scripts/restore_view.vim',
       enabled = true,
-      lazy = true,
-      event = "VeryLazy",
+      lazy = false,
     },
     --]==]
     -- [==[ specific formats
@@ -777,6 +853,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       'ellisonleao/glow.nvim',
       enabled = false,
       lazy = true,
+      event = "BufReadPre *.md",
       config = function()
         require("glow").setup({
           glow_path = "/usr/bin/glow",
@@ -795,7 +872,21 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       'RaafatTurki/hex.nvim',
       enabled = true,
       lazy = true,
-      event = "BufEnter",
+      cmd = { 'HexDump' },
+      ft = { 'xxd' },
+      config = function()
+        require('hex').setup({})
+      end,
+      --[===[
+      cond = function()
+        -- full path of the current file
+        local vFpath = vim.fn.expand('%:p')
+        -- MIME type
+        local vFtype = vim.fn.system("file --mime-type -b " .. vFpath)
+        -- check if it's a binary file
+        return vFtype:match("application/octet-stream") ~= nil
+      end,
+      --]===]
     },
     --]==]
     -- [==[ organisation and productivity
@@ -808,7 +899,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         "vhyrro/luarocks.nvim",
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
-        "kyazdani42/nvim-web-devicons",
+        --"kyazdani42/nvim-web-devicons",
+        "nvim-tree/nvim-web-devicons",
       },
       rocks = { "lua-utils.nvim", "nvim-nio", "nui.nvim" },
       config = function()
@@ -816,11 +908,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
           load = {
             ['core.defaults'] = {},
             ['core.dirman'] = {
-              config = {
-                workspaces = {
-                  Basic = '~/Other/neorg',
-                },
-              },
+              config = { workspaces = { Basic = '~/Other/neorg' } },
             },
           },
         })
@@ -828,8 +916,9 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
     },
     {
       'nvim-orgmode/orgmode',
-      enabled = true,
+      enabled = false,
       lazy = true,
+      event = 'VeryLazy',
       ft = { 'org' },
       config = function()
         -- Setup orgmode
@@ -845,10 +934,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       lazy = true,
       keys = {
         { "<leader>ww", "<cmd>VimwikiIndex<cr>", desc = "open wiki index;" },
-        { "<leader>wd", "<cmd>VimwikiIndex<cr>", desc = "open diary index;" },
+        { "<leader>wv", "<cmd>VimwikiCheckLinks<cr>", desc = "vet wiki links;" },
         { "<leader>wl", "<cmd>VimwikiGenerateLinks<cr>", desc = "make links to each file;" },
         { "<leader>wc", "<cmd>VimwikiTOC<cr>", desc = "make table of contents in this file;" },
         { "<leader>wg", "<cmd>VimwikiGoto<cr>", desc = "find and open file;" },
+        { "<leader>wr", "<cmd>VimwikiRenameLink<cr>", desc = "rename the current file link;" },
       },
       init = function()
         vim.cmd([[
@@ -893,127 +983,32 @@ if not vLazyPcallSuccess then
   }, true, {})
 end
 
--- [==[ debug
-
-local pDap = require("dap")
-
-pDap.adapters.cppdbg = {
-  id = "cppdbg",
-  type = "executable",
-  command = "/home/nikozdev/.local/share/"
-  .. "cpptools/extension/debugAdapters/bin/OpenDebugAD7",
-}
-
-pDap.setupCommands = {
-}
-
-pDap.configurations.cpp = {
-  {
-    name = "launch",
-    type = "cppdbg",
-    request = "launch",
-    program = function()
-      local prompt = vim.fn.getcwd() .. "/bin/"
-      return vim.fn.input("execpath: ", prompt, "file")
-    end,
-    cwd = "${workspaceFolder}",
-    stopAtEntry = true,
-  },
-  {
-    name = "attach",
-    type = "cppdbg",
-    request = "launch",
-    MIMode = "gdb",
-    miDebuggerServerAddress = "localhost:1234",
-    miDebuggerPath = "/usr/bin/gdb",
-    program = function()
-      local prompt = vim.fn.getcwd() .. "/bin/"
-      return vim.fn.input("execpath: ", prompt, "file")
-    end,
-    cwd = "${workspaceFolder}",
-  },
-}
-
---]==]
-
 --]=]
 
 -- [=[ keymap
 
 -- [==[ normal mode
 
-vim.keymap.set("n", "u", "<cmd>undo<cr>", {
-  ["remap"] = false,
-  ["desc"] = "revert the last action;",
-})
-vim.keymap.set("n", "U", "<cmd>redo<cr>", {
-  ["remap"] = false,
-  ["desc"] = "revert the last undo;",
-})
+vim.keymap.set("n", "u", "<cmd>undo<cr>", { desc = "revert the last action;" })
+vim.keymap.set("n", "U", "<cmd>redo<cr>", { desc = "revert the last undo;" })
+vim.keymap.set("n", "Г", "<cmd>redo<cr>", { desc = "revert the last undo;" })
 
-vim.keymap.set("n", "<c-w><c-e>", "<cmd>Explore<cr>", {
-  ["remap"] = false,
-  ["desc"] = "open window of explorer",
-})
-vim.keymap.set("n", "<c-w><c-t>", "<cmd>split term://$SHELL<cr>", {
-  ["remap"] = false,
-  ["desc"] = "open window of terminal",
-})
+vim.keymap.set("n", "<c-w><c-e>", "<cmd>Explore<cr>", { desc = "open window of explorer" })
+vim.keymap.set("n", "<c-w><c-t>", "<cmd>split term://$SHELL<cr>", { desc = "open window of terminal" })
 
-vim.keymap.set("n", "T", "<cmd>tabnew<cr>", {
-  ["remap"] = false,
-  ["desc"] = "open a new tab",
-})
-vim.keymap.set("n", "gt", "<cmd>tabn<cr>", {
-  ["remap"] = false,
-  ["desc"] = "switch to the next tab",
-})
-vim.keymap.set("n", "gT", "<cmd>tabp<cr>", {
-  ["remap"] = false,
-  ["desc"] = "switch to the prev tab;",
-})
-vim.keymap.set("n", "<leader>tm", "<cmd>tabm +1<cr>", {
-  ["remap"] = false,
-  ["desc"] = "move the current tab forward;",
-})
-vim.keymap.set("n", "<leader>tM", "<cmd>tabm -1<cr>", {
-  ["remap"] = false,
-  ["desc"] = "move the current tab backward;",
-})
+vim.keymap.set("n", "T", "<cmd>tabnew<cr>", { desc = "open a new tab" })
+vim.keymap.set("n", "gt", "<cmd>tabn<cr>", { desc = "switch to the next tab" })
+vim.keymap.set("n", "gT", "<cmd>tabp<cr>", { desc = "switch to the prev tab;" })
+vim.keymap.set("n", "<leader>tm", "<cmd>tabm +1<cr>", { desc = "move the current tab forward;" })
+vim.keymap.set("n", "<leader>tM", "<cmd>tabm -1<cr>", { desc = "move the current tab backward;" })
 
-vim.keymap.set("n", "<c-w><c-q>", "<cmd>Bdelete!<cr>", {
-  ["remap"] = false,
-  ["desc"] = "delete the current buffer;",
-})
-vim.keymap.set("n", "gb", "<cmd>bn<cr>", {
-  ["remap"] = false,
-  ["desc"] = "switch to the next buffer;",
-})
-vim.keymap.set("n", "gB", "<cmd>bp<cr>", {
-  ["remap"] = false,
-  ["desc"] = "switch to the prev buffer;",
-})
-vim.keymap.set("n", "<leader>bm", "<cmd>BufferLineMoveNext<cr>", {
-  ["remap"] = false,
-  ["desc"] = "move buffer next;",
-})
-vim.keymap.set("n", "<leader>bM", "<cmd>BufferLineMovePrev<cr>", {
-  ["remap"] = false,
-  ["desc"] = "move buffer prev;",
-})
-
-vim.keymap.set("n", "!", ":! ", {
-  ["remap"] = false,
-  ["desc"] = "system command line;",
-})
+vim.keymap.set("n", "!", ":! ", { desc = "system command line;" })
 
 --]==]
 
 -- [==[ terminal mode
 
-vim.keymap.set("t","<c-]>","<c-\\><c-n>",{
-  ["desc"]="switch from terminal to normal mode;"
-})
+vim.keymap.set('t', '<c-]>', '<c-\\><c-n>', { desc = "switch from terminal to normal mode;" })
 
 --]==]
 
