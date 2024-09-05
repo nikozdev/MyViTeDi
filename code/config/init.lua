@@ -283,14 +283,15 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
 
             fUpdLeader()
 
+            vim.keymap.set('n', '<leader>ls', '<cmd>ClangdSwitchSourceHeader<cr>', vOptionTable)
             vim.keymap.set('n', '<leader>ld', vim.lsp.buf.definition, vOptionTable)
             vim.keymap.set('n', '<leader>lD', vim.lsp.buf.declaration, vOptionTable)
             vim.keymap.set('n', '<leader>li', vim.lsp.buf.implementation, vOptionTable)
             vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, vOptionTable)
 
-            vim.keymap.set('n', '<leader>lh', vim.lsp.buf.hover, vOptionTable)
-            vim.keymap.set('n', '<leader>ls', vim.lsp.buf.signature_help, vOptionTable)
-            vim.keymap.set('n', '<leader>lf', vim.diagnostic.open_float, vOptionTable)
+            vim.keymap.set('n', '<leader>li', vim.lsp.buf.hover, vOptionTable)
+            vim.keymap.set('n', '<leader>lh', vim.lsp.buf.signature_help, vOptionTable)
+            vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, vOptionTable)
 
             vim.keymap.set('n', '<leader>ln', vim.lsp.buf.rename, vOptionTable)
             vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, vOptionTable)
@@ -509,6 +510,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
     {
       "neoclide/coc.nvim",
       branch = "release",
+      enabled = false,
+      lazy = true,
       event = { "BufReadPre", "BufNewFile" },
       config = function()
         vim.g.coc_global_extensions = {
@@ -774,6 +777,27 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       end
     },
     {
+      'vim-scripts/restore_view.vim',
+      enabled = true,
+      lazy = false,
+    },
+    {
+      "f-person/git-blame.nvim",
+      enable = true,
+      lazy = true,
+      keys = {
+        { '<leader>vg', '<cmd>GitBlameToggle<cr>', desc = 'git blame toggle ;' },
+      },
+      opts = {
+        enabled = false,
+        message_template = " <summary> • <date> • <author> • <<sha>>",
+        date_format = "%m-%d-%Y %H:%M:%S",
+        virtual_text_column = 1,
+      },
+    },
+    --]==]
+    -- [==[ navigation
+    {
       'akinsho/bufferline.nvim',
       version = "*",
       enable = true,
@@ -817,7 +841,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             move_wraps_at_ends = true,
             always_show_bufferline = true,
             auto_toggle_bufferline = false,
-            sort_by = 'id',
+            sort_by = 'insert_after_current',
           },
           highlights = {
             -- buffer_selected = { fg = "#ffffff", bg = "#282c34", bold = true },
@@ -841,11 +865,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       keys = {
         { 'gd', '<cmd>Bdelete<cr>', desc = "quit the current buffer;" },
       },
-    },
-    {
-      'vim-scripts/restore_view.vim',
-      enabled = true,
-      lazy = false,
     },
     --]==]
     -- [==[ specific formats
