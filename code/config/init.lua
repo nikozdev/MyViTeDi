@@ -20,7 +20,7 @@ vim.opt["history"] = 256
 
 vim.cmd("colorscheme nord")
 
-vim.opt.showtabline = 2
+vim.opt.showtabline = 4
 
 vim.opt["title"] = true
 vim.opt["splitright"] = true
@@ -91,9 +91,9 @@ vim.opt["clipboard"] = "unnamedplus"
 --do not turn spaces into tabs
 vim.opt["expandtab"] = true
 --tabbing moves 4 spaces
-vim.opt["tabstop"] = 2
+vim.opt["tabstop"] = 4
 --how many spaces to use in auto indent
-vim.opt["shiftwidth"] = 2
+vim.opt["shiftwidth"] = 4
 
 -- [==[ c-program indentation
 
@@ -230,6 +230,9 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       'williamboman/mason.nvim',
       config = true,
       lazy = true,
+      keys = {
+        { '<leader>lm', '<cmd>Mason<cr>', desc = 'LanguageMason interface;' },
+      },
     },
     {
       'williamboman/mason-lspconfig.nvim',
@@ -278,23 +281,23 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
           only when ls is attached
           --]===]
           local fForLspAttach = function(vClient, vBufferIndex)
-            -- see `:help vim.lsp.*`
-            local vOptionTable = { noremap = true, silent = true, buffer = vBufferIndex }
-
             fUpdLeader()
 
-            vim.keymap.set('n', '<leader>ls', '<cmd>ClangdSwitchSourceHeader<cr>', vOptionTable)
-            vim.keymap.set('n', '<leader>ld', vim.lsp.buf.definition, vOptionTable)
-            vim.keymap.set('n', '<leader>lD', vim.lsp.buf.declaration, vOptionTable)
-            vim.keymap.set('n', '<leader>li', vim.lsp.buf.implementation, vOptionTable)
-            vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, vOptionTable)
+            vim.keymap.set('n', '<leader>lgf', '<cmd>ClangdSwitchSourceHeader<cr>', { desc = "GoTo Source|Header;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lgd', vim.lsp.buf.definition, { desc = "GoTo Definition|Declaration;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lgi', vim.lsp.buf.implementation, { desc = "GoTo Implementation;", buffer = vBufferIndex })
 
-            vim.keymap.set('n', '<leader>li', vim.lsp.buf.hover, vOptionTable)
-            vim.keymap.set('n', '<leader>lh', vim.lsp.buf.signature_help, vOptionTable)
-            vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, vOptionTable)
+            vim.keymap.set('n', '<leader>lsr', vim.lsp.buf.references, { desc = "Show References", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lss', vim.lsp.buf.workspace_symbol, { desc = "Show WorkSpace Symbols;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lsh', vim.lsp.buf.hover, { desc = "Show Hovering Information;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lsd', vim.diagnostic.open_float, { desc = "Show Diagnostics;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lsi', vim.lsp.buf.incoming_calls, { desc = "Show InComing Calls;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lso', vim.lsp.buf.outgoing_calls, { desc = "Show OutGoing Calls;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lsw', vim.lsp.buf.list_workspace_folders, { desc = "Show Workspace Folders;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lst', vim.lsp.buf.typehierarchy, { desc = "Show Type Hierarchy;", buffer = vBufferIndex })
 
-            vim.keymap.set('n', '<leader>ln', vim.lsp.buf.rename, vOptionTable)
-            vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, vOptionTable)
+            vim.keymap.set('n', '<leader>lrn', vim.lsp.buf.rename, { desc = "Run Renaming;", buffer = vBufferIndex })
+            vim.keymap.set('n', '<leader>lrf', vim.lsp.buf.format, { desc = "Run Formatter;", buffer = vBufferIndex })
           end
           local fForLspAttachWas = vConfigTable.on_attach
           if fForLspAttachWas ~= nil then
@@ -317,39 +320,15 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
           end
         end
 
-        --fRunLspSetup("marksman", { })
-        fRunLspSetup("bashls", { })
+        fRunLspSetup("bashls")
 
-        fRunLspSetup("html", { })
+        fRunLspSetup("marksman")
+        fRunLspSetup("html")
 
-        fRunLspSetup("clangd", {
-          cmd = { "clangd", "--enable-config", "--compile-commands-dir=./", },
-          filetypes = { "c", "cpp", "cxx", "h", "hpp", "hxx", },
-          settings = { arguments = { "enable-config" }, },
-          on_attach = function(vClient, vBufferIndex)
-            local vOptionTable = { noremap = true, silent = true, buffer = vBufferIndex }
-            vim.keymap.set('n','<leader>lf', function()
-              vim.cmd[[! clang-format --style=file:.clang-format -i %]]
-            end, vOptionTable)
+        fRunLspSetup("clangd")
 
-            vClient.handlers["textDocument/definition"] = function(_, result, ctx, config)
-              if not result or vim.tbl_isempty(result) then
-                return
-              end
-              if #result == 1 then
-                vim.lsp.util.jump_to_location(result[1])
-              else
-                -- If multiple results, show a quickfix list
-                vim.fn.setqflist({}, ' ', { title = 'LSP Definitions', items = result })
-                vim.cmd('copen')
-              end
-            end
-          end
-        })
+        fRunLspSetup("pyright")
 
-        fRunLspSetup("pyright", {})
-
-        -- [==[
         fRunLspSetup("lua_ls", {
           settings = {
             Lua = {
@@ -369,18 +348,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
 
             },
           },
-
-          on_attach = function(vClient, vBufferIndex)
-
-            local bufopt = { noremap = true, silent = true, buffer = vBufferIndex }
-            vim.keymap.set('n','<c-l><c-f>', function()
-              vim.cmd[[! stylua -f stylua.toml %]]
-            end, bufopt)
-
-          end,
-
         })
-        --]==]
 
         fRunLspSetup("rust_analyzer", {
           settings = {
@@ -403,7 +371,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
           }
         })
 
-        fRunLspSetup("gopls", { })
+        fRunLspSetup("gopls")
 
         local mojo_ls = {
           "czheo/mojo.vim",
@@ -438,7 +406,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         }
         mojo_ls.init()
 
-        fRunLspSetup("tsserver", { })
+        fRunLspSetup("ts_ls")
 
         --]=]
       end,
@@ -587,7 +555,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         'BurntSushi/ripgrep',
         {
           'junegunn/fzf',
-          build = 'fzf#install()',
+          build = { './install --bin' },
         }
       },
     },
@@ -635,7 +603,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
           },
           pickers = {
             find_files = {
-              --find_command = { 'rg --files --hidden' },
+              find_command = { 'rg', '--files', '--hidden', '--follow', '-g', '!.git/', '-g', '!.cache/' },
               no_ignore = true,
             },
             live_grep = {
@@ -656,7 +624,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       end
     },
     {
-      "folke/which-key.nvim",
+      'folke/which-key.nvim',
       lazy = true,
       event = "VeryLazy",
       keys = {
@@ -667,6 +635,46 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
           end,
           desc = "Buffer local keymaps (which-key)",
         },
+        -- wins
+        { "gw", "<cmd>tabn<cr>", { desc = "Go Win Forward;" } },
+        { "gW", "<cmd>tabp<cr>", { desc = "Go Win Backward;" } },
+        { "<leader>wgf", "<cmd>wincmd r<cr>", { desc = "Win Go Forward;" } },
+        { "<leader>wgb", "<cmd>wincmd R<cr>", { desc = "Win Go Backward;" } },
+        { "<leader>wgh", "<cmd>wincmd h<cr>", { desc = "Win Goto Left;" } },
+        { "<leader>wgj", "<cmd>wincmd j<cr>", { desc = "Win Goto Down;" } },
+        { "<leader>wgk", "<cmd>wincmd k<cr>", { desc = "Win Goto Up;" } },
+        { "<leader>wgl", "<cmd>wincmd l<cr>", { desc = "Win Goto Right;" } },
+
+        { "<leader>wmh", "<cmd>wincmd H<cr>", { desc = "Win Move Left;" } },
+        { "<leader>wmj", "<cmd>wincmd J<cr>", { desc = "Win Move Down;" } },
+        { "<leader>wmk", "<cmd>wincmd K<cr>", { desc = "Win Move Up;" } },
+        { "<leader>wml", "<cmd>wincmd L<cr>", { desc = "Win Move Right;" } },
+        { "<leader>wmt", "<cmd>wincmd T<cr>", { desc = "Win Move to the newTab;" } },
+
+        { "<leader>wct", "<cmd>tabnew<cr>", { desc = "Win Open Tab;" } },
+        { "<leader>wch", "<cmd>split<cr>", { desc = "Win Open Hsplit;" } },
+        { "<leader>wcv", "<cmd>vsplit<cr>", { desc = "Win Open Vsplit;" } },
+        { "<leader>wcs", "<cmd>edit term://$SHELL<cr>", { desc = "Win Open Shell;" } },
+        { "<leader>wce", "<cmd>Explore<cr>", { desc = "Win Open Explorer;" } },
+        { "<leader>wd", "<cmd>close<cr>", { desc = "Win Deletion;" } },
+        -- tabs
+        { "gt", "<cmd>tabn<cr>", { desc = "Go Tab Forward;" } },
+        { "gT", "<cmd>tabp<cr>", { desc = "Go Tab Backward;" } },
+        { "<leader>tgf", "<cmd>tabn<cr>", { desc = "Tab Go Forward;" } },
+        { "<leader>tgb", "<cmd>tabp<cr>", { desc = "Tab Go Backward;" } },
+
+        { "<leader>tmf", "<cmd>tabm +1<cr>", { desc = "Tab Move forward;" } },
+        { "<leader>tmb", "<cmd>tabm -1<cr>", { desc = "Tab Move backward;" } },
+
+        { "T", "<cmd>tabnew<cr>", { desc = "New Tab;" } },
+        { "<leader>tc", "<cmd>tabnew<cr>", { desc = "Tab Creation;" } },
+        { "<leader>td", "<cmd>close<cr>", { desc = "Tab Deletion;" } },
+        -- misc
+        { "u", "<cmd>undo<cr>", desc = "UnDo the last action;" },
+        { "U", "<cmd>redo<cr>", desc = "ReDo the last action;" },
+        { "Г", "<cmd>redo<cr>", desc = "ReDo the last action;" },
+        { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from the Terminal to the Normal mode;" },
+        { "!", ":! ", desc = "System Command Line;" },
       },
       dependencies = {
         'nvim-tree/nvim-web-devicons',
@@ -728,6 +736,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-cmdline',
         'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-vsnip',
       },
     },
     --]==]
@@ -743,36 +752,21 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             section_separators = {
               left = "",
               right = "",
-            }, --section_separators
+            },
             component_separators = {
               left = "",
               right = "",
-            }, --component_separators
-            disabled_filetypes = {
-            }, --disabled_filetypes
+            },
             always_divide_middle = true,
             globalstatus = false,
-          }, --options
+          },
           sections = {
-            lualine_a = { "filetype", { "filename", path = 0 }, },
-            lualine_b = { "location", "progress", },
-            lualine_c = {
+            lualine_a = { { "filename", path = 2 }, },
+            lualine_b = {
               { "mode", fmt = function(str) return "m"..str:sub(1,1) end },
               { "winnr", fmt = function(str) return "w"..str end },
-            },
-          }, --sections
-          inactive_sections = {
-            lualine_a = {},
-            lualine_b = {},
-            lualine_c = {},
-            lualine_x = {},
-            lualine_y = {},
-            lualine_z = {},
-          }, --inactive_sections
-          tabline = {
-          }, --tabline
-          extensions = {
-          }, --extensions
+            }
+          },
         })
       end
     },
@@ -782,17 +776,13 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       lazy = false,
     },
     {
-      "f-person/git-blame.nvim",
-      enable = true,
+      'winston0410/range-highlight.nvim',
+      enabled = true,
       lazy = true,
-      keys = {
-        { '<leader>vg', '<cmd>GitBlameToggle<cr>', desc = 'git blame toggle ;' },
-      },
-      opts = {
-        enabled = false,
-        message_template = " <summary> • <date> • <author> • <<sha>>",
-        date_format = "%m-%d-%Y %H:%M:%S",
-        virtual_text_column = 1,
+      event = 'VeryLazy',
+      config = true,
+      dependencies = {
+        'winston0410/cmd-parser.nvim',
       },
     },
     --]==]
@@ -800,7 +790,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
     {
       'akinsho/bufferline.nvim',
       version = "*",
-      enable = true,
+      enabled = true,
       lazy = true,
       event = "BufEnter",
       dependencies = 'nvim-tree/nvim-web-devicons',
@@ -850,12 +840,17 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         })
       end,
       keys = {
-        { "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "switch to the picked buffer;" },
-        { '<leader>bc', '<cmd>BufferLinePickClose<cr>', desc = "close the picked buffer;" },
-        { "<leader>bm", "<cmd>BufferLineMoveNext<cr>", desc = "move buffer next;" },
-        { "<leader>bM", "<cmd>BufferLineMovePrev<cr>", desc = "move buffer prev;" },
-        { "gb", "<cmd>BufferLineCycleNext<cr>", desc = "switch to the next buffer;" },
-        { "gB", "<cmd>BufferLineCyclePrev<cr>", desc = "switch to the prev buffer;" },
+        -- pick
+        { '<leader>bpd', '<cmd>BufferLinePickClose<cr>', desc = "Buffer Pick Deletion;" },
+        { "<leader>bgp", "<cmd>BufferLinePick<cr>", desc = "Buffer Goto Picked;" },
+        -- move
+        { "<leader>bmb", "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Backward;" },
+        { "<leader>bmf", "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Forward;" },
+        -- goto
+        { "<leader>bgb", "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Go Backward;" },
+        { "<leader>bgf", "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Go Forward;" },
+        { "gb", "<cmd>BufferLineCycleNext<cr>", desc = "Go Buffer Forward;" },
+        { "gB", "<cmd>BufferLineCyclePrev<cr>", desc = "Go Buffer Backward;" },
       },
     },
     {
@@ -863,7 +858,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       enabled = true,
       lazy = true,
       keys = {
-        { 'gd', '<cmd>Bdelete<cr>', desc = "quit the current buffer;" },
+        { 'gd', '<cmd>Bdelete<cr>', desc = "Buffer Deletion;" },
+        { '<leader>bd', '<cmd>Bdelete<cr>', desc = "Buffer Deletion;" },
       },
     },
     --]==]
@@ -952,12 +948,12 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
       enabled = true,
       lazy = true,
       keys = {
-        { "<leader>ww", "<cmd>VimwikiIndex<cr>", desc = "open wiki index;" },
-        { "<leader>wv", "<cmd>VimwikiCheckLinks<cr>", desc = "vet wiki links;" },
-        { "<leader>wl", "<cmd>VimwikiGenerateLinks<cr>", desc = "make links to each file;" },
-        { "<leader>wc", "<cmd>VimwikiTOC<cr>", desc = "make table of contents in this file;" },
-        { "<leader>wg", "<cmd>VimwikiGoto<cr>", desc = "find and open file;" },
-        { "<leader>wr", "<cmd>VimwikiRenameLink<cr>", desc = "rename the current file link;" },
+        { "<leader>kw", "<cmd>VimwikiIndex<cr>", desc = "KnowledgeBase Wiki index;" },
+        { "<leader>kv", "<cmd>VimwikiCheckLinks<cr>", desc = "KnowledgeBase Vet links;" },
+        { "<leader>kl", "<cmd>VimwikiGenerateLinks<cr>", desc = "KnowledgeBase Link generation;" },
+        { "<leader>kc", "<cmd>VimwikiTOC<cr>", desc = "KnowledgeBase contents table in this file;" },
+        { "<leader>kg", "<cmd>VimwikiGoto<cr>", desc = "KnowledgeBase Goto a file;" },
+        { "<leader>kr", "<cmd>VimwikiRenameLink<cr>", desc = "KnowledgeBase Rename the current file link;" },
       },
       init = function()
         vim.cmd([[
@@ -976,6 +972,110 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         }
       end,
     },
+    {
+      "jghauser/papis.nvim",
+      enabled = false,
+      lazy = true,
+      event = 'VeryLazy',
+      dependencies = {
+        "nvim-telescope/telescope.nvim",
+        "hrsh7th/nvim-cmp",
+        "kkharji/sqlite.lua",
+        "MunifTanjim/nui.nvim",
+        "pysan3/pathlib.nvim",
+        "nvim-neotest/nvim-nio",
+      },
+      config = function()
+        require("papis").setup({
+          -- Your configuration goes here
+        })
+      end,
+    },
+    {
+      "epwalsh/obsidian.nvim",
+      version = "*",
+      enabled = false,
+      lazy = true,
+      keys = {
+        { '<leader>do', '<cmd>ObsidianOpen<cr>', desc = "DatabaseOpen page;" },
+        { '<leader>df', '<cmd>ObsidianQuickSwitch<cr>', desc = "DatabaseFind page;" },
+        { '<leader>dd', '<cmd>ObsidianToday<cr>', desc = "DatabaseDiary page for today;" },
+        { '<leader>dl', '<cmd>ObsidianLink<cr>', desc = "DatabaseLink the selected text to a page;" },
+        { '<leader>dn', '<cmd>ObsidianNewFromTemplate<cr>', desc = "DatabaseNew page;" },
+        { '<leader>dt', '<cmd>ObsidianTemplate<cr>', desc = "DatabaseTemplate;" },
+        { '<leader>di', '<cmd>ObsidianPasteImg<cr>', desc = "DatabasePasteImage;" },
+        { '<leader>dr', '<cmd>ObsidianRename<cr>', desc = "DatabaseRename;" },
+      },
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+        'nvim-telescope/telescope.nvim',
+        'hrsh7th/nvim-cmp',
+        'nvim-treesitter/nvim-treesitter',
+      },
+      opts = {
+        workspaces = {
+          {
+            name = "LivaNota",
+            path = "~/Documents/LivaNota",
+            overrides = {
+              notes_subdir = 'Nota',
+            },
+          },
+        },
+        notes_subdir = 'Nota',
+        new_notes_location = "Nota",
+        daily_notes = {
+          folder = "Liva",
+          date_format = "%Y-%m-%d",
+          default_tags = { "Liva" },
+          template = 'Liva'
+        },
+        templates = {
+          folder = "Temp",
+          date_format = "%Y-%m-%d",
+          time_format = "%H:%M",
+          substitutions = {},
+        },
+        ui = {
+          enable = false,
+          update_debounce = 1024,
+          max_file_length = 1024,
+        },
+        preferred_link_style = 'markdown',
+      },
+    },
+    {
+      'IlyasYOY/obs.nvim',
+      enabled = false,
+      lazy = false,
+      dependencies = {
+        "IlyasYOY/coredor.nvim",
+        "nvim-lua/plenary.nvim",
+        "nvim-telescope/telescope.nvim",
+      },
+      keys = {
+        { '<leader>dn', '<cmd>ObsNvimFollowLink<cr>', desc = 'ObsNvimFollowLink' },
+        { '<leader>dr', '<cmd>ObsNvimRandomNote<cr>', desc = 'ObsNvimRandomNote' },
+        { '<leader>dN', '<cmd>ObsNvimNewNote<cr>', desc = 'ObsNvimNewNote' },
+        { '<leader>dy', '<cmd>ObsNvimCopyObsidianLinkToNote<cr>', desc = 'ObsNvimCopyObsidianLinkToNote' },
+        { '<leader>do', '<cmd>ObsNvimOpenInObsidian<cr>', desc = 'ObsNvimOpenInObsidian' },
+        { '<leader>dd', '<cmd>ObsNvimDailyNote<cr>', desc = 'ObsNvimDailyNote' },
+        { '<leader>dw', '<cmd>ObsNvimWeeklyNote<cr>', desc = 'ObsNvimWeeklyNote' },
+        { '<leader>dr', '<cmd>ObsNvimRename<cr>', desc = 'ObsNvimRename' },
+        { '<leader>dT', '<cmd>ObsNvimTemplate<cr>', desc = 'ObsNvimTemplate' },
+        { '<leader>dM', '<cmd>ObsNvimMove<cr>', desc = 'ObsNvimMove' },
+        { '<leader>db', '<cmd>ObsNvimBacklinks<cr>', desc = 'ObsNvimBacklinks' },
+        { '<leader>df', '<cmd>ObsNvimFindNote<cr>', desc = 'ObsFind file;' },
+        { '<leader>dg', '<cmd>ObsNvimFindInNotes<cr>', desc = 'ObsGrep text;' },
+      },
+      config = function()
+        require('obs').setup({
+          vault_home = "~/Documents/LivaNota",
+          vault_name = "LivaNota",
+          journal = { template_name = "Liva" },
+        })
+      end,
+    },
     --]==]
     -- [==[ localization
     {
@@ -987,6 +1087,105 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         })
       end
     },
+    --]==]
+    -- [==[ web and networking
+    {
+      "oysandvik94/curl.nvim",
+      keys = {
+        { "<leader>nco", "<cmd>CurlOpen<cr>", desc = "NetCurlOpen local scope;" },
+        { "<leader>ncg", "<cmd>CurlOpen global<cr>", desc = "NetCurlOpen local scope;" },
+        { "<leader>ncc", "<cmd>CurlClose<cr>", desc = "NetCurlClose current scope;" },
+      },
+      dependencies = "nvim-lua/plenary.nvim",
+      config = true,
+    },
+    {
+      'coffebar/transfer.nvim',
+      enabled = false,
+      lazy = true,
+      keys = {
+        {
+          "<leader>nti",
+          "<cmd>TransferInit<cr>",
+          desc = "NetworkTransfer Init/Edit Deployment config",
+          -- icon = { color = "green", icon = "" },
+        },
+        {
+          "<leader>ntd",
+          "<cmd>TransferDownload<cr>",
+          desc = "NetworkTransferDownload from the remote server (scp);",
+          -- icon = { color = "green", icon = "󰇚" },
+        },
+        {
+          "<leader>ntu",
+          "<cmd>TransferUpload<cr>",
+          desc = "NetworkTransferUpload onto the remote server (scp)",
+          -- icon = { color = "green", icon = "󰕒" },
+        },
+        {
+          "<leader>ntr",
+          "<cmd>TransferRepeat<cr>",
+          desc = "NetworkTransfer command Repeat;",
+          -- icon = { color = "green", icon = "󰑖" },
+        },
+        {
+          "<leader>ntf",
+          "<cmd>DiffRemote<cr>",
+          desc = "NetoworkTransferDIFF a file with the remote server (scp);",
+          -- icon = { color = "green", icon = "" },
+        },
+      },
+      config = function()
+        require('transfer').setup({})
+      end
+    },
+    --]==]
+    -- [==[ source control
+    {
+      "chrisgrieser/nvim-tinygit",
+      enabled = false,
+      lazy = true,
+      event = 'VeryLazy',
+      dependencies = {
+        "stevearc/dressing.nvim",
+        "nvim-telescope/telescope.nvim",
+        "rcarriga/nvim-notify",
+      },
+      config = function()
+        local tinygit = require('tinygit')
+        tinygit.setup({})
+      end,
+    },
+    {
+      "f-person/git-blame.nvim",
+      enabled = true,
+      lazy = true,
+      keys = {
+        { '<leader>vg', '<cmd>GitBlameToggle<cr>', desc = 'git blame toggle ;' },
+      },
+      opts = {
+        enabled = false,
+        message_template = " <summary> • <date> • <author> • <<sha>>",
+        date_format = "%m-%d-%Y %H:%M:%S",
+        virtual_text_column = 1,
+      },
+      init = function()
+        vim.g.gitblame_highlight_group = 'Question'
+        vim.g.gitblame_date_format = '%r'
+        vim.g.gitblame_display_virtual_text = 1
+      end
+    },
+    --]==]
+    -- [==[ misc
+    {
+      'eandrju/cellular-automaton.nvim',
+      enabled = true,
+      lazy = true,
+      keys = {
+        { '<leader>pgl', '<cmd>CellularAutomaton game_of_life<cr>', desc = 'PlayGameOfLife;' },
+        { '<leader>pgr', '<cmd>CellularAutomaton make_it_rain<cr>', desc = 'PlayGameOfRain;' },
+      },
+    }
     --]==]
   },
   -- colorscheme that will be used when installing plugins;
@@ -1001,35 +1200,6 @@ if not vLazyPcallSuccess then
     { "\nPress any key to exit..." },
   }, true, {})
 end
-
---]=]
-
--- [=[ keymap
-
--- [==[ normal mode
-
-vim.keymap.set("n", "u", "<cmd>undo<cr>", { desc = "revert the last action;" })
-vim.keymap.set("n", "U", "<cmd>redo<cr>", { desc = "revert the last undo;" })
-vim.keymap.set("n", "Г", "<cmd>redo<cr>", { desc = "revert the last undo;" })
-
-vim.keymap.set("n", "<c-w><c-e>", "<cmd>Explore<cr>", { desc = "open window of explorer" })
-vim.keymap.set("n", "<c-w><c-t>", "<cmd>split term://$SHELL<cr>", { desc = "open window of terminal" })
-
-vim.keymap.set("n", "T", "<cmd>tabnew<cr>", { desc = "open a new tab" })
-vim.keymap.set("n", "gt", "<cmd>tabn<cr>", { desc = "switch to the next tab" })
-vim.keymap.set("n", "gT", "<cmd>tabp<cr>", { desc = "switch to the prev tab;" })
-vim.keymap.set("n", "<leader>tm", "<cmd>tabm +1<cr>", { desc = "move the current tab forward;" })
-vim.keymap.set("n", "<leader>tM", "<cmd>tabm -1<cr>", { desc = "move the current tab backward;" })
-
-vim.keymap.set("n", "!", ":! ", { desc = "system command line;" })
-
---]==]
-
--- [==[ terminal mode
-
-vim.keymap.set('t', '<c-]>', '<c-\\><c-n>', { desc = "switch from terminal to normal mode;" })
-
---]==]
 
 --]=]
 
