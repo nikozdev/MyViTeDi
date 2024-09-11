@@ -31,23 +31,21 @@ vim.opt["visualbell"] = true
 
 vim.opt["lazyredraw"] = true
 
---[==[ manage views
-
-vim.cmd([[
-augroup remember_folds
-autocmd!
-autocmd BufWinLeave *.py mkview
-autocmd BufWinEnter *.py silent! loadview
-autocmd BufWinLeave *.cpp mkview
-autocmd BufWinEnter *.cpp silent! loadview
-autocmd BufWinLeave *.hpp mkview
-autocmd BufWinEnter *.hpp silent! loadview
-autocmd BufWinLeave *.lua mkview
-autocmd BufWinEnter *.lua silent! loadview
-augroup END
-]])
-
+local function fSetCodeFolder()
+    if vim.wo.foldmethod ~= 'diff' then
+        vim.wo.foldmethod = 'syntax'
+        vim.wo.foldminlines = 4
+    end
+end
+--[==[
+vim.api.nvim_create_augroup("CodeFolder", { clear = true })
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  group = "CodeFolder",
+  pattern = "*",
+  callback = fSetCodeFolder,
+})
 --]==]
+
 
 --]=]
 
@@ -230,9 +228,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             'williamboman/mason.nvim',
             config = true,
             lazy = true,
-            keys = {
-                { '<leader>lm', '<cmd>Mason<cr>', desc = 'LanguageMason interface;' },
-            },
         },
         {
             'williamboman/mason-lspconfig.nvim',
@@ -240,6 +235,9 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             lazy = true,
             event = 'VeryLazy',
             cmd = 'Mason',
+            keys = {
+                { '<leader>lm', '<cmd>Mason<cr>', desc = 'LanguageMason interface;' },
+            },
             dependencies = {
                 'williamboman/mason.nvim',
             },
@@ -247,12 +245,15 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 require("mason-lspconfig").setup({
                     automatic_installation = false,
                     ensure_installed = {
+                        "bashls",
                         "marksman",
+                        "html",
+                        "lua_ls",
                         "clangd",
+                        "pyright",
                     },
                 })
                 -- [=[ language server protocol
-
                 local pLspConfig = require("lspconfig")
                 local pLspConfigTable = require("lspconfig.configs")
                 local pLspConfigUtils = require("lspconfig.util")
@@ -283,21 +284,32 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     local fForLspAttach = function(vClient, vBufferIndex)
                         fUpdLeader()
 
-                        vim.keymap.set('n', '<leader>lgf', '<cmd>ClangdSwitchSourceHeader<cr>', { desc = "GoTo Source|Header;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lgd', vim.lsp.buf.definition, { desc = "GoTo Definition|Declaration;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lgi', vim.lsp.buf.implementation, { desc = "GoTo Implementation;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lj', '<cmd>ClangdSwitchSourceHeader<cr>', { desc = "Lsp Jump Between Source|Header;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lgf', '<cmd>ClangdSwitchSourceHeader<cr>', { desc = "Lsp GoTo Source|Header;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>ld', vim.lsp.buf.definition, { desc = "Lsp Definition|Declaration;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lgd', vim.lsp.buf.definition, { desc = "Lsp GoTo Definition|Declaration;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lgi', vim.lsp.buf.implementation, { desc = "Lsp GoTo Implementation;", buffer = vBufferIndex })
 
-                        vim.keymap.set('n', '<leader>lsr', vim.lsp.buf.references, { desc = "Show References", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lss', vim.lsp.buf.workspace_symbol, { desc = "Show WorkSpace Symbols;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lsh', vim.lsp.buf.hover, { desc = "Show Hovering Information;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lsd', vim.diagnostic.open_float, { desc = "Show Diagnostics;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lsi', vim.lsp.buf.incoming_calls, { desc = "Show InComing Calls;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lso', vim.lsp.buf.outgoing_calls, { desc = "Show OutGoing Calls;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lsw', vim.lsp.buf.list_workspace_folders, { desc = "Show Workspace Folders;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lst', vim.lsp.buf.typehierarchy, { desc = "Show Type Hierarchy;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, { desc = "Lsp References", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lsr', vim.lsp.buf.references, { desc = "Lsp Show References", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lw', vim.lsp.buf.workspace_symbol, { desc = "Lsp WorkSpace Symbols;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lss', vim.lsp.buf.workspace_symbol, { desc = "Lsp Show WorkSpace Symbols;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lsh', vim.lsp.buf.hover, { desc = "Lsp Show Hovering Information;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lh', vim.lsp.buf.hover, { desc = "Lsp Help;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lsd', vim.diagnostic.open_float, { desc = "Lsp Show Diagnostics;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, { desc = "Lsp Errors;", buffer = vBufferIndex })
 
-                        vim.keymap.set('n', '<leader>lrn', vim.lsp.buf.rename, { desc = "Run Renaming;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lrf', vim.lsp.buf.format, { desc = "Run Formatter;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lsi', vim.lsp.buf.incoming_calls, { desc = "Lsp Show InComing Calls;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>li', vim.lsp.buf.incoming_calls, { desc = "Lsp InComing Calls;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lso', vim.lsp.buf.outgoing_calls, { desc = "Lsp Show OutGoing Calls;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lo', vim.lsp.buf.outgoing_calls, { desc = "Lsp OutGoing Calls;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lsw', vim.lsp.buf.list_workspace_folders, { desc = "Lsp Show Workspace Folders;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>ll', vim.lsp.buf.list_workspace_folders, { desc = "Lsp List Workspace Folders;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lst', vim.lsp.buf.typehierarchy, { desc = "Lsp Show Type Hierarchy;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lt', vim.lsp.buf.typehierarchy, { desc = "Lsp Type Hierarchy;", buffer = vBufferIndex })
+
+                        vim.keymap.set('n', '<leader>ln', vim.lsp.buf.rename, { desc = "Lsp reName;", buffer = vBufferIndex })
+                        vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = "Lsp Format;", buffer = vBufferIndex })
                     end
                     local fForLspAttachWas = vConfigTable.on_attach
                     if fForLspAttachWas ~= nil then
@@ -319,95 +331,27 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         vim.api.nvim_echo("The LSP config \"" .. vName .. "\" was not found")
                     end
                 end
-
+                -- [==[ running setup
                 fRunLspSetup("bashls")
 
                 fRunLspSetup("marksman")
                 fRunLspSetup("html")
 
-                fRunLspSetup("clangd")
-
-                fRunLspSetup("pyright")
-
                 fRunLspSetup("lua_ls", {
+                    root_dir = vim.loop.cwd,
                     settings = {
                         Lua = {
-                            diagnostics = {
-                                -- recognize these globals
-                                globals = {
-                                    "vim"
-                                },
-                            },
-                            workspace = {
-                                -- be aware of the neovim runtime libs
-                                library = vim.api.nvim_get_runtime_file("", true),
-                            },
-                            telemetry = {
-                                enable = false
-                            },
+                            runtime = { version = 'LuaJIT' },
+                            diagnostics = { globals = { "vim" } },
+                            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+                            telemetry = { enable = false },
 
                         },
                     },
                 })
-
-                fRunLspSetup("rust_analyzer", {
-                    settings = {
-                        ["rust-analyzer"] = {
-                            imports = {
-                                granularity = {
-                                    group = "module",
-                                },
-                                prefix = "self",
-                            },
-                            cargo = {
-                                buildScripts = {
-                                    enable = true,
-                                },
-                            },
-                            procMacro = {
-                                enable = true
-                            },
-                        }
-                    }
-                })
-
-                fRunLspSetup("gopls")
-
-                local mojo_ls = {
-                    "czheo/mojo.vim",
-                    ft = { "mojo" },
-                    init = function()
-                        vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-                            pattern = { "*.mojo" },
-                            callback = function()
-                                if vim.bo.filetype ~= "mojo" then
-                                    vim.bo.filetype = "mojo"
-                                end
-                            end,
-                        })
-
-                        vim.api.nvim_create_autocmd("FileType", {
-                            pattern = "mojo",
-                            callback = function()
-                                local modular = vim.env.MODULAR_HOME
-                                local lsp_cmd = modular .. "/pkg/packages.modular.com_mojo/bin/mojo-lsp-server"
-
-                                vim.bo.expandtab = true
-                                vim.bo.shiftwidth = 4
-                                vim.bo.softtabstop = 4
-
-                                vim.lsp.start({
-                                    name = "mojo",
-                                    cmd = { lsp_cmd },
-                                })
-                            end,
-                        })
-                    end,
-                }
-                mojo_ls.init()
-
-                fRunLspSetup("ts_ls")
-
+                fRunLspSetup("clangd")
+                fRunLspSetup("pyright")
+                --]==]
                 --]=]
             end,
         },
@@ -423,30 +367,20 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             end,
         },
         {
-            'czheo/mojo.vim',
-            enabled = false,
-            lazy = true,
-            event = "VeryLazy",
-            ft = "mojo",
-        },
-        {
             'mfussenegger/nvim-dap',
             enabled = true,
             lazy = true,
             cmd = 'DapNew',
             config = function()
                 local pDap = require("dap")
-
                 pDap.adapters.cppdbg = {
                     id = "cppdbg",
                     type = "executable",
                     command = "/home/nikozdev/.local/share/"
                     .. "cpptools/extension/debugAdapters/bin/OpenDebugAD7",
                 }
-
                 pDap.setupCommands = {
                 }
-
                 pDap.configurations.cpp = {
                     {
                         name = "launch",
@@ -473,51 +407,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         cwd = "${workspaceFolder}",
                     },
                 }
-            end,
-        },
-        {
-            "neoclide/coc.nvim",
-            branch = "release",
-            enabled = false,
-            lazy = true,
-            event = { "BufReadPre", "BufNewFile" },
-            config = function()
-                vim.g.coc_global_extensions = {
-                    "coc-snippets",
-                    "coc-pairs",
-                    "coc-tsserver",
-                    "coc-eslint",
-                    "coc-prettier",
-                    "coc-json",
-                }
-                vim.cmd [[
-                inoremap <silent><expr> <TAB>
-                \ coc#pum#visible() ? coc#pum#next(1) :
-                \ CheckBackspace() ? "\<Tab>" :
-                \ coc#refresh()
-                inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
-                function! CheckBackspace() abort
-                let col = col('.') - 1
-                return !col || getline('.')[col - 1]  =~# '\s'
-                endfunction
-
-                " Use <c-space> to trigger completion.
-                inoremap <silent><expr> <c-space> coc#refresh()
-
-                " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-                " Coc only does snippet and additional edit on confirm.
-                inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-                nmap <silent> <leader>c[ <Plug>(coc-diagnostic-prev)
-                nmap <silent> <leader>c] <Plug>(coc-diagnostic-next)
-
-                nmap <silent> <leader>cd <Plug>(coc-definition)
-                nmap <silent> <leader>ci <Plug>(coc-implementation)
-                nmap <silent> <leader>cr <Plug>(coc-references)
-
-                nnoremap <silent> <F3> :CocCommand clangd.switchSourceHeader<CR>
-                ]]
             end,
         },
         --]==]
@@ -635,11 +524,21 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     end,
                     desc = "Buffer local keymaps (which-key)",
                 },
+                -- jumps
+                { "gj", "<c-o>", { desc = "Go Jump Out;" } },
+                { "gJ", "<c-i>", { desc = "Go Jump In;" } },
+                { "<leader>jo", "<c-o>", { desc = "Jump Out;" } },
+                { "<leader>ji", "<c-i>", { desc = "Jump In;" } },
+                { "<leader>jb", "<c-o>", { desc = "Jump Backward;" } },
+                { "<leader>jf", "<c-i>", { desc = "Jump Forward;" } },
+                { "<leader>jl", "<cmd>jumps<cr>", { desc = "Jump List;" } },
                 -- wins
-                { "gw", "<cmd>tabn<cr>", { desc = "Go Win Forward;" } },
-                { "gW", "<cmd>tabp<cr>", { desc = "Go Win Backward;" } },
+                { "gw", "<cmd>wNext<cr>", { desc = "Go Win Forward;" } },
+                { "gW", "<cmd>wprev<cr>", { desc = "Go Win Backward;" } },
                 { "<leader>wgf", "<cmd>wincmd r<cr>", { desc = "Win Go Forward;" } },
+                { "<leader>wf", "<cmd>wincmd r<cr>", { desc = "Win Forward;" } },
                 { "<leader>wgb", "<cmd>wincmd R<cr>", { desc = "Win Go Backward;" } },
+                { "<leader>wb", "<cmd>wincmd R<cr>", { desc = "Win Backward;" } },
                 { "<leader>wgh", "<cmd>wincmd h<cr>", { desc = "Win Goto Left;" } },
                 { "<leader>wgj", "<cmd>wincmd j<cr>", { desc = "Win Goto Down;" } },
                 { "<leader>wgk", "<cmd>wincmd k<cr>", { desc = "Win Goto Up;" } },
@@ -651,16 +550,25 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { "<leader>wml", "<cmd>wincmd L<cr>", { desc = "Win Move Right;" } },
                 { "<leader>wmt", "<cmd>wincmd T<cr>", { desc = "Win Move to the newTab;" } },
 
-                { "<leader>wct", "<cmd>tabnew<cr>", { desc = "Win Open Tab;" } },
-                { "<leader>wch", "<cmd>split<cr>", { desc = "Win Open Hsplit;" } },
-                { "<leader>wcv", "<cmd>vsplit<cr>", { desc = "Win Open Vsplit;" } },
-                { "<leader>wcs", "<cmd>edit term://$SHELL<cr>", { desc = "Win Open Shell;" } },
-                { "<leader>wce", "<cmd>Explore<cr>", { desc = "Win Open Explorer;" } },
-                { "<leader>wd", "<cmd>close<cr>", { desc = "Win Deletion;" } },
+                { "<leader>wct", "<cmd>tabnew<cr>", { desc = "Win Create Tab;" } },
+                { "<leader>wt", "<cmd>tabnew<cr>", { desc = "Win Tab;" } },
+                { "<leader>wch", "<cmd>split<cr>", { desc = "Win Create Hsplit;" } },
+                { "<leader>wh", "<cmd>split<cr>", { desc = "Win Hsplit;" } },
+                { "<leader>wcv", "<cmd>vsplit<cr>", { desc = "Win Create Vsplit;" } },
+                { "<leader>wv", "<cmd>vsplit<cr>", { desc = "Win Vsplit;" } },
+
+                { "<leader>wcs", "<cmd>edit term://$SHELL<cr>", { desc = "Win Create Shell;" } },
+                { "<leader>ws", "<cmd>edit term://$SHELL<cr>", { desc = "Win Shell;" } },
+                { "<leader>wce", "<cmd>Explore<cr>", { desc = "Win Create Explorer;" } },
+                { "<leader>we", "<cmd>Explore<cr>", { desc = "Win Explorer;" } },
+
+                { "<leader>wd", "<cmd>close<cr>", { desc = "Win Delete;" } },
                 -- tabs
                 { "gt", "<cmd>tabn<cr>", { desc = "Go Tab Forward;" } },
                 { "gT", "<cmd>tabp<cr>", { desc = "Go Tab Backward;" } },
+                { "<leader>tf", "<cmd>tabn<cr>", { desc = "Tab Forward;" } },
                 { "<leader>tgf", "<cmd>tabn<cr>", { desc = "Tab Go Forward;" } },
+                { "<leader>tb", "<cmd>tabp<cr>", { desc = "Tab Backward;" } },
                 { "<leader>tgb", "<cmd>tabp<cr>", { desc = "Tab Go Backward;" } },
 
                 { "<leader>tmf", "<cmd>tabm +1<cr>", { desc = "Tab Move forward;" } },
@@ -675,6 +583,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { "Г", "<cmd>redo<cr>", desc = "ReDo the last action;" },
                 { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from the Terminal to the Normal mode;" },
                 { "!", ":! ", desc = "System Command Line;" },
+                { 'zS', fSetCodeFolder, desc = 'Setup code folding settings;' },
             },
             dependencies = {
                 'nvim-tree/nvim-web-devicons',
@@ -687,7 +596,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             'hrsh7th/nvim-cmp',
             enabled = true,
             lazy = true,
-            event = "BufEnter",
+            event = { 'InsertEnter', 'CmdlineEnter' },
             config = function()
                 local pCmp = require("cmp")
                 pCmp.setup({
@@ -702,11 +611,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     },
                     mapping = pCmp.mapping.preset.insert({
                         ["<c-space>"] = pCmp.mapping.complete({}),
+                        ["<c-e>"] = pCmp.mapping.abort(),
                         ["<c-b>"] = pCmp.mapping.scroll_docs(0-4),
                         ["<c-f>"] = pCmp.mapping.scroll_docs(0+4),
                         ["<c-k>"] = pCmp.mapping.select_prev_item({}),
                         ["<c-j>"] = pCmp.mapping.select_next_item({}),
-                        ["<c-e>"] = pCmp.mapping.abort(),
                         ["<s-tab>"] = pCmp.mapping.select_prev_item({}),
                         ["<tab>"] = pCmp.mapping.select_next_item({}),
                         ["<cr>"] = pCmp.mapping.confirm({ select = true }),
@@ -742,57 +651,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         --]==]
         -- [==[ view
         {
-            'nvim-lualine/lualine.nvim',
-            enabled = true,
-            config = function()
-                require("lualine").setup({
-                    options = {
-                        theme = "nord",
-                        icons_enabled = true,
-                        section_separators = {
-                            left = "",
-                            right = "",
-                        },
-                        component_separators = {
-                            left = "",
-                            right = "",
-                        },
-                        always_divide_middle = true,
-                        globalstatus = false,
-                    },
-                    sections = {
-                        lualine_a = { { "filename", path = 2 }, },
-                        lualine_b = {
-                            { "mode", fmt = function(str) return "m"..str:sub(1,1) end },
-                            { "winnr", fmt = function(str) return "w"..str end },
-                        }
-                    },
-                })
-            end
-        },
-        {
-            'vim-scripts/restore_view.vim',
-            enabled = true,
-            lazy = false,
-        },
-        {
-            'winston0410/range-highlight.nvim',
-            enabled = true,
-            lazy = true,
-            event = 'VeryLazy',
-            config = true,
-            dependencies = {
-                'winston0410/cmd-parser.nvim',
-            },
-        },
-        --]==]
-        -- [==[ navigation
-        {
             'akinsho/bufferline.nvim',
             version = "*",
             enabled = true,
             lazy = true,
-            event = "BufEnter",
+            event = { 'BufNew', 'TabNew' },
             dependencies = 'nvim-tree/nvim-web-devicons',
             init = function()
                 vim.opt.termguicolors = true
@@ -854,6 +717,55 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             },
         },
         {
+            'nvim-lualine/lualine.nvim',
+            enabled = true,
+            lazy = true,
+            event = 'VeryLazy',
+            config = function()
+                require("lualine").setup({
+                    options = {
+                        theme = "nord",
+                        icons_enabled = true,
+                        section_separators = {
+                            left = "",
+                            right = "",
+                        },
+                        component_separators = {
+                            left = "",
+                            right = "",
+                        },
+                        always_divide_middle = true,
+                        globalstatus = false,
+                    },
+                    sections = {
+                        lualine_a = { { "filename", path = 2 }, },
+                        lualine_b = {
+                            { "mode", fmt = function(str) return "m"..str:sub(1,1) end },
+                            { "winnr", fmt = function(str) return "w"..str end },
+                        }
+                    },
+                })
+            end
+        },
+        {
+            'vim-scripts/restore_view.vim',
+            enabled = true,
+            lazy = true,
+            event = 'VeryLazy',
+        },
+        {
+            'winston0410/range-highlight.nvim',
+            enabled = true,
+            lazy = true,
+            event = 'CmdlineEnter',
+            config = true,
+            dependencies = {
+                'winston0410/cmd-parser.nvim',
+            },
+        },
+        --]==]
+        -- [==[ navigation
+        {
             'famiu/bufdelete.nvim',
             enabled = true,
             lazy = true,
@@ -869,6 +781,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             enabled = false,
             lazy = true,
             event = "BufReadPre *.md",
+            ft = 'md',
             config = function()
                 require("glow").setup({
                     glow_path = "/usr/bin/glow",
@@ -887,8 +800,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             'RaafatTurki/hex.nvim',
             enabled = true,
             lazy = true,
-            cmd = { 'HexDump' },
-            ft = { 'xxd' },
+            cmd = 'HexDump',
+            ft = 'xxd',
             config = function()
                 require('hex').setup({})
             end,
@@ -907,9 +820,10 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         -- [==[ organisation and productivity
         {
             "nvim-neorg/neorg",
-            enabled = false,
-            lazy = false,
             version = "*",
+            enabled = false,
+            lazy = true,
+            cmd = 'Neorg',
             dependencies = {
                 "vhyrro/luarocks.nvim",
                 "nvim-lua/plenary.nvim",
@@ -931,10 +845,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             'nvim-orgmode/orgmode',
-            enabled = false,
+            enabled = true,
             lazy = true,
             event = 'VeryLazy',
-            ft = { 'org' },
+            ft = 'org',
+            keys = { '<leader>oa', '<leader>oc' },
             config = function()
                 -- Setup orgmode
                 require('orgmode').setup({
@@ -963,32 +878,13 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 ]])
                 vim.g.vimwiki_list = {
                     {
-                        --path = "~/vimwiki/",
+                        path = vim.fn.stdpath('data') .. "/vimwiki/",
                         --syntax = "wiki",
-                        --ext = ".wiki",
+                        ext = ".wiki",
                         on_attach = function(vClient, vBufferIndex)
                         end,
                     },
                 }
-            end,
-        },
-        {
-            "jghauser/papis.nvim",
-            enabled = false,
-            lazy = true,
-            event = 'VeryLazy',
-            dependencies = {
-                "nvim-telescope/telescope.nvim",
-                "hrsh7th/nvim-cmp",
-                "kkharji/sqlite.lua",
-                "MunifTanjim/nui.nvim",
-                "pysan3/pathlib.nvim",
-                "nvim-neotest/nvim-nio",
-            },
-            config = function()
-                require("papis").setup({
-                    -- Your configuration goes here
-                })
             end,
         },
         {
@@ -997,14 +893,14 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             enabled = false,
             lazy = true,
             keys = {
-                { '<leader>do', '<cmd>ObsidianOpen<cr>', desc = "DatabaseOpen page;" },
-                { '<leader>df', '<cmd>ObsidianQuickSwitch<cr>', desc = "DatabaseFind page;" },
-                { '<leader>dd', '<cmd>ObsidianToday<cr>', desc = "DatabaseDiary page for today;" },
-                { '<leader>dl', '<cmd>ObsidianLink<cr>', desc = "DatabaseLink the selected text to a page;" },
-                { '<leader>dn', '<cmd>ObsidianNewFromTemplate<cr>', desc = "DatabaseNew page;" },
-                { '<leader>dt', '<cmd>ObsidianTemplate<cr>', desc = "DatabaseTemplate;" },
-                { '<leader>di', '<cmd>ObsidianPasteImg<cr>', desc = "DatabasePasteImage;" },
-                { '<leader>dr', '<cmd>ObsidianRename<cr>', desc = "DatabaseRename;" },
+                { '<leader>no', '<cmd>ObsidianOpen<cr>', desc = "livaNota Open page;" },
+                { '<leader>nf', '<cmd>ObsidianQuickSwitch<cr>', desc = "livaNota Find page;" },
+                { '<leader>nd', '<cmd>ObsidianToday<cr>', desc = "livaNota Diary page for today;" },
+                { '<leader>nl', '<cmd>ObsidianLink<cr>', desc = "livaNota Link the selected text to a page;" },
+                { '<leader>nn', '<cmd>ObsidianNewFromTemplate<cr>', desc = "livaNota New page;" },
+                { '<leader>nt', '<cmd>ObsidianTemplate<cr>', desc = "livaNota Template;" },
+                { '<leader>ni', '<cmd>ObsidianPasteImg<cr>', desc = "livaNota PasteImage;" },
+                { '<leader>nr', '<cmd>ObsidianRename<cr>', desc = "livaNota Rename;" },
             },
             dependencies = {
                 'nvim-lua/plenary.nvim',
@@ -1044,38 +940,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 preferred_link_style = 'markdown',
             },
         },
-        {
-            'IlyasYOY/obs.nvim',
-            enabled = false,
-            lazy = false,
-            dependencies = {
-                "IlyasYOY/coredor.nvim",
-                "nvim-lua/plenary.nvim",
-                "nvim-telescope/telescope.nvim",
-            },
-            keys = {
-                { '<leader>dn', '<cmd>ObsNvimFollowLink<cr>', desc = 'ObsNvimFollowLink' },
-                { '<leader>dr', '<cmd>ObsNvimRandomNote<cr>', desc = 'ObsNvimRandomNote' },
-                { '<leader>dN', '<cmd>ObsNvimNewNote<cr>', desc = 'ObsNvimNewNote' },
-                { '<leader>dy', '<cmd>ObsNvimCopyObsidianLinkToNote<cr>', desc = 'ObsNvimCopyObsidianLinkToNote' },
-                { '<leader>do', '<cmd>ObsNvimOpenInObsidian<cr>', desc = 'ObsNvimOpenInObsidian' },
-                { '<leader>dd', '<cmd>ObsNvimDailyNote<cr>', desc = 'ObsNvimDailyNote' },
-                { '<leader>dw', '<cmd>ObsNvimWeeklyNote<cr>', desc = 'ObsNvimWeeklyNote' },
-                { '<leader>dr', '<cmd>ObsNvimRename<cr>', desc = 'ObsNvimRename' },
-                { '<leader>dT', '<cmd>ObsNvimTemplate<cr>', desc = 'ObsNvimTemplate' },
-                { '<leader>dM', '<cmd>ObsNvimMove<cr>', desc = 'ObsNvimMove' },
-                { '<leader>db', '<cmd>ObsNvimBacklinks<cr>', desc = 'ObsNvimBacklinks' },
-                { '<leader>df', '<cmd>ObsNvimFindNote<cr>', desc = 'ObsFind file;' },
-                { '<leader>dg', '<cmd>ObsNvimFindInNotes<cr>', desc = 'ObsGrep text;' },
-            },
-            config = function()
-                require('obs').setup({
-                    vault_home = "~/Documents/LivaNota",
-                    vault_name = "LivaNota",
-                    journal = { template_name = "Liva" },
-                })
-            end,
-        },
         --]==]
         -- [==[ localization
         {
@@ -1091,11 +955,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         -- [==[ web and networking
         {
             "oysandvik94/curl.nvim",
-            keys = {
-                { "<leader>nco", "<cmd>CurlOpen<cr>", desc = "NetCurlOpen local scope;" },
-                { "<leader>ncg", "<cmd>CurlOpen global<cr>", desc = "NetCurlOpen local scope;" },
-                { "<leader>ncc", "<cmd>CurlClose<cr>", desc = "NetCurlClose current scope;" },
-            },
+            cmd = "CurlOpen",
             dependencies = "nvim-lua/plenary.nvim",
             config = true,
         },
@@ -1141,11 +1001,42 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         --]==]
         -- [==[ source control
-        {
-            "chrisgrieser/nvim-tinygit",
+        { -- complicated and inconvenient
+            "NeogitOrg/neogit",
             enabled = false,
             lazy = true,
             event = 'VeryLazy',
+            cmd = 'Neogit',
+            keys = {
+                { '<leader>gn', '<cmd>Neogit<cr>', desc = "NeoGit;" },
+            },
+            dependencies = {
+                "nvim-lua/plenary.nvim",
+                "sindrets/diffview.nvim",
+                "nvim-telescope/telescope.nvim",
+            },
+            config = true,
+        },
+        { -- inconvenient
+            "chrisgrieser/nvim-tinygit",
+            enabled = false,
+            lazy = true,
+            keys = function()
+                local tinygit = require('tinygit')
+                local tinygitStatusline = require('tinygit.statusline')
+                return {
+                    { '<leader>ga', tinygit.interactiveStaging, desc = 'Git Add;' },
+                    { '<leader>gc', tinygit.smartCommit, desc = 'Git Commit;' },
+                    { '<leader>gp', tinygit.smartPush, desc = 'Git Push;' },
+                    { '<leader>gm', tinygit.amendOnlyMsg, desc = 'Git Amend Message;' },
+                    { '<leader>gu', tinygit.undoLastCommitOrAmend, desc = 'Git Undo Last;' },
+                    { '<leader>gsa',tinygit.undoLastCommitOrAmend, desc = 'Git Stash Add;' },
+                    { '<leader>gsd',tinygit.undoLastCommitOrAmend, desc = 'Git Stash Del;' },
+                    { '<leader>gh', tinygit.historyFunction, desc = 'Git History;' },
+                    { '<leader>gbl', tinygitStatusline.blame, desc = 'Git Blame;' },
+                    { '<leader>gbr', tinygitStatusline.branchState, desc = 'Git Branch;' },
+                }
+            end,
             dependencies = {
                 "stevearc/dressing.nvim",
                 "nvim-telescope/telescope.nvim",
@@ -1157,11 +1048,34 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             end,
         },
         {
+            'tanvirtin/vgit.nvim',
+            enabled = false,
+            lazy = true,
+            keys = function()
+                local vgit = require('vgit')
+                return {
+                    { '<leader>ghf', vgit.hunk_down, desc = "Git Hunk Forward;" },
+                    { '<leader>ghb', vgit.hunk_up, desc = "Git Hunk Backward;" },
+                    { '<leader>gha', vgit.hunk_stage, desc = "Git Hunk Add;" },
+                    { '<leader>ghu', vgit.hunk_reset, desc = "Git Hunk Undo;" },
+                    { '<leader>ghv', vgit.hunk_preview, desc = "Git Hunk View;" },
+                    { '<leader>gb', vgit.buffer_blame_preview, desc = "Git Blame;" },
+                    { '<leader>gd', vgit.buffer_diff_preview, desc = "Git Diffs;" },
+                    { '<leader>gl', vgit.buffer_history_preview, desc = "Git History;" },
+                    { '<leader>gu', vgit.buffer_reset, desc = "Git Undo;" },
+                }
+            end,
+            dependencies = 'nvim-lua/plenary.nvim',
+            config = function()
+                require('vgit').setup()
+            end,
+        },
+        {
             "f-person/git-blame.nvim",
             enabled = true,
             lazy = true,
             keys = {
-                { '<leader>vg', '<cmd>GitBlameToggle<cr>', desc = 'git blame toggle ;' },
+                { '<leader>gb', '<cmd>GitBlameToggle<cr>', desc = 'Git Blame;' },
             },
             opts = {
                 enabled = false,
@@ -1175,17 +1089,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 vim.g.gitblame_display_virtual_text = 1
             end
         },
-        --]==]
-        -- [==[ misc
-        {
-            'eandrju/cellular-automaton.nvim',
-            enabled = true,
-            lazy = true,
-            keys = {
-                { '<leader>pgl', '<cmd>CellularAutomaton game_of_life<cr>', desc = 'PlayGameOfLife;' },
-                { '<leader>pgr', '<cmd>CellularAutomaton make_it_rain<cr>', desc = 'PlayGameOfRain;' },
-            },
-        }
         --]==]
     },
     -- colorscheme that will be used when installing plugins;
