@@ -1000,51 +1000,45 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         --]==]
         -- [==[ source control
-        { -- complicated and inconvenient
-            "NeogitOrg/neogit",
-            enabled = false,
+        {
+            'lewis6991/gitsigns.nvim',
+            enabled = true,
             lazy = true,
-            event = 'VeryLazy',
-            cmd = 'Neogit',
             keys = {
-                { '<leader>gn', '<cmd>Neogit<cr>', desc = "NeoGit;" },
-            },
-            dependencies = {
-                "nvim-lua/plenary.nvim",
-                "sindrets/diffview.nvim",
-                "nvim-telescope/telescope.nvim",
+                { '<leader>gg', '<cmd>Gitsigns<cr>', desc = "Gitsigns Global" },
+                -- buffers
+                { '<leader>gbo', '<cmd>Gitsigns show<cr>', desc = "Gitsigns Buffer Origin" },
+                { '<leader>go', '<cmd>Gitsigns show<cr>', desc = "Gitsigns Orig" },
+                { '<leader>gbd', '<cmd>Gitsigns diffthis<cr>', desc = "Gitsigns Buffer Differ" },
+                { '<leader>gd', '<cmd>Gitsigns diffthis<cr>', desc = "Gitsigns Diff" },
+                { '<leader>gbs', '<cmd>Gitsigns stage_buffer<cr>', desc = "Gitsigns Stage Buffer" },
+                { '<leader>gbr', '<cmd>Gitsigns reset_buffer<cr>', desc = "Gitsigns Reset Buffer" },
+                -- hunks
+                { '<leader>ghg', '<cmd>Gitsigns setloclist<cr>', desc = "Gitsigns Get Hunks" },
+                { '<leader>gl', '<cmd>Gitsigns setloclist<cr>', desc = "Gitsigns List Hunks" },
+                { '<leader>ghf', '<cmd>Gitsigns next_hunk<cr>', desc = "Gitsigns Hunk Forward" },
+                { '<leader>g]', '<cmd>Gitsigns next_hunk<cr>', desc = "Gitsigns Prev Hunk" },
+                { '<leader>ghb', '<cmd>Gitsigns prev_hunk<cr>', desc = "Gitsigns Hunk Backward" },
+                { '<leader>g[', '<cmd>Gitsigns prev_hunk<cr>', desc = "Gitsigns Next Hunk" },
+                { '<leader>ghv', '<cmd>Gitsigns preview_hunk<cr>', desc = "Gitsigns preView Hunk" },
+                { '<leader>gv', '<cmd>Gitsigns preview_hunk<cr>', desc = "Gitsigns preView Hunk" },
+                { '<leader>ghl', '<cmd>Gitsigns preview_hunk_inline<cr>', desc = "Gitsigns Hunk Line" },
+                { '<leader>ghs', '<cmd>Gitsigns stage_hunk<cr>', desc = "Gitsigns Stage Hunk" },
+                { '<leader>gs', '<cmd>Gitsigns stage_hunk<cr>', desc = "Gitsigns Stage Hunk" },
+                { '<leader>ghr', '<cmd>Gitsigns reset_hunk<cr>', desc = "Gitsigns Reset Hunk" },
+                { '<leader>gr', '<cmd>Gitsigns reset_hunk<cr>', desc = "Gitsigns Reset Hunk" },
+                { '<leader>ghu', '<cmd>Gitsigns undo_stage_hunk<cr>', desc = "Gitsigns Hunk Undo" },
+                { '<leader>gu', '<cmd>Gitsigns undo_stage_hunk<cr>', desc = "Gitsigns Hunk Undo" },
+                -- blame
+                { '<leader>gbb', '<cmd>Gitsigns blame<cr>', desc = "Gitsigns Blame Buffer" },
+                { '<leader>gbh', '<cmd>Gitsigns blame_line<cr>', desc = "Gitsigns Blame Hunk" },
+                -- toggle
+                { '<leader>gts', '<cmd>Gitsigns toggle_signs<cr>', desc = "Gitsigns Toggle Signs" },
+                { '<leader>gtd', '<cmd>Gitsigns toggle_deleted<cr>', desc = "Gitsigns Toggle Deleted" },
+                { '<leader>gtl', '<cmd>Gitsigns toggle_linehl<cr>', desc = "Gitsigns Toggle Line highlight" },
+                { '<leader>gtn', '<cmd>Gitsigns toggle_numhl<cr>', desc = "Gitsigns Toggle line Numbers" },
             },
             config = true,
-        },
-        { -- inconvenient
-            "chrisgrieser/nvim-tinygit",
-            enabled = false,
-            lazy = true,
-            keys = function()
-                local tinygit = require('tinygit')
-                local tinygitStatusline = require('tinygit.statusline')
-                return {
-                    { '<leader>ga', tinygit.interactiveStaging, desc = 'Git Add;' },
-                    { '<leader>gc', tinygit.smartCommit, desc = 'Git Commit;' },
-                    { '<leader>gp', tinygit.smartPush, desc = 'Git Push;' },
-                    { '<leader>gm', tinygit.amendOnlyMsg, desc = 'Git Amend Message;' },
-                    { '<leader>gu', tinygit.undoLastCommitOrAmend, desc = 'Git Undo Last;' },
-                    { '<leader>gsa',tinygit.undoLastCommitOrAmend, desc = 'Git Stash Add;' },
-                    { '<leader>gsd',tinygit.undoLastCommitOrAmend, desc = 'Git Stash Del;' },
-                    { '<leader>gh', tinygit.historyFunction, desc = 'Git History;' },
-                    { '<leader>gbl', tinygitStatusline.blame, desc = 'Git Blame;' },
-                    { '<leader>gbr', tinygitStatusline.branchState, desc = 'Git Branch;' },
-                }
-            end,
-            dependencies = {
-                "stevearc/dressing.nvim",
-                "nvim-telescope/telescope.nvim",
-                "rcarriga/nvim-notify",
-            },
-            config = function()
-                local tinygit = require('tinygit')
-                tinygit.setup({})
-            end,
         },
         {
             'tanvirtin/vgit.nvim',
@@ -1058,10 +1052,10 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     { '<leader>gha', vgit.hunk_stage, desc = "Git Hunk Add;" },
                     { '<leader>ghu', vgit.hunk_reset, desc = "Git Hunk Undo;" },
                     { '<leader>ghv', vgit.hunk_preview, desc = "Git Hunk View;" },
-                    { '<leader>gb', vgit.buffer_blame_preview, desc = "Git Blame;" },
-                    { '<leader>gd', vgit.buffer_diff_preview, desc = "Git Diffs;" },
-                    { '<leader>gl', vgit.buffer_history_preview, desc = "Git History;" },
-                    { '<leader>gu', vgit.buffer_reset, desc = "Git Undo;" },
+                    { '<leader>gb', vgit.buffer_blame_preview, desc = "Git Buffer Blame;" },
+                    { '<leader>gd', vgit.buffer_diff_preview, desc = "Git Buffer Diffs;" },
+                    { '<leader>gl', vgit.buffer_history_preview, desc = "Git Buffer History;" },
+                    { '<leader>gu', vgit.buffer_reset, desc = "Git Buffer Undo;" },
                 }
             end,
             dependencies = 'nvim-lua/plenary.nvim',
@@ -1071,7 +1065,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             "f-person/git-blame.nvim",
-            enabled = true,
+            enabled = false,
             lazy = true,
             keys = {
                 { '<leader>gb', '<cmd>GitBlameToggle<cr>', desc = 'Git Blame;' },
