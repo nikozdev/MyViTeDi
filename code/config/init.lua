@@ -750,8 +750,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         {
             'vim-scripts/restore_view.vim',
             enabled = true,
-            lazy = true,
-            event = 'VeryLazy',
+            lazy = false,
         },
         {
             'winston0410/range-highlight.nvim',
