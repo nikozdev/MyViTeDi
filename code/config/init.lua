@@ -284,32 +284,38 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     local fForLspAttach = function(vClient, vBufferIndex)
                         fUpdLeader()
 
-                        vim.keymap.set('n', '<leader>lj', '<cmd>ClangdSwitchSourceHeader<cr>', { desc = "Lsp Jump Between Source|Header;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lgf', '<cmd>ClangdSwitchSourceHeader<cr>', { desc = "Lsp GoTo Source|Header;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>ld', vim.lsp.buf.definition, { desc = "Lsp Definition|Declaration;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lgd', vim.lsp.buf.definition, { desc = "Lsp GoTo Definition|Declaration;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lgi', vim.lsp.buf.implementation, { desc = "Lsp GoTo Implementation;", buffer = vBufferIndex })
+                        local function fKeyMap(vKey, vMap, vInf)
+                            vOpt = {}
+                            vOpt.desc = vInf
+                            vim.keymap.set('n', vKey, vMap, vOpt)
+                        end
 
-                        vim.keymap.set('n', '<leader>lr', vim.lsp.buf.references, { desc = "Lsp References", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lsr', vim.lsp.buf.references, { desc = "Lsp Show References", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lw', vim.lsp.buf.workspace_symbol, { desc = "Lsp WorkSpace Symbols;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lss', vim.lsp.buf.workspace_symbol, { desc = "Lsp Show WorkSpace Symbols;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lsh', vim.lsp.buf.hover, { desc = "Lsp Show Hovering Information;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lh', vim.lsp.buf.hover, { desc = "Lsp Help;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lsd', vim.diagnostic.open_float, { desc = "Lsp Show Diagnostics;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, { desc = "Lsp Errors;", buffer = vBufferIndex })
+                        fKeyMap('<leader>lj', '<cmd>ClangdSwitchSourceHeader<cr>', "Lsp Jump Between Source|Header;")
+                        fKeyMap('<leader>lgf', '<cmd>ClangdSwitchSourceHeader<cr>', "Lsp GoTo Source|Header;")
+                        fKeyMap('<leader>ld', vim.lsp.buf.definition, "Lsp Definition|Declaration;")
+                        fKeyMap('<leader>lgd', vim.lsp.buf.definition, "Lsp GoTo Definition|Declaration;")
+                        fKeyMap('<leader>lgi', vim.lsp.buf.implementation, "Lsp GoTo Implementation;")
 
-                        vim.keymap.set('n', '<leader>lsi', vim.lsp.buf.incoming_calls, { desc = "Lsp Show InComing Calls;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>li', vim.lsp.buf.incoming_calls, { desc = "Lsp InComing Calls;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lso', vim.lsp.buf.outgoing_calls, { desc = "Lsp Show OutGoing Calls;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lo', vim.lsp.buf.outgoing_calls, { desc = "Lsp OutGoing Calls;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lsw', vim.lsp.buf.list_workspace_folders, { desc = "Lsp Show Workspace Folders;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>ll', vim.lsp.buf.list_workspace_folders, { desc = "Lsp List Workspace Folders;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lst', vim.lsp.buf.typehierarchy, { desc = "Lsp Show Type Hierarchy;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lt', vim.lsp.buf.typehierarchy, { desc = "Lsp Type Hierarchy;", buffer = vBufferIndex })
+                        fKeyMap('<leader>lr', vim.lsp.buf.references, "Lsp References")
+                        fKeyMap('<leader>lsr', vim.lsp.buf.references, "Lsp Show References")
+                        fKeyMap('<leader>lw', vim.lsp.buf.workspace_symbol, "Lsp WorkSpace Symbols;")
+                        fKeyMap('<leader>lss', vim.lsp.buf.workspace_symbol, "Lsp Show WorkSpace Symbols;")
+                        fKeyMap('<leader>lsh', vim.lsp.buf.hover, "Lsp Show Hovering Information;")
+                        fKeyMap('<leader>lh', vim.lsp.buf.hover, "Lsp Help;")
+                        fKeyMap('<leader>lsd', vim.diagnostic.open_float, "Lsp Show Diagnostics;")
+                        fKeyMap('<leader>le', vim.diagnostic.open_float, "Lsp Errors;")
 
-                        vim.keymap.set('n', '<leader>ln', vim.lsp.buf.rename, { desc = "Lsp reName;", buffer = vBufferIndex })
-                        vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = "Lsp Format;", buffer = vBufferIndex })
+                        fKeyMap('<leader>lsi', vim.lsp.buf.incoming_calls, "Lsp Show InComing Calls;")
+                        fKeyMap('<leader>li', vim.lsp.buf.incoming_calls, "Lsp InComing Calls;")
+                        fKeyMap('<leader>lso', vim.lsp.buf.outgoing_calls, "Lsp Show OutGoing Calls;")
+                        fKeyMap('<leader>lo', vim.lsp.buf.outgoing_calls, "Lsp OutGoing Calls;")
+                        fKeyMap('<leader>lsw', vim.lsp.buf.list_workspace_folders, "Lsp Show Workspace Folders;")
+                        fKeyMap('<leader>ll', vim.lsp.buf.list_workspace_folders, "Lsp List Workspace Folders;")
+                        fKeyMap('<leader>lst', vim.lsp.buf.typehierarchy, "Lsp Show Type Hierarchy;")
+                        fKeyMap('<leader>lt', vim.lsp.buf.typehierarchy, "Lsp Type Hierarchy;")
+
+                        fKeyMap('<leader>ln', vim.lsp.buf.rename, "Lsp reName;")
+                        fKeyMap('<leader>lf', vim.lsp.buf.format, "Lsp Format;")
                     end
                     local fForLspAttachWas = vConfigTable.on_attach
                     if fForLspAttachWas ~= nil then
