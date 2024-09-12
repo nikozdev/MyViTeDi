@@ -590,6 +590,23 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 'echasnovski/mini.nvim',
             },
         },
+        {
+            'famiu/bufdelete.nvim',
+            enabled = true,
+            lazy = true,
+            keys = {
+                { 'gd', '<cmd>Bdelete<cr>', desc = "Buffer Deletion;" },
+                { '<leader>bd', '<cmd>Bdelete<cr>', desc = "Buffer Deletion;" },
+            },
+        },
+        {
+            'notomo/cmdbuf.nvim',
+            enabled = false,
+            lazy = true,
+            keys = {
+                { 'q/', function() require("cmdbuf").split_open(vim.o.cmdwinheight) end, desc = 'CommandLineMode Buffer' },
+            },
+        },
         --]==]
         -- [==[ completion
         {
@@ -760,17 +777,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             config = true,
             dependencies = {
                 'winston0410/cmd-parser.nvim',
-            },
-        },
-        --]==]
-        -- [==[ navigation
-        {
-            'famiu/bufdelete.nvim',
-            enabled = true,
-            lazy = true,
-            keys = {
-                { 'gd', '<cmd>Bdelete<cr>', desc = "Buffer Deletion;" },
-                { '<leader>bd', '<cmd>Bdelete<cr>', desc = "Buffer Deletion;" },
             },
         },
         --]==]
