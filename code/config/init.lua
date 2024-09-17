@@ -638,6 +638,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         { name = "buffer" },
                         { name = "nvim_lsp" },
                         { name = "vsnip" },
+                        { name = "path" },
                     }),
                 })
                 pCmp.setup.cmdline("/", {
@@ -717,17 +718,15 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 })
             end,
             keys = {
-                -- pick
-                { '<leader>bpd', '<cmd>BufferLinePickClose<cr>', desc = "Buffer Pick Deletion;" },
-                { "<leader>bgp", "<cmd>BufferLinePick<cr>", desc = "Buffer Goto Picked;" },
+                { "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buf Goto Picked;" },
                 -- move
-                { "<leader>bmb", "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Backward;" },
-                { "<leader>bmf", "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Forward;" },
+                { "<leader>bb", "<cmd>BufferLineMovePrev<cr>", desc = "Buf Backward;" },
+                { "<leader>bf", "<cmd>BufferLineMoveNext<cr>", desc = "Buf Forward;" },
                 -- goto
-                { "<leader>bgb", "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Go Backward;" },
-                { "<leader>bgf", "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Go Forward;" },
-                { "gb", "<cmd>BufferLineCycleNext<cr>", desc = "Go Buffer Forward;" },
-                { "gB", "<cmd>BufferLineCyclePrev<cr>", desc = "Go Buffer Backward;" },
+                { "gb", "<cmd>BufferLineCycleNext<cr>", desc = "Goto next Buf;" },
+                { "gB", "<cmd>BufferLineCyclePrev<cr>", desc = "Goto prev Buf;" },
+                { "<leader>bn", "<cmd>BufferLineCycleNext<cr>", desc = "Buf Next;" },
+                { "<leader>bp", "<cmd>BufferLineCyclePrev<cr>", desc = "Buf Prev;" },
             },
         },
         {
