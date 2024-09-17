@@ -355,7 +355,9 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         },
                     },
                 })
-                fRunLspSetup("clangd")
+                fRunLspSetup("clangd", {
+                    timeout_ms = 4096,
+                })
                 fRunLspSetup("pyright")
                 --]==]
                 --]=]
@@ -845,7 +847,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             'nvim-orgmode/orgmode',
-            enabled = true,
+            enabled = false,
             lazy = true,
             event = 'VeryLazy',
             ft = 'org',
@@ -862,14 +864,37 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             'vimwiki/vimwiki',
             enabled = true,
             lazy = true,
-            keys = {
-                { "<leader>kw", "<cmd>VimwikiIndex<cr>", desc = "KnowledgeBase Wiki index;" },
-                { "<leader>kv", "<cmd>VimwikiCheckLinks<cr>", desc = "KnowledgeBase Vet links;" },
-                { "<leader>kl", "<cmd>VimwikiGenerateLinks<cr>", desc = "KnowledgeBase Link generation;" },
-                { "<leader>kc", "<cmd>VimwikiTOC<cr>", desc = "KnowledgeBase contents table in this file;" },
-                { "<leader>kg", "<cmd>VimwikiGoto<cr>", desc = "KnowledgeBase Goto a file;" },
-                { "<leader>kr", "<cmd>VimwikiRenameLink<cr>", desc = "KnowledgeBase Rename the current file link;" },
-            },
+            cmd = 'VimwikiIndex',
+            keys = function()
+                vim.g.vimwiki_key_mappings = {
+                    all_maps = 0,
+                    global = 0,
+                }
+                return {
+                    { "<leader>kwi", "<cmd>VimwikiIndex<cr>", desc = "KnowledgeBase: Wiki Index" },
+                    { "<leader>kwg", "<cmd>VimwikiGenerateLinks<cr>", desc = "KnowledgeBase: Wiki Generation" },
+                    { "<leader>kdi", "<cmd>VimwikiDiaryIndex<cr>", desc = "KnowledgeBase: Diary Index" },
+                    { "<leader>kdg", "<cmd>VimwikiDiaryGenerateLinks<cr>", desc = "KnowledgeBase: Diary Generation" },
+                    { "<leader>kdd", "<cmd>VimwikiMakeDiaryNote<cr>", desc = "KnowledgeBase: Daily Diary" },
+
+                    { "<leader>kct", "<cmd>VimwikiTOC<cr>", desc = "KnowledgeBase: Contents Table" },
+                    { "<leader>kcr", "<cmd>VimwikiRss<cr>", desc = "KnowledgeBase: Contents Rss" },
+
+                    { "<leader>kg", "<cmd>VimwikiSearch<cr>", desc = "KnowledgeBase: Grep" },
+                    { "<leader>kf", "<cmd>VimwikiSearch<cr>", desc = "KnowledgeBase: Find" },
+
+                    { "<leader>kv", "<cmd>VimwikiCheckLinks<cr>", desc = "KnowledgeBase: Verifify links" },
+                    { "<leader>kr", "<cmd>VimwikiRenameLink<cr>", desc = "KnowledgeBase: Rename Link" },
+                    { "<leader>kl", "<cmd>VimwikiPasteLink<cr>", desc = "KnowledgeBase: Paste Link" },
+                    { "<leader>ku", "<cmd>VimwikiPasteUrl<cr>", desc = "KnowledgeBase: Paste URL" },
+
+                    { "<leader>kfr", "<cmd>VimwikiDeleteFile<cr>", desc = "KnowledgeBase: File Renaming" },
+                    { "<leader>kfd", "<cmd>VimwikiRenameFile<cr>", desc = "KnowledgeBase: File Deletion" },
+
+                    { "<leader>khg", "<cmd>VimwikiAll2HTML<cr>", desc = "KnowledgeBase: Html Generation" },
+                    { "<leader>khb", "<cmd>Vimwiki2HTML<cr>", desc = "KnowledgeBase: Html Browsing" },
+                }
+            end,
             init = function()
                 vim.cmd([[
                 set nocompatible
@@ -939,6 +964,147 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 },
                 preferred_link_style = 'markdown',
             },
+        },
+        {
+            'zk-org/zk-nvim',
+            enabled = false,
+            lazy = true,
+            keys = function()
+                local zkCommands = require("zk.commands")
+                return {
+                    {
+                        '<leader>zz',
+                        mode = 'n',
+                        function()
+                            print('Zettelkasten has been loaded')
+                        end,
+                        desc = "Zettelkasten: loader keybind"
+                    },
+                    {
+                        '<leader>zi',
+                        mode = 'n',
+                        function()
+                            zkCommands.get('ZkIndex')()
+                        end,
+                        desc = "Zettelkasten: Make Index"
+                    },
+                    {
+                        '<leader>zc',
+                        mode = 'n',
+                        function()
+                            zkCommands.get('ZkNew')()
+                        end,
+                        desc = "Zettelkasten: Create Note"
+                    },
+                    {
+                        '<leader>zc',
+                        mode = 'v',
+                        "<cmd>'<,'>ZkNewFromTitleSelection<cr>",
+                        desc = "Zettelkasten: Create note from visual selection"
+                    },
+                    {
+                        '<leader>zl',
+                        mode = 'v',
+                        "<cmd>'<,'>ZkInsertLinkAtSelection<cr>",
+                        desc = "Zettelkasten: Link visual selection"
+                    },
+                    {
+                        '<leader>zn',
+                        mode = 'n',
+                        function()
+                            zkCommands.get("ZkNotes")()
+                        end,
+                        desc = "Zettelkasten: pick from Notes"
+                    },
+                    {
+                        '<leader>zl',
+                        mode = 'n',
+                        function()
+                            zkCommands.get('ZkLinks')()
+                        end,
+                        desc = "Zettelkasten: pick from Links"
+                    },
+                    {
+                        '<leader>zb',
+                        mode = 'n',
+                        function()
+                            zkCommands.get('ZkBacklinks')()
+                        end,
+                        desc = "Zettelkasten: pick from Backlinks"
+                    },
+                    {
+                        '<leader>zv',
+                        mode = 'v',
+                        "<cmd>'<,'>ZkMatch<cr>",
+                        desc = "Zettelkasten: pick from notes by Visual selection"
+                    },
+                    {
+                        '<leader>zt',
+                        mode = 'n',
+                        function()
+                            zkCommands.get('ZkTags')()
+                        end,
+                        desc = "Zettelkasten: pick from notes by Tags"
+                    },
+                    {
+                        '<leader>zd',
+                        mode = 'n',
+                        function()
+                            zkCommands.get('ZkDaily')()
+                        end,
+                        desc = "Zettelkasten: open Daily note"
+                    },
+                }
+            end,
+            config = function()
+                local zk = require('zk')
+                zk.setup({
+                    picker = "telescope",
+                    lsp = {
+                        config = {
+                            cmd = { "zk", "lsp" },
+                            name = "zk",
+                        },
+                        -- automatically attach buffers in a zk notebook that match the given filetypes
+                        auto_attach = {
+                            enabled = true,
+                            filetypes = { "markdown" },
+                        },
+                    },
+                })
+                local zkApi = require('zk.api')
+                local zkCommands = require("zk.commands")
+                zkCommands.add('ZkDaily', function(opts)
+                    opts = vim.tbl_extend("force", {}, opts or {})
+                    zk.edit(opts, { title = 'daily' })
+                end)
+            end,
+        },
+        {
+            'nvim-telekasten/telekasten.nvim',
+            enabled = false,
+            lazy = true,
+            cmd = 'Telekasten',
+            keys = {
+                { '<leader>zz', "<cmd>Telekasten<cr>", desc = "Telekasten: menu" },
+                { '<leader>zf', "<cmd>Telekasten find_notes<cr>", desc = "Telekasten: Find notes by title (filename)" },
+                { '<leader>zr', "<cmd>Telekasten rename_note<cr>", desc = "Telekasten: Rename the current note" },
+                { '<leader>zg', "<cmd>Telekasten search_notes<cr>", desc = "Telekasten: Grep notes by content" },
+                { '<leader>zt', "<cmd>Telekasten tags<cr>", desc = "Telekasten: Tags" },
+                { '<leader>zd', "<cmd>Telekasten goto_today<cr>", desc = "Telekasten: open Daily note for today" },
+                { '<leader>zw', "<cmd>Telekasten goto_thisweek<cr>", desc = "Telekasten: open Weekly note for today" },
+                { '<leader>zn', "<cmd>Telekasten new_templated_note<cr>", desc = "Telekasten: New note from template" },
+                { '<leader>zl', "<cmd>Telekasten yank_notelink<cr>", desc = "Telekasten: yank Link" },
+                { '<leader>zc', "<cmd>Telekasten show_calendar<cr>", desc = "Telekasten: Calendar" },
+                { '<leader>zm', "<cmd>Telekasten insert_img_link<cr>", desc = "Telekasten: Media link insertion" },
+                { '<leader>zp', "<cmd>Telekasten preview_img<cr>", desc = "Telekasten: media Preview" },
+                { '<leader>zb', "<cmd>Telekasten insert_img_link<cr>", desc = "Telekasten: media Browsing" },
+            },
+            config = function()
+                require('telekasten').setup({
+                    home = vim.fn.expand("~/zk"),
+                })
+            end,
         },
         --]==]
         -- [==[ localization
