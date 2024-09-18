@@ -1068,46 +1068,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             dependencies = "nvim-lua/plenary.nvim",
             config = true,
         },
-        {
-            'coffebar/transfer.nvim',
-            enabled = false,
-            lazy = true,
-            keys = {
-                {
-                    "<leader>nti",
-                    "<cmd>TransferInit<cr>",
-                    desc = "NetworkTransfer Init/Edit Deployment config",
-                    -- icon = { color = "green", icon = "" },
-                },
-                {
-                    "<leader>ntd",
-                    "<cmd>TransferDownload<cr>",
-                    desc = "NetworkTransferDownload from the remote server (scp);",
-                    -- icon = { color = "green", icon = "󰇚" },
-                },
-                {
-                    "<leader>ntu",
-                    "<cmd>TransferUpload<cr>",
-                    desc = "NetworkTransferUpload onto the remote server (scp)",
-                    -- icon = { color = "green", icon = "󰕒" },
-                },
-                {
-                    "<leader>ntr",
-                    "<cmd>TransferRepeat<cr>",
-                    desc = "NetworkTransfer command Repeat;",
-                    -- icon = { color = "green", icon = "󰑖" },
-                },
-                {
-                    "<leader>ntf",
-                    "<cmd>DiffRemote<cr>",
-                    desc = "NetoworkTransferDIFF a file with the remote server (scp);",
-                    -- icon = { color = "green", icon = "" },
-                },
-            },
-            config = function()
-                require('transfer').setup({})
-            end
-        },
         --]==]
         -- [==[ source control
         {
