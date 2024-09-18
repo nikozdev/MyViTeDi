@@ -1084,24 +1084,16 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { '<leader>gbs', '<cmd>Gitsigns stage_buffer<cr>', desc = "Gitsigns Stage Buffer" },
                 { '<leader>gbr', '<cmd>Gitsigns reset_buffer<cr>', desc = "Gitsigns Reset Buffer" },
                 -- hunks
-                { '<leader>ghg', '<cmd>Gitsigns setloclist<cr>', desc = "Gitsigns Get Hunks" },
-                { '<leader>gl', '<cmd>Gitsigns setloclist<cr>', desc = "Gitsigns List Hunks" },
-                { '<leader>ghf', '<cmd>Gitsigns next_hunk<cr>', desc = "Gitsigns Hunk Forward" },
-                { '<leader>g]', '<cmd>Gitsigns next_hunk<cr>', desc = "Gitsigns Prev Hunk" },
-                { '<leader>ghb', '<cmd>Gitsigns prev_hunk<cr>', desc = "Gitsigns Hunk Backward" },
-                { '<leader>g[', '<cmd>Gitsigns prev_hunk<cr>', desc = "Gitsigns Next Hunk" },
-                { '<leader>ghv', '<cmd>Gitsigns preview_hunk<cr>', desc = "Gitsigns preView Hunk" },
-                { '<leader>gv', '<cmd>Gitsigns preview_hunk<cr>', desc = "Gitsigns preView Hunk" },
-                { '<leader>ghl', '<cmd>Gitsigns preview_hunk_inline<cr>', desc = "Gitsigns Hunk Line" },
-                { '<leader>ghs', '<cmd>Gitsigns stage_hunk<cr>', desc = "Gitsigns Stage Hunk" },
+                { '<leader>gh', '<cmd>Gitsigns setloclist<cr>', desc = "Gitsigns list Hunks" },
+                { '<leader>g,', '<cmd>Gitsigns prev_hunk<cr>', desc = "Gitsigns Next Hunk" },
+                { '<leader>g.', '<cmd>Gitsigns next_hunk<cr>', desc = "Gitsigns Prev Hunk" },
+                { '<leader>gv', '<cmd>Gitsigns preview_hunk<cr>', desc = "Gitsigns View hunk" },
+                { '<leader>gl', '<cmd>Gitsigns preview_hunk_inline<cr>', desc = "Gitsigns hunk Line" },
                 { '<leader>gs', '<cmd>Gitsigns stage_hunk<cr>', desc = "Gitsigns Stage Hunk" },
-                { '<leader>ghr', '<cmd>Gitsigns reset_hunk<cr>', desc = "Gitsigns Reset Hunk" },
                 { '<leader>gr', '<cmd>Gitsigns reset_hunk<cr>', desc = "Gitsigns Reset Hunk" },
-                { '<leader>ghu', '<cmd>Gitsigns undo_stage_hunk<cr>', desc = "Gitsigns Hunk Undo" },
                 { '<leader>gu', '<cmd>Gitsigns undo_stage_hunk<cr>', desc = "Gitsigns Hunk Undo" },
                 -- blame
-                { '<leader>gbb', '<cmd>Gitsigns blame<cr>', desc = "Gitsigns Blame Buffer" },
-                { '<leader>gbh', '<cmd>Gitsigns blame_line<cr>', desc = "Gitsigns Blame Hunk" },
+                { '<leader>gb', '<cmd>Gitsigns blame_line<cr>', desc = "Gitsigns Blame Hunk" },
                 -- toggle
                 { '<leader>gts', '<cmd>Gitsigns toggle_signs<cr>', desc = "Gitsigns Toggle Signs" },
                 { '<leader>gtd', '<cmd>Gitsigns toggle_deleted<cr>', desc = "Gitsigns Toggle Deleted" },
@@ -1109,48 +1101,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { '<leader>gtn', '<cmd>Gitsigns toggle_numhl<cr>', desc = "Gitsigns Toggle line Numbers" },
             },
             config = true,
-        },
-        {
-            'tanvirtin/vgit.nvim',
-            enabled = false,
-            lazy = true,
-            keys = function()
-                local vgit = require('vgit')
-                return {
-                    { '<leader>ghf', vgit.hunk_down, desc = "Git Hunk Forward;" },
-                    { '<leader>ghb', vgit.hunk_up, desc = "Git Hunk Backward;" },
-                    { '<leader>gha', vgit.hunk_stage, desc = "Git Hunk Add;" },
-                    { '<leader>ghu', vgit.hunk_reset, desc = "Git Hunk Undo;" },
-                    { '<leader>ghv', vgit.hunk_preview, desc = "Git Hunk View;" },
-                    { '<leader>gb', vgit.buffer_blame_preview, desc = "Git Buffer Blame;" },
-                    { '<leader>gd', vgit.buffer_diff_preview, desc = "Git Buffer Diffs;" },
-                    { '<leader>gl', vgit.buffer_history_preview, desc = "Git Buffer History;" },
-                    { '<leader>gu', vgit.buffer_reset, desc = "Git Buffer Undo;" },
-                }
-            end,
-            dependencies = 'nvim-lua/plenary.nvim',
-            config = function()
-                require('vgit').setup()
-            end,
-        },
-        {
-            "f-person/git-blame.nvim",
-            enabled = false,
-            lazy = true,
-            keys = {
-                { '<leader>gb', '<cmd>GitBlameToggle<cr>', desc = 'Git Blame;' },
-            },
-            opts = {
-                enabled = false,
-                message_template = " <summary> • <date> • <author> • <<sha>>",
-                date_format = "%m-%d-%Y %H:%M:%S",
-                virtual_text_column = 1,
-            },
-            init = function()
-                vim.g.gitblame_highlight_group = 'Question'
-                vim.g.gitblame_date_format = '%r'
-                vim.g.gitblame_display_virtual_text = 1
-            end
         },
         --]==]
     },
