@@ -453,10 +453,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             lazy = true,
             dependencies = {
                 'BurntSushi/ripgrep',
-                {
-                    'junegunn/fzf',
-                    build = { './install --bin' },
-                }
+                { 'junegunn/fzf', build = { './install --bin' } }
             },
         },
         {
@@ -467,10 +464,9 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             dependencies = {
                 'nvim-lua/plenary.nvim',
                 {
-                    'junegunn/fzf.vim',
                     'nvim-telescope/telescope-fzf-native.nvim',
                     build = 'make',
-                }
+                },
             },
             config = function()
                 require("telescope").setup({
@@ -503,7 +499,16 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     },
                     pickers = {
                         find_files = {
-                            find_command = { 'rg', '--files', '--hidden', '--follow', '-g', '!.git/', '-g', '!.cache/' },
+                            find_command = {
+                                'rg',
+                                '--files',
+                                '--hidden',
+                                '--follow',
+                                '-g',
+                                '!.git/',
+                                '-g',
+                                '!.cache/',
+                            },
                             no_ignore = true,
                         },
                         live_grep = {
@@ -514,11 +519,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             keys = function()
                 local pTeleScopeBuiltIn = require('telescope.builtin')
                 return {
-                    { '<leader>ff', pTeleScopeBuiltIn.find_files, desc = "fuzzy find a file;" },
-                    { '<leader>fg', pTeleScopeBuiltIn.live_grep, desc = "fuzzy grep in files;" },
-                    { '<leader>fb', pTeleScopeBuiltIn.buffers, desc = "fuzzy find an openned buffer;" },
-                    { '<leader>fc', pTeleScopeBuiltIn.commands, desc = "fuzzy find a command;" },
-                    { '<leader>fk', pTeleScopeBuiltIn.keymaps, desc = "fuzzy find keymaps;" },
+                    { '<leader>ff', pTeleScopeBuiltIn.find_files, desc = "Fuzzy Find file;" },
+                    { '<leader>fg', pTeleScopeBuiltIn.live_grep, desc = "Fuzzy Grep files;" },
+                    { '<leader>fb', pTeleScopeBuiltIn.buffers, desc = "Fuzzy find Buf;" },
+                    { '<leader>fc', pTeleScopeBuiltIn.commands, desc = "Fuzzy find Cmd;" },
+                    { '<leader>fk', pTeleScopeBuiltIn.keymaps, desc = "Fuzzy find Key;" },
                 }
             end
         },
