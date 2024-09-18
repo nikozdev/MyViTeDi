@@ -533,62 +533,63 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             event = "VeryLazy",
             keys = {
                 {
+                    "<leader>/",
+                    function()
+                        require("which-key").show({ global = true })
+                    end,
+                    desc = "WhichKey: global keymaps",
+                },
+                {
                     "<leader>?",
                     function()
                         require("which-key").show({ global = false })
                     end,
-                    desc = "Buffer local keymaps (which-key)",
+                    desc = "WhichKey: local keymaps",
                 },
                 -- jumps
-                { "gj", "<c-o>", { desc = "Go Jump Out" } },
-                { "gJ", "<c-i>", { desc = "Go Jump In" } },
-                { "<leader>jo", "<c-o>", { desc = "Jump Out" } },
-                { "<leader>ji", "<c-i>", { desc = "Jump In" } },
-                { "<leader>jb", "<c-o>", { desc = "Jump Backward" } },
-                { "<leader>jf", "<c-i>", { desc = "Jump Forward" } },
+                { "<leader>j,", "<c-o>", { desc = "Jump prev" } },
+                { "<leader>j.", "<c-i>", { desc = "Jump next" } },
                 { "<leader>jl", "<cmd>jumps<cr>", { desc = "Jump List" } },
                 -- wins
-                { "gs", "<cmd>wNext<cr>", { desc = "Goto prev Win" } },
-                { "gS", "<cmd>wprev<cr>", { desc = "Goto next Win" } },
+                { "<leader>w,", "<cmd>wincmd W<cr>", { desc = "Win prev" } },
+                { "<leader>w.", "<cmd>wincmd w<cr>", { desc = "Win next" } },
 
-                { "<leader>wp", "<cmd>wincmd W<cr>", { desc = "Win Prev" } },
-                { "<leader>wn", "<cmd>wincmd w<cr>", { desc = "Win Next" } },
-
-                { "<leader>wh", "<cmd>wincmd h<cr>", { desc = "Win Goto Left" } },
-                { "<leader>wj", "<cmd>wincmd j<cr>", { desc = "Win Goto Down" } },
-                { "<leader>wk", "<cmd>wincmd k<cr>", { desc = "Win Goto Up" } },
-                { "<leader>wl", "<cmd>wincmd l<cr>", { desc = "Win Goto Right" } },
+                { "<leader>wh", "<cmd>wincmd h<cr>", { desc = "Win goto Left" } },
+                { "<leader>wj", "<cmd>wincmd j<cr>", { desc = "Win goto Down" } },
+                { "<leader>wk", "<cmd>wincmd k<cr>", { desc = "Win goto Up" } },
+                { "<leader>wl", "<cmd>wincmd l<cr>", { desc = "Win goto Right" } },
 
                 { "<leader>wH", "<cmd>wincmd H<cr>", { desc = "Win Move Left" } },
                 { "<leader>wJ", "<cmd>wincmd J<cr>", { desc = "Win Move Down" } },
                 { "<leader>wK", "<cmd>wincmd K<cr>", { desc = "Win Move Up" } },
                 { "<leader>wL", "<cmd>wincmd L<cr>", { desc = "Win Move Right" } },
+                { "<leader>wT", "<cmd>wincmd T<cr>", { desc = "Win move into Tab" } },
 
-                { "<leader>wt", "<cmd>wincmd T<cr>", { desc = "Win Tab" } },
-                { "<leader>ws", "<cmd>edit term://$SHELL<cr>", { desc = "Win Shell" } },
                 { "<leader>wd", "<cmd>close<cr>", { desc = "Win Delete" } },
-                -- splits
-                { "<leader>sh", "<cmd>split<cr>", { desc = "Split Horizontally" } },
-                { "<leader>sv", "<cmd>vsplit<cr>", { desc = "Split Vertically" } },
+                { "<leader>ws", "<cmd>split<cr>", { desc = "Win horizontal Split" } },
+                { "<leader>wv", "<cmd>vsplit<cr>", { desc = "Win Vertical split" } },
                 -- tabs
-                { "gt", "<cmd>tabn<cr>", { desc = "Goto next Tab" } },
-                { "gT", "<cmd>tabp<cr>", { desc = "Goto prev Tab" } },
-                { "<leader>tn", "<cmd>tabn<cr>", { desc = "Tab Next" } },
-                { "<leader>tp", "<cmd>tabp<cr>", { desc = "Tab Prev" } },
+                { "<leader>t,", "<cmd>tabp<cr>", { desc = "Tab Prev" } },
+                { "<leader>t.", "<cmd>tabn<cr>", { desc = "Tab Next" } },
 
-                { "<leader>tb", "<cmd>tabm -1<cr>", { desc = "Tab Backward" } },
-                { "<leader>tf", "<cmd>tabm +1<cr>", { desc = "Tab Forward" } },
+                { "<leader>t[", "<cmd>tabm -1<cr>", { desc = "Tab Backward" } },
+                { "<leader>t]", "<cmd>tabm +1<cr>", { desc = "Tab Forward" } },
 
-                { "T", "<cmd>tabnew<cr>", { desc = "New Tab" } },
-                { "<leader>tc", "<cmd>tabnew<cr>", { desc = "Tab Creation" } },
+                { "<leader>tc", "<cmd>tabnew<cr><cmd>Bdelete<cr>", { desc = "Tab Creation" } },
                 { "<leader>td", "<cmd>close<cr>", { desc = "Tab Deletion" } },
                 -- misc
-                { "u", "<cmd>undo<cr>", desc = "UnDo the last action;" },
-                { "U", "<cmd>redo<cr>", desc = "ReDo the last action;" },
-                { "Г", "<cmd>redo<cr>", desc = "ReDo the last action;" },
-                { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from the Terminal to the Normal mode;" },
-                { "!", ":! ", desc = "System Command Line;" },
-                { 'zS', fSetCodeFolder, desc = 'Setup code folding settings;' },
+                { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
+                { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
+                { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
+                { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
+                { "г", "<cmd>undo<cr>", desc = "UnDo the last action" },
+                { "<leader>vu", "<cmd>undo<cr>", desc = "Vim: Undo" },
+                { "U", "<cmd>redo<cr>", desc = "ReDo the last action" },
+                { "Г", "<cmd>redo<cr>", desc = "ReDo the last action" },
+                { "<leader>vr", "<cmd>redo<cr>", desc = "Vim: Redo" },
+                { "!", "<cmd>! ", desc = "System Command Line" },
+                { 'zS', fSetCodeFolder, desc = 'Setup code folding settings' },
+                { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
             },
             dependencies = {
                 'nvim-tree/nvim-web-devicons',
@@ -599,9 +600,12 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             'famiu/bufdelete.nvim',
             enabled = true,
             lazy = true,
+            cmd = "Bdelete",
             keys = {
-                { 'gd', '<cmd>Bdelete<cr>', desc = "Buffer Deletion;" },
-                { '<leader>bd', '<cmd>Bdelete<cr>', desc = "Buffer Deletion;" },
+                { "<leader>bc", "<cmd>enew<cr>", desc = "Buf Creation;" },
+                { '<leader>bd', '<cmd>Bdelete<cr>', desc = "Buf Deletion;" },
+                { "<leader>be", "<cmd>Explore<cr>", { desc = "Buf Explorer" } },
+                { "<leader>bt", "<cmd>edit term://$SHELL<cr>", { desc = "Buf Terminal" } },
             },
         },
         {
@@ -728,13 +732,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             keys = {
                 { "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buf Goto Picked;" },
                 -- move
-                { "<leader>bb", "<cmd>BufferLineMovePrev<cr>", desc = "Buf Backward;" },
-                { "<leader>bf", "<cmd>BufferLineMoveNext<cr>", desc = "Buf Forward;" },
+                { "<leader>b[", "<cmd>BufferLineMovePrev<cr>", desc = "Buf Backward;" },
+                { "<leader>b]", "<cmd>BufferLineMoveNext<cr>", desc = "Buf Forward;" },
                 -- goto
-                { "gb", "<cmd>BufferLineCycleNext<cr>", desc = "Goto next Buf;" },
-                { "gB", "<cmd>BufferLineCyclePrev<cr>", desc = "Goto prev Buf;" },
-                { "<leader>bn", "<cmd>BufferLineCycleNext<cr>", desc = "Buf Next;" },
-                { "<leader>bp", "<cmd>BufferLineCyclePrev<cr>", desc = "Buf Prev;" },
+                { "<leader>b,", "<cmd>BufferLineCyclePrev<cr>", desc = "Buf Prev;" },
+                { "<leader>b.", "<cmd>BufferLineCycleNext<cr>", desc = "Buf Next;" },
             },
         },
         {
