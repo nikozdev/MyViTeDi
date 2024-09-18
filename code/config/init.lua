@@ -20,6 +20,8 @@ vim.opt["history"] = 256
 
 vim.cmd("colorscheme nord")
 
+vim.opt.conceallevel = 2
+
 vim.opt.showtabline = 4
 
 vim.opt["title"] = true
@@ -765,38 +767,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             enabled = true,
             lazy = false,
         },
-        {
-            'winston0410/range-highlight.nvim',
-            enabled = true,
-            lazy = true,
-            event = 'CmdlineEnter',
-            config = true,
-            dependencies = {
-                'winston0410/cmd-parser.nvim',
-            },
-        },
         --]==]
         -- [==[ specific formats
-        {
-            'ellisonleao/glow.nvim',
-            enabled = false,
-            lazy = true,
-            event = "BufReadPre *.md",
-            ft = 'md',
-            config = function()
-                require("glow").setup({
-                    glow_path = "/usr/bin/glow",
-                    install_path = "~/.local/bin",
-                    border = "shadow",
-                    style = "dark",
-                    pager = false,
-                    width = 80,
-                    height = 100,
-                    width_ratio = 0.75,
-                    height_ratio = 0.75,
-                })
-            end,
-        },
         {
             'RaafatTurki/hex.nvim',
             enabled = true,
