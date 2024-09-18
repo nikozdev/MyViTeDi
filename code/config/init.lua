@@ -344,6 +344,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
 
                 fRunLspSetup("marksman")
                 fRunLspSetup("html")
+                fRunLspSetup("zk")
 
                 fRunLspSetup("lua_ls", {
                     root_dir = vim.loop.cwd,
@@ -792,31 +793,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         --]==]
         -- [==[ organisation and productivity
         {
-            "nvim-neorg/neorg",
-            version = "*",
-            enabled = false,
-            lazy = true,
-            cmd = 'Neorg',
-            dependencies = {
-                "vhyrro/luarocks.nvim",
-                "nvim-lua/plenary.nvim",
-                "nvim-treesitter/nvim-treesitter",
-                --"kyazdani42/nvim-web-devicons",
-                "nvim-tree/nvim-web-devicons",
-            },
-            rocks = { "lua-utils.nvim", "nvim-nio", "nui.nvim" },
-            config = function()
-                require("neorg").setup({
-                    load = {
-                        ['core.defaults'] = {},
-                        ['core.dirman'] = {
-                            config = { workspaces = { Basic = '~/Other/neorg' } },
-                        },
-                    },
-                })
-            end,
-        },
-        {
             'nvim-orgmode/orgmode',
             enabled = false,
             lazy = true,
@@ -938,7 +914,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             'zk-org/zk-nvim',
-            enabled = false,
+            enabled = true,
             lazy = true,
             keys = function()
                 local zkCommands = require("zk.commands")
@@ -954,17 +930,13 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     {
                         '<leader>zi',
                         mode = 'n',
-                        function()
-                            zkCommands.get('ZkIndex')()
-                        end,
-                        desc = "Zettelkasten: Make Index"
+                        "<cmd>ZkIndex<cr>",
+                        desc = "Zettelkasten: Index notes"
                     },
                     {
                         '<leader>zc',
                         mode = 'n',
-                        function()
-                            zkCommands.get('ZkNew')()
-                        end,
+                        "<cmd>ZkNew<cr>",
                         desc = "Zettelkasten: Create Note"
                     },
                     {
@@ -982,25 +954,19 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     {
                         '<leader>zn',
                         mode = 'n',
-                        function()
-                            zkCommands.get("ZkNotes")()
-                        end,
+                        "<cmd>ZkNotes<cr>",
                         desc = "Zettelkasten: pick from Notes"
                     },
                     {
                         '<leader>zl',
                         mode = 'n',
-                        function()
-                            zkCommands.get('ZkLinks')()
-                        end,
+                        "<cmd>ZkLinks<cr>",
                         desc = "Zettelkasten: pick from Links"
                     },
                     {
                         '<leader>zb',
                         mode = 'n',
-                        function()
-                            zkCommands.get('ZkBacklinks')()
-                        end,
+                        "<cmd>ZkBacklinks<cr>",
                         desc = "Zettelkasten: pick from Backlinks"
                     },
                     {
@@ -1043,7 +1009,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         },
                     },
                 })
-                local zkApi = require('zk.api')
                 local zkCommands = require("zk.commands")
                 zkCommands.add('ZkDaily', function(opts)
                     opts = vim.tbl_extend("force", {}, opts or {})
