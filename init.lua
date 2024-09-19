@@ -591,7 +591,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { "U", "<cmd>redo<cr>", desc = "ReDo the last action" },
                 { "Г", "<cmd>redo<cr>", desc = "ReDo the last action" },
                 { "<leader>vr", "<cmd>redo<cr>", desc = "Vim: Redo" },
-                { "!", "<cmd>! ", desc = "System Command Line" },
+                { "!", ":! ", desc = "System Command Line" },
                 { 'zS', fSetCodeFolder, desc = 'Setup code folding settings' },
                 { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
             },
