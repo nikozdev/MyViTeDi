@@ -1080,22 +1080,16 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             lazy = true,
             keys = {
                 { '<leader>gg', '<cmd>Gitsigns<cr>', desc = "Gitsigns Global" },
-                -- buffers
-                { '<leader>gbo', '<cmd>Gitsigns show<cr>', desc = "Gitsigns Buffer Origin" },
                 { '<leader>go', '<cmd>Gitsigns show<cr>', desc = "Gitsigns Orig" },
-                { '<leader>gbd', '<cmd>Gitsigns diffthis<cr>', desc = "Gitsigns Buffer Differ" },
                 { '<leader>gd', '<cmd>Gitsigns diffthis<cr>', desc = "Gitsigns Diff" },
-                { '<leader>gbs', '<cmd>Gitsigns stage_buffer<cr>', desc = "Gitsigns Stage Buffer" },
-                { '<leader>gbr', '<cmd>Gitsigns reset_buffer<cr>', desc = "Gitsigns Reset Buffer" },
                 -- hunks
                 { '<leader>gh', '<cmd>Gitsigns setloclist<cr>', desc = "Gitsigns list Hunks" },
                 { '<leader>g,', '<cmd>Gitsigns prev_hunk<cr>', desc = "Gitsigns Next Hunk" },
                 { '<leader>g.', '<cmd>Gitsigns next_hunk<cr>', desc = "Gitsigns Prev Hunk" },
                 { '<leader>gv', '<cmd>Gitsigns preview_hunk<cr>', desc = "Gitsigns View hunk" },
                 { '<leader>gl', '<cmd>Gitsigns preview_hunk_inline<cr>', desc = "Gitsigns hunk Line" },
-                { '<leader>gs', '<cmd>Gitsigns stage_hunk<cr>', desc = "Gitsigns Stage Hunk" },
+                { '<leader>gs', '<cmd>Gitsigns stage_hunk<cr>', desc = "Gitsigns Stage/unStage hunk" },
                 { '<leader>gr', '<cmd>Gitsigns reset_hunk<cr>', desc = "Gitsigns Reset Hunk" },
-                { '<leader>gu', '<cmd>Gitsigns undo_stage_hunk<cr>', desc = "Gitsigns Hunk Undo" },
                 -- blame
                 { '<leader>gb', '<cmd>Gitsigns blame_line<cr>', desc = "Gitsigns Blame Hunk" },
                 -- toggle
@@ -1103,6 +1097,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { '<leader>gtd', '<cmd>Gitsigns toggle_deleted<cr>', desc = "Gitsigns Toggle Deleted" },
                 { '<leader>gtl', '<cmd>Gitsigns toggle_linehl<cr>', desc = "Gitsigns Toggle Line highlight" },
                 { '<leader>gtn', '<cmd>Gitsigns toggle_numhl<cr>', desc = "Gitsigns Toggle line Numbers" },
+                { '<leader>gtw', '<cmd>Gitsigns toggle_word_diff<cr>', desc = "Gitsigns Toggle Words" },
             },
             config = true,
         },
