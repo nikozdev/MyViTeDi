@@ -1,5 +1,5 @@
 vProjName:=MyViTeDi
-vProjVnum:=1.1.0
+vProjVnum:=2.0.0
 
 vFileRoot:=..
 vFileCode:=$(vFileRoot)/code
@@ -22,9 +22,11 @@ print:
 	$(info "[vFileDest]=$(vFileDest))
 
 setup:
-	$(vCmdCp) $(vFileCode)/config/* $(vFileDest)/.config/nvim
-	$(vCmdCp) $(vFileCode)/shared/* $(vFileDest)/.local/share/nvim
+	$(vCmdCp) $(vFileCode)/config/init.lua $(vFileDest)/.config/nvim
 
 reset:
 #	$(vCmdRm) $(vFileDest)/.config/nvim $(vFileDest)/.local/share/nvim
 	$(info "we do not have a clean way to reset $(vProjName)")
+
+reget:
+	$(vCmdCp) $(vFileCode)/config
