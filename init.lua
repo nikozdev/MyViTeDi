@@ -78,8 +78,6 @@ vim.opt["signcolumn"] = "yes"
 
 vim.cmd("syntax enable")
 
-vim.opt.clipboard = "unnamedplus"
-
 --do not make backup files
 vim.opt["backup"] = false
 --do not add the end of the line for explicity
