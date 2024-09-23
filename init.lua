@@ -363,10 +363,12 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 fRunLspSetup("clangd", {
                     timeout_ms = 4096,
                     on_attach = function()
-                        vim.api.nvim_create_autocmd("BufWritePost", {
-                            pattern = { "*.cpp", "*.hpp" },
-                            command = "silent !clang-format --style=file -i %",
-                        })
+                        if false then -- causing lags
+                            vim.api.nvim_create_autocmd("BufWritePost", {
+                                pattern = { "*.cpp", "*.hpp" },
+                                command = "silent !clang-format --style=file -i %",
+                            })
+                        end
                     end,
                 })
                 fRunLspSetup("pyright")
