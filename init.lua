@@ -636,6 +636,17 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { 'q/', function() require("cmdbuf").split_open(vim.o.cmdwinheight) end, desc = 'CommandLineMode Buffer' },
             },
         },
+        {
+            "goolord/alpha-nvim",
+            enabled = true,
+            lazy = false,
+            dependencies = { 'nvim-tree/nvim-web-devicons' },
+            config = function()
+                local startify = require("alpha.themes.startify")
+                startify.file_icons.provider = "devicons"
+                require("alpha").setup(startify.config)
+            end,
+        },
         --]==]
         -- [==[ completion
         {
@@ -696,7 +707,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             },
         },
         --]==]
-        -- [==[ view
+        -- [==[ visual
         {
             'akinsho/bufferline.nvim',
             version = "*",
@@ -710,6 +721,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             config = function()
                 require('bufferline').setup({
                     options = {
+                        mode = 'buffers',
                         numbers = "both",
                         close_command = "Bdelete! %d",
                         right_mouse_command = "Bdelete! %d",
@@ -724,6 +736,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         modified_icon = '●',
                         left_trunc_marker = '',
                         right_trunc_marker = '',
+                        separator_style = 'slope',
                         offsets = {
                             {
                                 filetype = "NvimTree",
@@ -732,21 +745,19 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                                 separator = true,
                             }
                         },
+                        hover = { enabled = false },
                         max_name_length = 12,
                         max_prefix_length = 8,
                         truncate_names = true,
                         tab_size = 16,
                         diagnostics = "nvim_lsp",
                         persist_buffer_sort = true,
-                        move_wraps_at_ends = true,
+                        move_wraps_at_ends = false,
                         always_show_bufferline = true,
                         auto_toggle_bufferline = false,
                         sort_by = 'insert_after_current',
                     },
-                    highlights = {
-                        -- buffer_selected = { fg = "#ffffff", bg = "#282c34", bold = true },
-                        tab_selected = { fg = "#ffffff", bg = "#aaaaaa", bold = true },
-                    },
+                    highlights = { tab_selected = { fg = "#ffffff", bg = "#aaaaaa", bold = true } },
                 })
             end,
             keys = {
@@ -795,6 +806,21 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             enabled = true,
             lazy = false,
         },
+        {
+            "MunifTanjim/nui.nvim",
+            enabled = true,
+            lazy = true,
+        },
+        {
+            "rcarriga/nvim-notify",
+            enabled = true,
+            lazy = false,
+            config = function()
+                local notify = require('notify')
+                notify.setup()
+                vim.notify = notify
+            end
+        },
         --]==]
         -- [==[ specific formats
         {
@@ -838,13 +864,19 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             'vimwiki/vimwiki',
             enabled = true,
             lazy = true,
-            cmd = 'VimwikiIndex',
+            cmd = { 'VimwikiIndex', 'VimwikiDiaryIndex', 'VimwikiMakeDiaryNote' },
             keys = function()
+                --[===[
                 vim.g.vimwiki_key_mappings = {
-                    all_maps = 0,
+                    -- all_maps = 0,
                     global = 0,
                 }
+                --]===]
                 return {
+                    { "<leader>ww", "<cmd>VimwikiIndex<cr>", desc = "VimwikiIndex" },
+                    { "<leader>w<leader>i", "<cmd>VimwikiDiaryIndex<cr>", desc = "VimwikiDiaryIndex" },
+                    { "<leader>w<leader>w", "<cmd>VimwikiMakeDiaryNote<cr>", desc = "VimwikiMakeDiaryNote" },
+                    --[===[
                     { "<leader>kwi", "<cmd>VimwikiIndex<cr>", desc = "KnowledgeBase: Wiki Index" },
                     { "<leader>kwg", "<cmd>VimwikiGenerateLinks<cr>", desc = "KnowledgeBase: Wiki Generation" },
                     { "<leader>kdi", "<cmd>VimwikiDiaryIndex<cr>", desc = "KnowledgeBase: Diary Index" },
@@ -867,6 +899,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
 
                     { "<leader>khg", "<cmd>VimwikiAll2HTML<cr>", desc = "KnowledgeBase: Html Generation" },
                     { "<leader>khb", "<cmd>Vimwiki2HTML<cr>", desc = "KnowledgeBase: Html Browsing" },
+                    --]===]
                 }
             end,
             init = function()
@@ -1117,6 +1150,63 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             },
             config = true,
         },
+        --]==]
+        -- [==[ play
+        {
+            "kawre/leetcode.nvim",
+            build = ":TSUpdate html",
+            enabled = true,
+            lazy = vim.fn.argv()[1] ~= 'leetcode.nvim',
+            cmd = 'Leet',
+            keys = {
+                { '<leader>cm', "<cmd>Leet<cr>", "Competition: Menu" },
+                { '<leader>cl', "<cmd>Leet list<cr>", "Competition: Listing of questions" },
+                { '<leader>cr', "<cmd>Leet run<cr>", "Competition: Running of the solution" },
+                { '<leader>cs', "<cmd>Leet submit<cr>", "Competition: Submission of the solution" },
+                { '<leader>cc', "<cmd>Leet console<cr>", "Competition: Console of the question" },
+                { '<leader>cd', "<cmd>Leet desc<cr>", "Competition: Description of the question" },
+                { '<leader>ci', "<cmd>Leet info<cr>", "Competition: Information of the question" },
+            },
+            dependencies = {
+                "nvim-treesitter/nvim-treesitter",
+                "nvim-lua/plenary.nvim",
+                "nvim-telescope/telescope.nvim",
+                "nvim-tree/nvim-web-devicons",
+                "MunifTanjim/nui.nvim",
+                "rcarriga/nvim-notify",
+            },
+            opts = {
+                arg = 'leetcode.nvim',
+                lang = 'cpp',
+                plugins = {
+                    non_standalone = true,
+                },
+                injector = {
+                    ['cpp'] = {
+                        before = {
+                            "#include <bits/stdc++.h>",
+                            "using namespace std;",
+                        },
+                        after = {
+                            "int main()",
+                            "{",
+                            "return 0;",
+                            "}",
+                        },
+                    },
+                },
+                description = {
+                    position = "left",
+                    width = "40%",
+                    show_stats = true,
+                },
+                storage = {
+                    home = vim.fn.stdpath("data") .. "/leetcode",
+                    cache = vim.fn.stdpath("cache") .. "/leetcode",
+                },
+                logging = true,
+            },
+        }
         --]==]
     },
     -- colorscheme that will be used when installing plugins;
