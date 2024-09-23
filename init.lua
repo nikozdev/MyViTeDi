@@ -345,7 +345,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 fRunLspSetup("zk")
 
                 fRunLspSetup("lua_ls", {
-                    root_dir = vim.loop.cwd,
+                    filetypes = { 'lua' },
+                    root_dir = function()
+                        return false
+                    end,
+                    single_file_support = true,
                     settings = {
                         Lua = {
                             runtime = { version = 'LuaJIT' },
