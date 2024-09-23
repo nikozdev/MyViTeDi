@@ -64,6 +64,9 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 })
 --]==]
 
+if vim.g.neovide == true then
+    vim.g.neovide_fullscreen = true
+end
 
 --]=]
 
