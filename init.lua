@@ -364,7 +364,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 fRunLspSetup("zk")
 
                 fRunLspSetup("lua_ls", {
-                    root_dir = vim.loop.cwd,
+                    filetypes = { 'lua' },
+                    root_dir = function()
+                        return false
+                    end,
+                    single_file_support = true,
                     settings = {
                         Lua = {
                             runtime = { version = 'LuaJIT' },
@@ -378,10 +382,12 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 fRunLspSetup("clangd", {
                     timeout_ms = 4096,
                     on_attach = function()
-                        vim.api.nvim_create_autocmd("BufWritePost", {
-                            pattern = { "*.cpp", "*.hpp" },
-                            command = "silent !clang-format --style=file -i %",
-                        })
+                        if false then -- causing lags
+                            vim.api.nvim_create_autocmd("BufWritePost", {
+                                pattern = { "*.cpp", "*.hpp" },
+                                command = "silent !clang-format --style=file -i %",
+                            })
+                        end
                     end,
                 })
                 fRunLspSetup("pyright")
@@ -535,7 +541,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                             no_ignore = true,
                         },
                         live_grep = {
-                        }
+                            additional_args = {
+                                "--hidden",
+                                "--no-ignore-vcs",
+                            },
+                        },
                     },
                 })
             end,
@@ -557,61 +567,67 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             keys = {
                 {
                     "<leader>/",
-                    function()
-                        require("which-key").show({ global = true })
-                    end,
+                    function() require("which-key").show({ global = true }) end,
                     desc = "WhichKey: global keymaps",
                 },
                 {
                     "<leader>?",
-                    function()
-                        require("which-key").show({ global = false })
-                    end,
+                    function() require("which-key").show({ global = false }) end,
                     desc = "WhichKey: local keymaps",
                 },
+
                 -- jumps
-                { "<leader>j,", "<c-o>", { desc = "Jump prev" } },
-                { "<leader>j.", "<c-i>", { desc = "Jump next" } },
+
+                { "<leader>ji", "<c-o>", { desc = "Jump Incoming" } },
+                { "<leader>jo", "<c-i>", { desc = "Jump Outgoing" } },
                 { "<leader>jl", "<cmd>jumps<cr>", { desc = "Jump List" } },
-                -- wins
-                { "<leader>w,", "<cmd>wincmd W<cr>", { desc = "Win prev" } },
-                { "<leader>w.", "<cmd>wincmd w<cr>", { desc = "Win next" } },
 
-                { "<leader>wh", "<cmd>wincmd h<cr>", { desc = "Win goto Left" } },
-                { "<leader>wj", "<cmd>wincmd j<cr>", { desc = "Win goto Down" } },
-                { "<leader>wk", "<cmd>wincmd k<cr>", { desc = "Win goto Up" } },
-                { "<leader>wl", "<cmd>wincmd l<cr>", { desc = "Win goto Right" } },
+                -- splits
 
-                { "<leader>wH", "<cmd>wincmd H<cr>", { desc = "Win Move Left" } },
-                { "<leader>wJ", "<cmd>wincmd J<cr>", { desc = "Win Move Down" } },
-                { "<leader>wK", "<cmd>wincmd K<cr>", { desc = "Win Move Up" } },
-                { "<leader>wL", "<cmd>wincmd L<cr>", { desc = "Win Move Right" } },
-                { "<leader>wT", "<cmd>wincmd T<cr>", { desc = "Win move into Tab" } },
+                { "<leader>s,", "<cmd>wincmd W<cr>", { desc = "Split prev" } },
+                { "<leader>s.", "<cmd>wincmd w<cr>", { desc = "Split next" } },
 
-                { "<leader>wd", "<cmd>close<cr>", { desc = "Win Delete" } },
-                { "<leader>ws", "<cmd>split<cr>", { desc = "Win horizontal Split" } },
-                { "<leader>wv", "<cmd>vsplit<cr>", { desc = "Win Vertical split" } },
+                { "<leader>sj", "<cmd>wincmd h<cr>", { desc = "Split goto Left" } },
+                { "<leader>sl", "<cmd>wincmd l<cr>", { desc = "Split goto Right" } },
+                { "<leader>sk", "<cmd>wincmd j<cr>", { desc = "Split goto Down" } },
+                { "<leader>si", "<cmd>wincmd k<cr>", { desc = "Split goto Up" } },
+
+                { "<leader>sJ", "<cmd>wincmd H<cr>", { desc = "Split move Left" } },
+                { "<leader>sL", "<cmd>wincmd L<cr>", { desc = "Split move Right" } },
+                { "<leader>sK", "<cmd>wincmd J<cr>", { desc = "Split move Down" } },
+                { "<leader>sI", "<cmd>wincmd K<cr>", { desc = "Split move Up" } },
+                { "<leader>sT", "<cmd>wincmd T<cr>", { desc = "Split move Tab" } },
+
+                { "<leader>sh", "<cmd>sp<cr>", { desc = "Split horizontally" } },
+                { "<leader>sv", "<cmd>vs<cr>", { desc = "Split Vertically" } },
+                { "<leader>sd", "<cmd>close<cr>", { desc = "Split Deletion" } },
+
                 -- tabs
-                { "<leader>t,", "<cmd>tabp<cr>", { desc = "Tab Prev" } },
-                { "<leader>t.", "<cmd>tabn<cr>", { desc = "Tab Next" } },
 
-                { "<leader>t[", "<cmd>tabm -1<cr>", { desc = "Tab Backward" } },
-                { "<leader>t]", "<cmd>tabm +1<cr>", { desc = "Tab Forward" } },
+                { "<leader>t,", "<cmd>tabp<cr>", { desc = "Tab goto Prev" } },
+                { "<leader>t.", "<cmd>tabn<cr>", { desc = "Tab goto Next" } },
+
+                { "<leader>t[", "<cmd>tabm -1<cr>", { desc = "Tab move Backward" } },
+                { "<leader>t]", "<cmd>tabm +1<cr>", { desc = "Tab move Forward" } },
 
                 { "<leader>tc", "<cmd>tabnew<cr><cmd>Bdelete<cr>", { desc = "Tab Creation" } },
                 { "<leader>td", "<cmd>close<cr>", { desc = "Tab Deletion" } },
+
                 -- misc
+
                 { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
                 { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
                 { '<leader>vl', '<cmd>lua FReLoad()<cr>', desc = "Vim: reLoad" },
                 { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
                 { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
+
                 { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
                 { "г", "<cmd>undo<cr>", desc = "UnDo the last action" },
                 { "<leader>vu", "<cmd>undo<cr>", desc = "Vim: Undo" },
                 { "U", "<cmd>redo<cr>", desc = "ReDo the last action" },
                 { "Г", "<cmd>redo<cr>", desc = "ReDo the last action" },
                 { "<leader>vr", "<cmd>redo<cr>", desc = "Vim: Redo" },
+
                 { "!", ":! ", desc = "System Command Line" },
                 { 'zS', fSetCodeFolder, desc = 'Setup code folding settings' },
                 { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
@@ -640,6 +656,17 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             keys = {
                 { 'q/', function() require("cmdbuf").split_open(vim.o.cmdwinheight) end, desc = 'CommandLineMode Buffer' },
             },
+        },
+        {
+            "goolord/alpha-nvim",
+            enabled = true,
+            lazy = false,
+            dependencies = { 'nvim-tree/nvim-web-devicons' },
+            config = function()
+                local startify = require("alpha.themes.startify")
+                startify.file_icons.provider = "devicons"
+                require("alpha").setup(startify.config)
+            end,
         },
         --]==]
         -- [==[ completion
@@ -701,7 +728,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             },
         },
         --]==]
-        -- [==[ view
+        -- [==[ visual
         {
             'akinsho/bufferline.nvim',
             version = "*",
@@ -715,6 +742,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             config = function()
                 require('bufferline').setup({
                     options = {
+                        mode = 'buffers',
                         numbers = "both",
                         close_command = "Bdelete! %d",
                         right_mouse_command = "Bdelete! %d",
@@ -729,6 +757,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         modified_icon = '●',
                         left_trunc_marker = '',
                         right_trunc_marker = '',
+                        separator_style = 'slope',
                         offsets = {
                             {
                                 filetype = "NvimTree",
@@ -737,21 +766,19 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                                 separator = true,
                             }
                         },
+                        hover = { enabled = false },
                         max_name_length = 12,
                         max_prefix_length = 8,
                         truncate_names = true,
                         tab_size = 16,
                         diagnostics = "nvim_lsp",
                         persist_buffer_sort = true,
-                        move_wraps_at_ends = true,
+                        move_wraps_at_ends = false,
                         always_show_bufferline = true,
                         auto_toggle_bufferline = false,
                         sort_by = 'insert_after_current',
                     },
-                    highlights = {
-                        -- buffer_selected = { fg = "#ffffff", bg = "#282c34", bold = true },
-                        tab_selected = { fg = "#ffffff", bg = "#aaaaaa", bold = true },
-                    },
+                    highlights = { tab_selected = { fg = "#ffffff", bg = "#aaaaaa", bold = true } },
                 })
             end,
             keys = {
@@ -800,6 +827,21 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             enabled = true,
             lazy = false,
         },
+        {
+            "MunifTanjim/nui.nvim",
+            enabled = true,
+            lazy = true,
+        },
+        {
+            "rcarriga/nvim-notify",
+            enabled = true,
+            lazy = false,
+            config = function()
+                local notify = require('notify')
+                notify.setup()
+                vim.notify = notify
+            end
+        },
         --]==]
         -- [==[ specific formats
         {
@@ -843,13 +885,19 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             'vimwiki/vimwiki',
             enabled = true,
             lazy = true,
-            cmd = 'VimwikiIndex',
+            cmd = { 'VimwikiIndex', 'VimwikiDiaryIndex', 'VimwikiMakeDiaryNote' },
             keys = function()
+                --[===[
                 vim.g.vimwiki_key_mappings = {
-                    all_maps = 0,
+                    -- all_maps = 0,
                     global = 0,
                 }
+                --]===]
                 return {
+                    { "<leader>ww", "<cmd>VimwikiIndex<cr>", desc = "VimwikiIndex" },
+                    { "<leader>w<leader>i", "<cmd>VimwikiDiaryIndex<cr>", desc = "VimwikiDiaryIndex" },
+                    { "<leader>w<leader>w", "<cmd>VimwikiMakeDiaryNote<cr>", desc = "VimwikiMakeDiaryNote" },
+                    --[===[
                     { "<leader>kwi", "<cmd>VimwikiIndex<cr>", desc = "KnowledgeBase: Wiki Index" },
                     { "<leader>kwg", "<cmd>VimwikiGenerateLinks<cr>", desc = "KnowledgeBase: Wiki Generation" },
                     { "<leader>kdi", "<cmd>VimwikiDiaryIndex<cr>", desc = "KnowledgeBase: Diary Index" },
@@ -872,6 +920,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
 
                     { "<leader>khg", "<cmd>VimwikiAll2HTML<cr>", desc = "KnowledgeBase: Html Generation" },
                     { "<leader>khb", "<cmd>Vimwiki2HTML<cr>", desc = "KnowledgeBase: Html Browsing" },
+                    --]===]
                 }
             end,
             init = function()
@@ -1122,6 +1171,63 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             },
             config = true,
         },
+        --]==]
+        -- [==[ play
+        {
+            "kawre/leetcode.nvim",
+            build = ":TSUpdate html",
+            enabled = true,
+            lazy = vim.fn.argv()[1] ~= 'leetcode.nvim',
+            cmd = 'Leet',
+            keys = {
+                { '<leader>cm', "<cmd>Leet<cr>", "Competition: Menu" },
+                { '<leader>cl', "<cmd>Leet list<cr>", "Competition: Listing of questions" },
+                { '<leader>cr', "<cmd>Leet run<cr>", "Competition: Running of the solution" },
+                { '<leader>cs', "<cmd>Leet submit<cr>", "Competition: Submission of the solution" },
+                { '<leader>cc', "<cmd>Leet console<cr>", "Competition: Console of the question" },
+                { '<leader>cd', "<cmd>Leet desc<cr>", "Competition: Description of the question" },
+                { '<leader>ci', "<cmd>Leet info<cr>", "Competition: Information of the question" },
+            },
+            dependencies = {
+                "nvim-treesitter/nvim-treesitter",
+                "nvim-lua/plenary.nvim",
+                "nvim-telescope/telescope.nvim",
+                "nvim-tree/nvim-web-devicons",
+                "MunifTanjim/nui.nvim",
+                "rcarriga/nvim-notify",
+            },
+            opts = {
+                arg = 'leetcode.nvim',
+                lang = 'cpp',
+                plugins = {
+                    non_standalone = true,
+                },
+                injector = {
+                    ['cpp'] = {
+                        before = {
+                            "#include <bits/stdc++.h>",
+                            "using namespace std;",
+                        },
+                        after = {
+                            "int main()",
+                            "{",
+                            "return 0;",
+                            "}",
+                        },
+                    },
+                },
+                description = {
+                    position = "left",
+                    width = "40%",
+                    show_stats = true,
+                },
+                storage = {
+                    home = vim.fn.stdpath("data") .. "/leetcode",
+                    cache = vim.fn.stdpath("cache") .. "/leetcode",
+                },
+                logging = true,
+            },
+        }
         --]==]
     },
     -- colorscheme that will be used when installing plugins;
