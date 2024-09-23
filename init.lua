@@ -29,6 +29,11 @@ vim.opt["history"] = 256
 
 -- [=[ visual
 
+local function fUpdColors()
+    vim.opt.termguicolors = os.getenv('COLORTERM') == '24bit'
+end
+fUpdColors()
+
 vim.cmd("colorscheme nord")
 
 vim.opt.conceallevel = 2
@@ -702,7 +707,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             event = { 'BufNew', 'TabNew' },
             dependencies = 'nvim-tree/nvim-web-devicons',
             init = function()
-                vim.opt.termguicolors = true
+                fUpdColors()
             end,
             config = function()
                 require('bufferline').setup({
