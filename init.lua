@@ -1,5 +1,16 @@
 -- [[ neovim config by nikozdev
 
+function FReLoad()
+    vim.notify('Reload is being done!', vim.log.levels.INFO)
+    -- Clear cached modules
+    for name, _ in pairs(package.loaded) do
+        package.loaded[name] = nil
+    end
+    -- Source your init.lua file
+    dofile(vim.env.MYVIMRC)
+    vim.notify('Reload has been done!', vim.log.levels.INFO)
+end
+
 local function fUpdLeader()
     vim.g.mapleader = ' '
     vim.g.maplocalleader = ' '
@@ -583,6 +594,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { "<leader>td", "<cmd>close<cr>", { desc = "Tab Deletion" } },
                 -- misc
                 { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
+                { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
+                { '<leader>vl', '<cmd>lua FReLoad()<cr>', desc = "Vim: reLoad" },
                 { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
                 { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
                 { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
