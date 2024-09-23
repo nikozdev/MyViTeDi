@@ -522,7 +522,11 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                             no_ignore = true,
                         },
                         live_grep = {
-                        }
+                            additional_args = {
+                                "--hidden",
+                                "--no-ignore-vcs",
+                            },
+                        },
                     },
                 })
             end,
