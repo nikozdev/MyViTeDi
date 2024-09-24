@@ -528,14 +528,11 @@ local vLazySpec = {
     },
     {
         'williamboman/mason-lspconfig.nvim',
-        dependencies = 'williamboman/mason.nvim',
+        dependencies = { 'nvim-lspconfig', 'williamboman/mason.nvim' },
         enabled = true,
         lazy = true,
-        event = 'VeryLazy',
         cmd = 'Mason',
-        keys = {
-            { '<leader>lm', '<cmd>Mason<cr>', desc = 'LanguageMason interface;' },
-        },
+        keys = { { '<leader>lm', '<cmd>Mason<cr>', desc = 'Lang-manager Mason interface' } },
         config = function()
             require("mason-lspconfig").setup({
                 automatic_installation = false,
@@ -673,14 +670,11 @@ local vLazySpec = {
     },
     {
         'simrat39/rust-tools.nvim',
-        enabled = false,
+        enabled = true,
         lazy = true,
         ft = "rs",
-        config = function()
-            require('rust-tools').setup({
-                server = {},
-            })
-        end,
+        config = true,
+        opts = { server = {} },
     },
     {
         'mfussenegger/nvim-dap',
@@ -695,8 +689,7 @@ local vLazySpec = {
                 command = "/home/nikozdev/.local/share/"
                 .. "cpptools/extension/debugAdapters/bin/OpenDebugAD7",
             }
-            pDap.setupCommands = {
-            }
+            pDap.setupCommands = { }
             pDap.configurations.cpp = {
                 {
                     name = "launch",
@@ -737,8 +730,7 @@ local vLazySpec = {
             'hrsh7th/cmp-vsnip',
         },
         enabled = true,
-        lazy = true,
-        event = { 'InsertEnter', 'CmdlineEnter' },
+        lazy = false,
         config = function()
             local pCmp = require("cmp")
             pCmp.setup({
@@ -760,7 +752,6 @@ local vLazySpec = {
                     ["<c-j>"] = pCmp.mapping.select_next_item({}),
                     ["<s-tab>"] = pCmp.mapping.select_prev_item({}),
                     ["<tab>"] = pCmp.mapping.select_next_item({}),
-                    -- ["<cr>"] = pCmp.mapping.confirm({ select = true }),
                 }),
                 sources = pCmp.config.sources({
                     { name = "buffer" },
@@ -771,16 +762,11 @@ local vLazySpec = {
             })
             pCmp.setup.cmdline("/", {
                 mapping = pCmp.mapping.preset.cmdline(),
-                sources = {
-                    { name = "buffer" },
-                },
+                sources = { { name = "buffer" } },
             })
             pCmp.setup.cmdline(":", {
                 mapping = pCmp.mapping.preset.cmdline(),
-                sources = {
-                    { name = "path" },
-                    { name = "cmdline" },
-                },
+                sources = { { name = "cmdline" }, { name = "path" } },
             })
         end,
     },
@@ -1035,19 +1021,7 @@ local vLazySpec = {
         lazy = true,
         cmd = 'HexDump',
         ft = 'xxd',
-        config = function()
-            require('hex').setup({})
-        end,
-        --[===[
-        cond = function()
-            -- full path of the current file
-            local vFpath = vim.fn.expand('%:p')
-            -- MIME type
-            local vFtype = vim.fn.system("file --mime-type -b " .. vFpath)
-            -- check if it's a binary file
-            return vFtype:match("application/octet-stream") ~= nil
-        end,
-        --]===]
+        config = true,
     },
     -- ]==]
     -- [==[ source control
@@ -1094,11 +1068,9 @@ local vLazySpec = {
         enabled = true,
         lazy = true,
         cmd = "CurlOpen",
+        ft = 'curl',
+        opts = { default_flags = { '--compressed', '-k' }, open_with = "tab" },
         config = true,
-        opts = {
-            default_flags = { '--compressed', '-k' },
-            open_with = "split",
-        },
     },
     -- ]==]
     -- [==[ organisation and productivity
