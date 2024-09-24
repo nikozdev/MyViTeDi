@@ -452,6 +452,40 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 fSetTheme('theta')
             end,
         },
+        {
+            'Shatur/neovim-session-manager',
+            dependencies = "nvim-lua/plenary.nvim",
+            enabled = true,
+            lazy = true,
+            cmd = "SessionManager",
+            keys = {
+                { "<leader>pl", "<cmd>SessionManager load_last_session<cr>", desc = "Project: Last session" },
+                { "<leader>pm", "<cmd>SessionManager load_session<cr>", desc = "Project: session Menu" },
+                { "<leader>pf", "<cmd>SessionManager load_current_dir_session<cr>", desc = "Project: Folder session" },
+                { "<leader>pg", "<cmd>SessionManager load_git_session<cr>", desc = "Project: Git session" },
+                { "<leader>ps", "<cmd>SessionManager save_current_session<cr>", desc = "Project: Save session" },
+                { "<leader>pd", "<cmd>SessionManager delete_session<cr>", desc = "Project: Delete session" },
+            },
+            config = function()
+                local tPath = require('plenary.path')
+                local vModule = require('session_manager')
+                local vConfig = require('session_manager.config')
+                vModule.setup({
+                    sessions_dir = tPath:new(vim.fn.stdpath('data'), 'sessions'),
+                    autoload_mode = vConfig.AutoloadMode.Disabled,
+                    autosave_last_session = true,
+                    autosave_ignore_not_normal = true,
+                    autosave_ignore_dirs = {},
+                    autosave_ignore_filetypes = {
+                        'gitcommit',
+                        'gitrebase',
+                    },
+                    autosave_ignore_buftypes = {},
+                    autosave_only_in_session = false,
+                    max_path_length = 64,
+                })
+            end,
+        },
         -- ]==]
         -- [==[ development
         {
