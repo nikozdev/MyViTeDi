@@ -792,11 +792,8 @@ local vLazySpec = {
         enabled = true,
         lazy = true,
         event = 'VeryLazy',
-        config = function()
-            require('cyrillic').setup({
-                no_cyrillic_abbrev = true,
-            })
-        end
+        opts = { no_cyrillic_abbrev = true },
+        config = true,
     },
     -- ]==]
     -- [==[ visual
@@ -1050,7 +1047,6 @@ local vLazySpec = {
             { '<leader>gtn', '<cmd>Gitsigns toggle_numhl<cr>', desc = "Gitsigns Toggle line Numbers" },
             { '<leader>gtw', '<cmd>Gitsigns toggle_word_diff<cr>', desc = "Gitsigns Toggle Words" },
         },
-        config = true,
         opts = {
             signs_staged_enable = true,
             signcolumn = true,
@@ -1059,6 +1055,7 @@ local vLazySpec = {
             word_diff = false,
             max_file_length = 16000,
         },
+        config = true,
     },
     -- ]==]
     -- [==[ networking
