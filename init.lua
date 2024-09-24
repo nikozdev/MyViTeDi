@@ -225,18 +225,16 @@ local vLazySpec = {
         event = "VeryLazy",
         config = function()
             require("treesitter-context").setup({
-                enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-                max_lines = 8, -- How many lines the window should span. Values <= 0 mean no limit
-                min_window_height = 12, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+                enable = true,
+                max_lines = 8,
+                min_window_height = 12,
                 line_numbers = true,
-                multiline_threshold = 8, -- Maximum number of lines to show for a single context
-                trim_scope = 'inner', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-                mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
-                -- Separator between context and content. Should be a single character string, like '-'.
-                -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+                multiline_threshold = 8,
+                trim_scope = 'inner',
+                mode = 'cursor',
                 separator = "-",
-                zindex = 20, -- The Z-index of the context window
-                on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+                zindex = 20,
+                on_attach = nil,
             })
         end,
     },
@@ -255,64 +253,62 @@ local vLazySpec = {
         },
         enabled = true,
         lazy = true,
-        event = "VeryLazy",
-        config = function()
-            require("telescope").setup({
-                defaults = {
-                    layout_strategy = "flex",
-                    layout_config = {
-                        horizontal = {
-                            anchor = "E",
-                            width = 0.95,
-                            height = 0.95,
-                            preview_width = 0.5,
-                            preview_cutoff = 16,
-                        },
-                        vertical = {
-                            anchor = "E",
-                            width = 0.95,
-                            height = 0.95,
-                        },
-                        cursor = {
-                            anchor = "E",
-                            width = 0.95,
-                            height = 0.95,
-                        },
-                        flex = {
-                            anchor = "E",
-                            width = 0.95,
-                            height = 0.95,
-                        },
+        opts = {
+            defaults = {
+                layout_strategy = "flex",
+                layout_config = {
+                    horizontal = {
+                        anchor = "E",
+                        width = 0.95,
+                        height = 0.95,
+                        preview_width = 0.5,
+                        preview_cutoff = 16,
                     },
-                    file_ignore_patterns = {
-                        "Build/",
-                        ".git",
-                        ".cache",
+                    vertical = {
+                        anchor = "E",
+                        width = 0.95,
+                        height = 0.95,
+                    },
+                    cursor = {
+                        anchor = "E",
+                        width = 0.95,
+                        height = 0.95,
+                    },
+                    flex = {
+                        anchor = "E",
+                        width = 0.95,
+                        height = 0.95,
                     },
                 },
-                pickers = {
-                    find_files = {
-                        find_command = {
-                            'rg',
-                            '--files',
-                            '--hidden',
-                            '--follow',
-                            '-g',
-                            '!.git/',
-                            '-g',
-                            '!.cache/',
-                        },
-                        no_ignore = true,
+                file_ignore_patterns = {
+                    "Build/",
+                    ".git",
+                    ".cache",
+                },
+            },
+            pickers = {
+                find_files = {
+                    find_command = {
+                        'rg',
+                        '--files',
+                        '--hidden',
+                        '--follow',
+                        '-g',
+                        '!.git/',
+                        '-g',
+                        '!.cache/',
                     },
-                    live_grep = {
-                        additional_args = {
-                            "--hidden",
-                            "--no-ignore-vcs",
-                        },
+                    no_ignore = true,
+                },
+                live_grep = {
+                    additional_args = {
+                        "--hidden",
+                        "--no-ignore-vcs",
                     },
                 },
-            })
-        end,
+            },
+        },
+        config = true,
         keys = function()
             local pTeleScopeBuiltIn = require('telescope.builtin')
             return {
@@ -401,19 +397,6 @@ local vLazySpec = {
             { "!", ":! ", desc = "System Command Line" },
             { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
         },
-    },
-    {
-        'chrisgrieser/nvim-spider',
-        enabled = true,
-        lazy = true,
-        keys = function()
-            local spider = require('spider')
-            return {
-                { 'w', function() spider.motion('w', { skipInsignificantPunctuation = false }) end, desc = "head of the next word" },
-                { 'e', function() spider.motion('e', { skipInsignificantPunctuation = false }) end, desc = "tail of the curr/next word" },
-                { 'b', function() spider.motion('b', { skipInsignificantPunctuation = false }) end, desc = "head of the prev/curr word" },
-            }
-        end
     },
     {
 	    "tris203/precognition.nvim",
@@ -528,18 +511,16 @@ local vLazySpec = {
         lazy = false,
         priority = 100,
         build = ":TSUpdate",
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                highlight = {
-                    enable = true,
-                },
-            })
-        end,
+        config = true,
+        opts = {
+            highlight = { enable = true },
+            textobjects = { enable = true },
+        },
     },
     {
         'neovim/nvim-lspconfig',
         enabled = true,
-        lazy = false,
+        lazy = true,
     },
     {
         'williamboman/mason.nvim',
@@ -841,57 +822,6 @@ local vLazySpec = {
         enabled = true,
         lazy = true,
         event = { 'BufNew', 'TabNew' },
-        init = function()
-            fUpdColors()
-        end,
-        config = function()
-            require('bufferline').setup({
-                options = {
-                    mode = 'buffers',
-                    numbers = "both",
-                    close_command = "Bdelete! %d",
-                    right_mouse_command = "Bdelete! %d",
-                    color_icons = true,
-                    show_buffer_icons = true,
-                    show_buffer_close_icons = false,
-                    show_close_icon = false,
-                    show_tab_indicators = true,
-                    show_duplicate_prefix = true,
-                    indicator_icon = '▎',
-                    buffer_close_icon = 'x',
-                    modified_icon = '●',
-                    left_trunc_marker = '',
-                    right_trunc_marker = '',
-                    separator_style = 'slope',
-                    offsets = {
-                        {
-                            filetype = "NvimTree",
-                            text = "File Explorer",
-                            text_align = "center",
-                            separator = true,
-                        }
-                    },
-                    hover = { enabled = false },
-                    max_name_length = 12,
-                    max_prefix_length = 8,
-                    truncate_names = true,
-                    tab_size = 16,
-                    diagnostics = "nvim_lsp",
-                    persist_buffer_sort = true,
-                    move_wraps_at_ends = false,
-                    always_show_bufferline = true,
-                    auto_toggle_bufferline = false,
-                    sort_by = 'insert_after_current',
-                },
-                -- highlights = { tab_selected = { fg = "#ffffff", bg = "#aaaaaa", bold = true } },
-                --[[
-                highlights = require("nord").bufferline.highlights({
-                    italic = true,
-                    bold = true,
-                }),
-                -- ]]
-            })
-        end,
         keys = {
             { "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buf Goto Picked;" },
             -- move
@@ -901,37 +831,71 @@ local vLazySpec = {
             { "<leader>b,", "<cmd>BufferLineCyclePrev<cr>", desc = "Buf Prev;" },
             { "<leader>b.", "<cmd>BufferLineCycleNext<cr>", desc = "Buf Next;" },
         },
+        opts = {
+            options = {
+                mode = 'buffers',
+                numbers = "both",
+                close_command = "Bdelete! %d",
+                right_mouse_command = "Bdelete! %d",
+                color_icons = true,
+                show_buffer_icons = true,
+                show_buffer_close_icons = false,
+                show_close_icon = false,
+                show_tab_indicators = true,
+                show_duplicate_prefix = true,
+                indicator_icon = '▎',
+                buffer_close_icon = 'x',
+                modified_icon = '●',
+                left_trunc_marker = '',
+                right_trunc_marker = '',
+                separator_style = 'slope',
+                offsets = {
+                    {
+                        filetype = "NvimTree",
+                        text = "File Explorer",
+                        text_align = "center",
+                        separator = true,
+                    }
+                },
+                hover = { enabled = false },
+                max_name_length = 12,
+                max_prefix_length = 8,
+                truncate_names = true,
+                tab_size = 16,
+                diagnostics = "nvim_lsp",
+                persist_buffer_sort = true,
+                move_wraps_at_ends = false,
+                always_show_bufferline = true,
+                auto_toggle_bufferline = false,
+                sort_by = 'insert_after_current',
+            },
+        },
+        config = true,
+        init = fUpdColors,
     },
     {
         'nvim-lualine/lualine.nvim',
         enabled = true,
         lazy = true,
         event = 'VeryLazy',
-        config = function()
-            require("lualine").setup({
-                options = {
-                    theme = "nord",
-                    icons_enabled = true,
-                    section_separators = {
-                        left = "",
-                        right = "",
-                    },
-                    component_separators = {
-                        left = "",
-                        right = "",
-                    },
-                    always_divide_middle = true,
-                    globalstatus = false,
-                },
-                sections = {
-                    lualine_a = { { "filename", path = 2 }, },
-                    lualine_b = {
-                        { "mode", fmt = function(str) return "m"..str:sub(1,1) end },
-                        { "winnr", fmt = function(str) return "w"..str end },
-                    }
-                },
-            })
-        end,
+        opts = {
+            options = {
+                theme = "auto",
+                icons_enabled = true,
+                section_separators = { left = "", right = "" },
+                component_separators = { left = "", right = "" },
+                always_divide_middle = true,
+                globalstatus = false,
+            },
+            sections = {
+                lualine_a = { { "filename", path = 2 } },
+                lualine_b = {
+                    { "mode", fmt = function(str) return "m"..str:sub(1,1) end },
+                    { "winnr", fmt = function(str) return "w"..str end },
+                }
+            },
+        },
+        config = true,
     },
     -- ]==]
     -- [==[ colors
