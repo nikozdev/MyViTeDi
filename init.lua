@@ -30,13 +30,11 @@ vim.opt["history"] = 256
 -- [=[ visual
 
 local function fUpdColors()
-    vim.opt.termguicolors = os.getenv('COLORTERM') == '24bit'
+    vim.opt.termguicolors = (os.getenv('COLORTERM') == '24bit')
 end
 fUpdColors()
 
-vim.cmd("colorscheme nord")
-
-vim.opt.conceallevel = 2
+vim.opt.conceallevel = 0
 
 vim.opt.showtabline = 4
 
@@ -735,7 +733,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             enabled = true,
             lazy = true,
             event = { 'BufNew', 'TabNew' },
-            dependencies = 'nvim-tree/nvim-web-devicons',
+            dependencies = { 'nvim-tree/nvim-web-devicons',  'shaunsingh/nord.nvim' },
             init = function()
                 fUpdColors()
             end,
@@ -779,6 +777,12 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         sort_by = 'insert_after_current',
                     },
                     highlights = { tab_selected = { fg = "#ffffff", bg = "#aaaaaa", bold = true } },
+                    --[[
+                    highlights = require("nord").bufferline.highlights({
+                        italic = true,
+                        bold = true,
+                    }),
+                    --]]
                 })
             end,
             keys = {
@@ -820,7 +824,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                         }
                     },
                 })
-            end
+            end,
+            dependencies = { 'shaunsingh/nord.nvim' },
         },
         {
             'vim-scripts/restore_view.vim',
@@ -840,6 +845,23 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 local notify = require('notify')
                 notify.setup()
                 vim.notify = notify
+            end
+        },
+        {
+            'EdenEast/nightfox.nvim',
+            enabled = true,
+            lazy = false,
+            config = function()
+                vim.cmd("colorscheme nightfox")
+                --vim.cmd("colorscheme nordfox")
+            end
+        },
+        {
+            'shaunsingh/nord.nvim',
+            enabled = true,
+            lazy = true,
+            config = function()
+                --vim.cmd("colorscheme nord")
             end
         },
         --]==]
