@@ -1410,7 +1410,7 @@ local vLazySpec = {
             "rcarriga/nvim-notify",
         },
         enabled = true,
-        lazy = vim.fn.argv()[1] ~= 'leetcode.nvim',
+        lazy = (vim.fn.argv()[1] ~= 'leetcode.nvim'),
         cmd = 'Leet',
         keys = {
             { '<leader>cm', "<cmd>Leet<cr>", "Competition: Menu" },
@@ -1424,9 +1424,7 @@ local vLazySpec = {
         opts = {
             arg = 'leetcode.nvim',
             lang = 'cpp',
-            plugins = {
-                non_standalone = true,
-            },
+            plugins = { non_standalone = true },
             injector = {
                 ['cpp'] = {
                     before = {
@@ -1434,10 +1432,7 @@ local vLazySpec = {
                         "using namespace std;",
                     },
                     after = {
-                        "int main()",
-                        "{",
-                        "return 0;",
-                        "}",
+                        "int main() { return 0; }",
                     },
                 },
             },
