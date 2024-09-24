@@ -25,7 +25,7 @@ vim.opt["cmdheight"] = 4
 
 vim.opt["history"] = 256
 
---]=]
+-- ]=]
 
 -- [=[ visual
 
@@ -67,7 +67,7 @@ if vim.g.neovide == true then
     vim.g.neovide_fullscreen = true
 end
 
---]=]
+-- ]=]
 
 -- [=[ navigation
 
@@ -90,7 +90,7 @@ vim.opt["scrolloff"] = 1024
 vim.opt["colorcolumn"] = "80"
 vim.opt["signcolumn"] = "yes"
 
---]=]
+-- ]=]
 
 -- [=[ editing
 
@@ -159,7 +159,7 @@ vim.opt["cinoptions"] = ">s,g0,hs,N-s,t-s,ps,E0,is,+s,cs,C1,/0,:s,=s,l0,b0,(s,)6
 vim.opt["cinscopedecls"] = "public,private,protected"
 vim.opt["indentexpr"] = ""
 
---]==]
+-- ]==]
 
 -- auto complete menu;
 vim.opt["wildmenu"] = true
@@ -172,14 +172,14 @@ vim.opt["showmatch"] = true
 -- (0.1 * n) of a second to show the matching;
 vim.opt["matchtime"] = 2
 
---]=]
+-- ]=]
 
 -- [=[ completion
 
 vim.opt["complete"] = { ".", "w", "b", "u", "t", }
 vim.opt["completeopt"] = { "menu", "menuone", "noselect", }
 
---]=]
+-- ]=]
 
 -- [=[ search/replace
 
@@ -190,7 +190,7 @@ vim.opt["incsearch"] = true
 --do not affect search by capital/regular case
 vim.opt["ignorecase"] = true
 
---]=]
+-- ]=]
 
 -- [=[ plugins
 
@@ -330,7 +330,7 @@ local vLazySpec = {
                 { '<leader>fc', pTeleScopeBuiltIn.commands, desc = "Fuzzy find Cmd;" },
                 { '<leader>fk', pTeleScopeBuiltIn.keymaps, desc = "Fuzzy find Key;" },
             }
-        end
+        end,
     },
     {
         'folke/which-key.nvim',
@@ -1214,7 +1214,7 @@ local vLazySpec = {
 
                 { "<leader>khg", "<cmd>VimwikiAll2HTML<cr>", desc = "KnowledgeBase: Html Generation" },
                 { "<leader>khb", "<cmd>Vimwiki2HTML<cr>", desc = "KnowledgeBase: Html Browsing" },
-                --]===]
+                -- ]===]
             }
         end,
         init = function()
@@ -1490,6 +1490,6 @@ if not vLazyPcallSuccess then
     }, true, {})
 end
 
---]=]
+-- ]=]
 
---]]
+-- ]]
