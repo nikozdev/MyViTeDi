@@ -905,13 +905,13 @@ local vLazySpec = {
             })
         end,
     },
-    { -- nice, blue, dark, bright, colorful
+    { -- blue, dark, bright, colorful
         'shaunsingh/nord.nvim',
         enabled = true,
         lazy = false,
         -- config = function() vim.cmd.colorscheme("nord") end
     },
-    { -- nice, dark, grim, gothic, gray, colorless
+    { -- dark, grim, gothic, gray, colorless
         'zenbones-theme/zenbones.nvim',
         dependencies = "rktjmp/lush.nvim",
         enabled = true,
@@ -919,7 +919,7 @@ local vLazySpec = {
         init = function() vim.g.zenbones_compat = 1; end,
         -- config = function() vim.cmd.colorscheme('neobones') end,
     },
-    { -- nice, dark, pretty, colorful
+    { -- dark, colorful
         'EdenEast/nightfox.nvim',
         enabled = true,
         lazy = false,
@@ -937,7 +937,7 @@ local vLazySpec = {
             --vim.cmd.colorscheme("forest_stream")
         end
     },
-    { -- nice, blue, dark, mild
+    { -- blue, dark, mild
         'kyazdani42/blue-moon',
         enabled = true,
         lazy = false,
