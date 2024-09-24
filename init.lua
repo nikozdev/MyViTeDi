@@ -434,10 +434,22 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             dependencies = 'nvim-tree/nvim-web-devicons',
             enabled = true,
             lazy = false,
+            cmd = 'Alpha',
+            keys = {
+                { '<leader>vi', "<cmd>Alpha<cr>", desc = "Vim: Intro;" },
+            },
             config = function()
-                local startify = require("alpha.themes.startify")
-                startify.file_icons.provider = "devicons"
-                require("alpha").setup(startify.config)
+                local vModule = require('alpha')
+                local function fSetTheme(vThemeName)
+                    local vTheme = require('alpha.themes.' .. vThemeName)
+                    if vTheme.file_icons then
+                        vTheme.file_icons.provider = "devicons"
+                    end
+                    vModule.setup(vTheme.config)
+                end
+                --fSetTheme('startify')
+                --fSetTheme('dashboard')
+                fSetTheme('theta')
             end,
         },
         -- ]==]
