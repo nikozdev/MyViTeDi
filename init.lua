@@ -964,7 +964,7 @@ local vLazySpec = {
     },
     { -- very colorful, dimming inactive windows (replaced by tint)
         'sontungexpt/witch',
-        enabled = false,
+        enabled = true,
         lazy = true,
         cmd = 'Witch',
         opts = {
@@ -996,45 +996,45 @@ local vLazySpec = {
     },
     { -- weak comments
         'kvrohit/substrata.nvim',
-        enabled = false,
+        enabled = true,
         lazy = false,
-        config = function() vim.cmd.colorscheme("substrata") end
+        config = false, -- function() vim.cmd.colorscheme("substrata") end
     },
     { -- nice and shiny, darky comments
         'FrenzyExists/aquarium-vim',
-        enabled = false,
+        enabled = true,
         lazy = false,
-        config = function() vim.cmd.colorscheme("aquarium") end
+        config = false, -- function() vim.cmd.colorscheme("aquarium"); end
     },
     { -- bad contrast of comments
         'slugbyte/lackluster.nvim',
-        enabled = false,
+        enabled = true,
         lazy = false,
-        config = function() vim.cmd.colorscheme("lackluster") end
+        config = false, -- function() vim.cmd.colorscheme("lackluster") end
     },
     { -- too dark for mee
         'kdheepak/monochrome.nvim',
-        enabled = false,
+        enabled = true,
         lazy = false,
-        config = function() vim.cmd.colorscheme("monochrome") end
+        config = false, -- function() vim.cmd.colorscheme("lackluster") end
     },
     { -- too hight contrast, very colorful and bright
         'fenetikm/falcon',
-        enabled = false,
+        enabled = true,
         lazy = false,
-        config = function() vim.cmd.colorscheme("falcon") end,
+        config = false, -- function() vim.cmd.colorscheme("falcon") end,
     },
     { -- too high contrast
         'dasupradyumna/midnight.nvim',
-        enabled = false,
+        enabled = true,
         lazy = false,
-        config = function() vim.cmd.colorscheme("midnight") end
+        config = false, -- function() vim.cmd.colorscheme("midnight") end
     },
     { -- nice, blue, dark, bright, colorful
         'shaunsingh/nord.nvim',
         enabled = true,
         lazy = false,
-        config = function() vim.cmd.colorscheme("nord") end
+        config = false, -- function() vim.cmd.colorscheme("nord") end
     },
     { -- nice, dark, grim, gothic, gray, colorless
         'zenbones-theme/zenbones.nvim',
@@ -1042,20 +1042,20 @@ local vLazySpec = {
         enabled = true,
         lazy = false,
         init = function() vim.g.zenbones_compat = 1; end,
-        config = function() vim.cmd.colorscheme('neobones'); fUpdColors(); end,
+        config = false, -- function() vim.cmd.colorscheme('neobones') end,
     },
     { -- one of the best
         'EdenEast/nightfox.nvim',
-        enabled = false,
+        enabled = true,
         lazy = false,
-        config = function() vim.cmd.colorscheme("nightfox") end
+        config = false, -- function() vim.cmd.colorscheme("nightfox") end
     },
     { -- high contrast, dark, colorful
         'rockerBOO/boo-colorscheme-nvim',
         enabled = true,
         lazy = false,
         config = function()
-            vim.cmd.colorscheme("boo")
+            --vim.cmd.colorscheme("boo")
             --vim.cmd.colorscheme("sunset_cloud")
             --vim.cmd.colorscheme("crimson_moonlight")
             --vim.cmd.colorscheme("radioactive_waste")
@@ -1064,12 +1064,9 @@ local vLazySpec = {
     },
     { -- nice, blue, dark, mild
         'kyazdani42/blue-moon',
-        enabled = false,
+        enabled = true,
         lazy = false,
-        config = function()
-            fUpdColors();
-            vim.cmd.colorscheme("blue-moon")
-        end
+        config = false, -- function() vim.cmd.colorscheme("blue-moon") end
     },
     -- ]==]
     -- [==[ specific formats
