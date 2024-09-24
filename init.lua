@@ -223,8 +223,226 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             priority = 1000,
             config = true,
         },
-        --]==]
-        -- [==[ languages
+        -- ]==]
+        -- [==[ navigation
+        {
+            'nvim-treesitter/nvim-treesitter-context',
+            dependencies = { 'nvim-treesitter/nvim-treesitter' },
+            enabled = true,
+            lazy = true,
+            event = "VeryLazy",
+            config = function()
+                require("treesitter-context").setup({
+                    enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+                    max_lines = 8, -- How many lines the window should span. Values <= 0 mean no limit
+                    min_window_height = 12, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+                    line_numbers = true,
+                    multiline_threshold = 8, -- Maximum number of lines to show for a single context
+                    trim_scope = 'inner', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+                    mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
+                    -- Separator between context and content. Should be a single character string, like '-'.
+                    -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+                    separator = "-",
+                    zindex = 20, -- The Z-index of the context window
+                    on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+                })
+            end,
+        },
+        {
+            'junegunn/fzf.vim',
+            build = './install --bin',
+            dependencies = {
+                'BurntSushi/ripgrep',
+            },
+            enabled = true,
+            lazy = true,
+        },
+        {
+            'nvim-telescope/telescope.nvim',
+            dependencies = {
+                'nvim-lua/plenary.nvim',
+                {
+                    'nvim-telescope/telescope-fzf-native.nvim',
+                    build = 'make',
+                },
+            },
+            enabled = true,
+            lazy = true,
+            event = "VeryLazy",
+            config = function()
+                require("telescope").setup({
+                    defaults = {
+                        layout_strategy = "flex",
+                        layout_config = {
+                            horizontal = {
+                                anchor = "E",
+                                width = 0.95,
+                                height = 0.95,
+                                preview_width = 0.5,
+                                preview_cutoff = 16,
+                            },
+                            vertical = {
+                                anchor = "E",
+                                width = 0.95,
+                                height = 0.95,
+                            },
+                            cursor = {
+                                anchor = "E",
+                                width = 0.95,
+                                height = 0.95,
+                            },
+                            flex = {
+                                anchor = "E",
+                                width = 0.95,
+                                height = 0.95,
+                            },
+                        },
+                    },
+                    pickers = {
+                        find_files = {
+                            find_command = {
+                                'rg',
+                                '--files',
+                                '--hidden',
+                                '--follow',
+                                '-g',
+                                '!.git/',
+                                '-g',
+                                '!.cache/',
+                            },
+                            no_ignore = true,
+                        },
+                        live_grep = {
+                            additional_args = {
+                                "--hidden",
+                                "--no-ignore-vcs",
+                            },
+                        },
+                    },
+                })
+            end,
+            keys = function()
+                local pTeleScopeBuiltIn = require('telescope.builtin')
+                return {
+                    { '<leader>ff', pTeleScopeBuiltIn.find_files, desc = "Fuzzy Find file;" },
+                    { '<leader>fg', pTeleScopeBuiltIn.live_grep, desc = "Fuzzy Grep files;" },
+                    { '<leader>fb', pTeleScopeBuiltIn.buffers, desc = "Fuzzy find Buf;" },
+                    { '<leader>fc', pTeleScopeBuiltIn.commands, desc = "Fuzzy find Cmd;" },
+                    { '<leader>fk', pTeleScopeBuiltIn.keymaps, desc = "Fuzzy find Key;" },
+                }
+            end
+        },
+        {
+            'folke/which-key.nvim',
+            dependencies = {
+                'nvim-tree/nvim-web-devicons',
+                'echasnovski/mini.nvim',
+            },
+            enabled = true,
+            lazy = true,
+            event = "VeryLazy",
+            keys = {
+                {
+                    "<leader>/",
+                    function() require("which-key").show({ global = true }) end,
+                    desc = "WhichKey: global keymaps",
+                },
+                {
+                    "<leader>?",
+                    function() require("which-key").show({ global = false }) end,
+                    desc = "WhichKey: local keymaps",
+                },
+
+                -- jumps
+
+                { "<leader>ji", "<c-o>", { desc = "Jump Incoming" } },
+                { "<leader>jo", "<c-i>", { desc = "Jump Outgoing" } },
+                { "<leader>jl", "<cmd>jumps<cr>", { desc = "Jump List" } },
+
+                -- splits
+
+                { "<leader>s,", "<cmd>wincmd W<cr>", { desc = "Split prev" } },
+                { "<leader>s.", "<cmd>wincmd w<cr>", { desc = "Split next" } },
+
+                { "<leader>sj", "<cmd>wincmd h<cr>", { desc = "Split goto Left" } },
+                { "<leader>sl", "<cmd>wincmd l<cr>", { desc = "Split goto Right" } },
+                { "<leader>sk", "<cmd>wincmd j<cr>", { desc = "Split goto Down" } },
+                { "<leader>si", "<cmd>wincmd k<cr>", { desc = "Split goto Up" } },
+
+                { "<leader>sJ", "<cmd>wincmd H<cr>", { desc = "Split move Left" } },
+                { "<leader>sL", "<cmd>wincmd L<cr>", { desc = "Split move Right" } },
+                { "<leader>sK", "<cmd>wincmd J<cr>", { desc = "Split move Down" } },
+                { "<leader>sI", "<cmd>wincmd K<cr>", { desc = "Split move Up" } },
+                { "<leader>sT", "<cmd>wincmd T<cr>", { desc = "Split move Tab" } },
+
+                { "<leader>sh", "<cmd>sp<cr>", { desc = "Split horizontally" } },
+                { "<leader>sv", "<cmd>vs<cr>", { desc = "Split Vertically" } },
+                { "<leader>sd", "<cmd>close<cr>", { desc = "Split Deletion" } },
+
+                -- tabs
+
+                { "<leader>t,", "<cmd>tabp<cr>", { desc = "Tab goto Prev" } },
+                { "<leader>t.", "<cmd>tabn<cr>", { desc = "Tab goto Next" } },
+
+                { "<leader>t[", "<cmd>tabm -1<cr>", { desc = "Tab move Backward" } },
+                { "<leader>t]", "<cmd>tabm +1<cr>", { desc = "Tab move Forward" } },
+
+                { "<leader>tc", "<cmd>tabnew<cr><cmd>Bdelete<cr>", { desc = "Tab Creation" } },
+                { "<leader>td", "<cmd>close<cr>", { desc = "Tab Deletion" } },
+
+                -- misc
+
+                { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
+                { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
+                { '<leader>vl', '<cmd>lua FReLoad()<cr>', desc = "Vim: reLoad" },
+                { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
+                { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
+
+                { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
+                { "г", "<cmd>undo<cr>", desc = "UnDo the last action" },
+                { "<leader>vu", "<cmd>undo<cr>", desc = "Vim: Undo" },
+                { "U", "<cmd>redo<cr>", desc = "ReDo the last action" },
+                { "Г", "<cmd>redo<cr>", desc = "ReDo the last action" },
+                { "<leader>vr", "<cmd>redo<cr>", desc = "Vim: Redo" },
+
+                { "!", ":! ", desc = "System Command Line" },
+                { 'zS', fSetCodeFolder, desc = 'Setup code folding settings' },
+                { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
+            },
+        },
+        {
+            'famiu/bufdelete.nvim',
+            enabled = true,
+            lazy = true,
+            cmd = "Bdelete",
+            keys = {
+                { "<leader>bc", "<cmd>enew<cr>", desc = "Buf Creation;" },
+                { '<leader>bd', '<cmd>Bdelete<cr>', desc = "Buf Deletion;" },
+                { "<leader>be", "<cmd>Explore<cr>", { desc = "Buf Explorer" } },
+                { "<leader>bt", "<cmd>edit term://$SHELL<cr>", { desc = "Buf Terminal" } },
+            },
+        },
+        {
+            'notomo/cmdbuf.nvim',
+            enabled = false,
+            lazy = true,
+            keys = {
+                { 'q/', function() require("cmdbuf").split_open(vim.o.cmdwinheight) end, desc = 'CommandLineMode Buffer' },
+            },
+        },
+        {
+            "goolord/alpha-nvim",
+            dependencies = 'nvim-tree/nvim-web-devicons',
+            enabled = true,
+            lazy = false,
+            config = function()
+                local startify = require("alpha.themes.startify")
+                startify.file_icons.provider = "devicons"
+                require("alpha").setup(startify.config)
+            end,
+        },
+        -- ]==]
+        -- [==[ development
         {
             "nvim-treesitter/nvim-treesitter",
             enabled = true,
@@ -288,8 +506,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 pcall(function()
                     local vCmpNvimLsp = require('cmp_nvim_lsp')
                     local vNvimCaps = vim.lsp.protocol.make_client_capabilities()
-                    --vLspCaps = comp.update_capabilities(nvim_caps)
-                    vLspCaps = comp.default_capabilities(nvim_caps)
+                    --vLspCaps = vCmpNvimLsp.update_capabilities(vNvimCaps)
+                    vLspCaps = vCmpNvimLsp.default_capabilities(vNvimCaps)
                 end)
 
                 local function fRunLspSetup(vName, vConfigTable)
@@ -449,223 +667,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 }
             end,
         },
-        --]==]
-        -- [==[ navigation
-        {
-            'nvim-treesitter/nvim-treesitter-context',
-            dependencies = { 'nvim-treesitter/nvim-treesitter' },
-            enabled = true,
-            lazy = true,
-            event = "VeryLazy",
-            config = function()
-                require("treesitter-context").setup({
-                    enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-                    max_lines = 8, -- How many lines the window should span. Values <= 0 mean no limit
-                    min_window_height = 12, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
-                    line_numbers = true,
-                    multiline_threshold = 8, -- Maximum number of lines to show for a single context
-                    trim_scope = 'inner', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-                    mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
-                    -- Separator between context and content. Should be a single character string, like '-'.
-                    -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
-                    separator = "-",
-                    zindex = 20, -- The Z-index of the context window
-                    on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
-                })
-            end,
-        },
-        {
-            'junegunn/fzf.vim',
-            dependencies = {
-                'BurntSushi/ripgrep',
-                { 'junegunn/fzf', build = { './install --bin' } }
-            },
-            enabled = true,
-            lazy = true,
-        },
-        {
-            'nvim-telescope/telescope.nvim',
-            dependencies = {
-                'nvim-lua/plenary.nvim',
-                {
-                    'nvim-telescope/telescope-fzf-native.nvim',
-                    build = 'make',
-                },
-            },
-            enabled = true,
-            lazy = true,
-            event = "VeryLazy",
-            config = function()
-                require("telescope").setup({
-                    defaults = {
-                        layout_strategy = "flex",
-                        layout_config = {
-                            horizontal = {
-                                anchor = "E",
-                                width = 0.95,
-                                height = 0.95,
-                                preview_width = 0.5,
-                                preview_cutoff = 16,
-                            },
-                            vertical = {
-                                anchor = "E",
-                                width = 0.95,
-                                height = 0.95,
-                            },
-                            cursor = {
-                                anchor = "E",
-                                width = 0.95,
-                                height = 0.95,
-                            },
-                            flex = {
-                                anchor = "E",
-                                width = 0.95,
-                                height = 0.95,
-                            },
-                        },
-                    },
-                    pickers = {
-                        find_files = {
-                            find_command = {
-                                'rg',
-                                '--files',
-                                '--hidden',
-                                '--follow',
-                                '-g',
-                                '!.git/',
-                                '-g',
-                                '!.cache/',
-                            },
-                            no_ignore = true,
-                        },
-                        live_grep = {
-                            additional_args = {
-                                "--hidden",
-                                "--no-ignore-vcs",
-                            },
-                        },
-                    },
-                })
-            end,
-            keys = function()
-                local pTeleScopeBuiltIn = require('telescope.builtin')
-                return {
-                    { '<leader>ff', pTeleScopeBuiltIn.find_files, desc = "Fuzzy Find file;" },
-                    { '<leader>fg', pTeleScopeBuiltIn.live_grep, desc = "Fuzzy Grep files;" },
-                    { '<leader>fb', pTeleScopeBuiltIn.buffers, desc = "Fuzzy find Buf;" },
-                    { '<leader>fc', pTeleScopeBuiltIn.commands, desc = "Fuzzy find Cmd;" },
-                    { '<leader>fk', pTeleScopeBuiltIn.keymaps, desc = "Fuzzy find Key;" },
-                }
-            end
-        },
-        {
-            'folke/which-key.nvim',
-            dependencies = { 'nvim-tree/nvim-web-devicons', 'echasnovski/mini.nvim' },
-            enabled = true,
-            lazy = true,
-            event = "VeryLazy",
-            keys = {
-                {
-                    "<leader>/",
-                    function() require("which-key").show({ global = true }) end,
-                    desc = "WhichKey: global keymaps",
-                },
-                {
-                    "<leader>?",
-                    function() require("which-key").show({ global = false }) end,
-                    desc = "WhichKey: local keymaps",
-                },
-
-                -- jumps
-
-                { "<leader>ji", "<c-o>", { desc = "Jump Incoming" } },
-                { "<leader>jo", "<c-i>", { desc = "Jump Outgoing" } },
-                { "<leader>jl", "<cmd>jumps<cr>", { desc = "Jump List" } },
-
-                -- splits
-
-                { "<leader>s,", "<cmd>wincmd W<cr>", { desc = "Split prev" } },
-                { "<leader>s.", "<cmd>wincmd w<cr>", { desc = "Split next" } },
-
-                { "<leader>sj", "<cmd>wincmd h<cr>", { desc = "Split goto Left" } },
-                { "<leader>sl", "<cmd>wincmd l<cr>", { desc = "Split goto Right" } },
-                { "<leader>sk", "<cmd>wincmd j<cr>", { desc = "Split goto Down" } },
-                { "<leader>si", "<cmd>wincmd k<cr>", { desc = "Split goto Up" } },
-
-                { "<leader>sJ", "<cmd>wincmd H<cr>", { desc = "Split move Left" } },
-                { "<leader>sL", "<cmd>wincmd L<cr>", { desc = "Split move Right" } },
-                { "<leader>sK", "<cmd>wincmd J<cr>", { desc = "Split move Down" } },
-                { "<leader>sI", "<cmd>wincmd K<cr>", { desc = "Split move Up" } },
-                { "<leader>sT", "<cmd>wincmd T<cr>", { desc = "Split move Tab" } },
-
-                { "<leader>sh", "<cmd>sp<cr>", { desc = "Split horizontally" } },
-                { "<leader>sv", "<cmd>vs<cr>", { desc = "Split Vertically" } },
-                { "<leader>sd", "<cmd>close<cr>", { desc = "Split Deletion" } },
-
-                -- tabs
-
-                { "<leader>t,", "<cmd>tabp<cr>", { desc = "Tab goto Prev" } },
-                { "<leader>t.", "<cmd>tabn<cr>", { desc = "Tab goto Next" } },
-
-                { "<leader>t[", "<cmd>tabm -1<cr>", { desc = "Tab move Backward" } },
-                { "<leader>t]", "<cmd>tabm +1<cr>", { desc = "Tab move Forward" } },
-
-                { "<leader>tc", "<cmd>tabnew<cr><cmd>Bdelete<cr>", { desc = "Tab Creation" } },
-                { "<leader>td", "<cmd>close<cr>", { desc = "Tab Deletion" } },
-
-                -- misc
-
-                { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
-                { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
-                { '<leader>vl', '<cmd>lua FReLoad()<cr>', desc = "Vim: reLoad" },
-                { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
-                { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
-
-                { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
-                { "г", "<cmd>undo<cr>", desc = "UnDo the last action" },
-                { "<leader>vu", "<cmd>undo<cr>", desc = "Vim: Undo" },
-                { "U", "<cmd>redo<cr>", desc = "ReDo the last action" },
-                { "Г", "<cmd>redo<cr>", desc = "ReDo the last action" },
-                { "<leader>vr", "<cmd>redo<cr>", desc = "Vim: Redo" },
-
-                { "!", ":! ", desc = "System Command Line" },
-                { 'zS', fSetCodeFolder, desc = 'Setup code folding settings' },
-                { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
-            },
-        },
-        {
-            'famiu/bufdelete.nvim',
-            enabled = true,
-            lazy = true,
-            cmd = "Bdelete",
-            keys = {
-                { "<leader>bc", "<cmd>enew<cr>", desc = "Buf Creation;" },
-                { '<leader>bd', '<cmd>Bdelete<cr>', desc = "Buf Deletion;" },
-                { "<leader>be", "<cmd>Explore<cr>", { desc = "Buf Explorer" } },
-                { "<leader>bt", "<cmd>edit term://$SHELL<cr>", { desc = "Buf Terminal" } },
-            },
-        },
-        {
-            'notomo/cmdbuf.nvim',
-            enabled = false,
-            lazy = true,
-            keys = {
-                { 'q/', function() require("cmdbuf").split_open(vim.o.cmdwinheight) end, desc = 'CommandLineMode Buffer' },
-            },
-        },
-        {
-            "goolord/alpha-nvim",
-            dependencies = 'nvim-tree/nvim-web-devicons',
-            enabled = true,
-            lazy = false,
-            config = function()
-                local startify = require("alpha.themes.startify")
-                startify.file_icons.provider = "devicons"
-                require("alpha").setup(startify.config)
-            end,
-        },
-        --]==]
-        -- [==[ completion
+        -- ]==]
+        -- [==[ editing
         {
             'hrsh7th/nvim-cmp',
             dependencies = {
@@ -723,7 +726,35 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 })
             end,
         },
-        --]==]
+        -- ]==]
+        -- [==[ interface
+        {
+            "MunifTanjim/nui.nvim",
+            enabled = true,
+            lazy = true,
+        },
+        {
+            "rcarriga/nvim-notify",
+            enabled = true,
+            lazy = false,
+            config = function()
+                local notify = require('notify')
+                notify.setup()
+                vim.notify = notify
+            end
+        },
+        {
+            'nativerv/cyrillic.nvim',
+            enabled = true,
+            lazy = true,
+            event = 'VeryLazy',
+            config = function()
+                require('cyrillic').setup({
+                    no_cyrillic_abbrev = true,
+                })
+            end
+        },
+        -- ]==]
         -- [==[ visual
         {
             'akinsho/bufferline.nvim',
@@ -830,21 +861,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             lazy = false,
         },
         {
-            "MunifTanjim/nui.nvim",
-            enabled = true,
-            lazy = true,
-        },
-        {
-            "rcarriga/nvim-notify",
-            enabled = true,
-            lazy = false,
-            config = function()
-                local notify = require('notify')
-                notify.setup()
-                vim.notify = notify
-            end
-        },
-        {
             'EdenEast/nightfox.nvim',
             enabled = true,
             lazy = false,
@@ -861,7 +877,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 --vim.cmd("colorscheme nord")
             end
         },
-        --]==]
+        -- ]==]
         -- [==[ specific formats
         {
             'RaafatTurki/hex.nvim',
@@ -883,7 +899,58 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             end,
             --]===]
         },
-        --]==]
+        -- ]==]
+        -- [==[ source control
+        {
+            'lewis6991/gitsigns.nvim',
+            enabled = true,
+            lazy = true,
+            keys = {
+                { '<leader>gg', '<cmd>Gitsigns<cr>', desc = "Gitsigns Global" },
+                { '<leader>go', '<cmd>Gitsigns show<cr>', desc = "Gitsigns Orig" },
+                { '<leader>gd', '<cmd>Gitsigns diffthis<cr>', desc = "Gitsigns Diff" },
+                -- hunks
+                { '<leader>gh', '<cmd>Gitsigns setloclist<cr>', desc = "Gitsigns list Hunks" },
+                { '<leader>g,', '<cmd>Gitsigns prev_hunk<cr>', desc = "Gitsigns Next Hunk" },
+                { '<leader>g.', '<cmd>Gitsigns next_hunk<cr>', desc = "Gitsigns Prev Hunk" },
+                { '<leader>gv', '<cmd>Gitsigns preview_hunk<cr>', desc = "Gitsigns View hunk" },
+                { '<leader>gl', '<cmd>Gitsigns preview_hunk_inline<cr>', desc = "Gitsigns hunk Line" },
+                { '<leader>gs', '<cmd>Gitsigns stage_hunk<cr>', desc = "Gitsigns Stage/unStage hunk" },
+                { '<leader>gr', '<cmd>Gitsigns reset_hunk<cr>', desc = "Gitsigns Reset Hunk" },
+                -- blame
+                { '<leader>gb', '<cmd>Gitsigns blame_line<cr>', desc = "Gitsigns Blame Hunk" },
+                -- toggle
+                { '<leader>gts', '<cmd>Gitsigns toggle_signs<cr>', desc = "Gitsigns Toggle Signs" },
+                { '<leader>gtd', '<cmd>Gitsigns toggle_deleted<cr>', desc = "Gitsigns Toggle Deleted" },
+                { '<leader>gtl', '<cmd>Gitsigns toggle_linehl<cr>', desc = "Gitsigns Toggle Line highlight" },
+                { '<leader>gtn', '<cmd>Gitsigns toggle_numhl<cr>', desc = "Gitsigns Toggle line Numbers" },
+                { '<leader>gtw', '<cmd>Gitsigns toggle_word_diff<cr>', desc = "Gitsigns Toggle Words" },
+            },
+            config = true,
+            opts = {
+                signs_staged_enable = true,
+                signcolumn = true,
+                numhl = true,
+                linehl = false,
+                word_diff = false,
+                max_file_length = 16000,
+            },
+        },
+        -- ]==]
+        -- [==[ networking
+        {
+            "oysandvik94/curl.nvim",
+            dependencies = "nvim-lua/plenary.nvim",
+            enabled = true,
+            lazy = true,
+            cmd = "CurlOpen",
+            config = true,
+            opts = {
+                default_flags = { '--compressed', '-k' },
+                open_with = "split",
+            },
+        },
+        -- ]==]
         -- [==[ organisation and productivity
         {
             'nvim-orgmode/orgmode',
@@ -1141,59 +1208,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 })
             end,
         },
-        --]==]
-        -- [==[ localization
-        {
-            'nativerv/cyrillic.nvim',
-            enabled = true,
-            lazy = true,
-            event = 'VeryLazy',
-            config = function()
-                require('cyrillic').setup({
-                    no_cyrillic_abbrev = true,
-                })
-            end
-        },
-        --]==]
-        -- [==[ web and networking
-        {
-            "oysandvik94/curl.nvim",
-            dependencies = "nvim-lua/plenary.nvim",
-            enabled = true,
-            lazy = true,
-            cmd = "CurlOpen",
-            config = true,
-        },
-        --]==]
-        -- [==[ source control
-        {
-            'lewis6991/gitsigns.nvim',
-            enabled = true,
-            lazy = true,
-            keys = {
-                { '<leader>gg', '<cmd>Gitsigns<cr>', desc = "Gitsigns Global" },
-                { '<leader>go', '<cmd>Gitsigns show<cr>', desc = "Gitsigns Orig" },
-                { '<leader>gd', '<cmd>Gitsigns diffthis<cr>', desc = "Gitsigns Diff" },
-                -- hunks
-                { '<leader>gh', '<cmd>Gitsigns setloclist<cr>', desc = "Gitsigns list Hunks" },
-                { '<leader>g,', '<cmd>Gitsigns prev_hunk<cr>', desc = "Gitsigns Next Hunk" },
-                { '<leader>g.', '<cmd>Gitsigns next_hunk<cr>', desc = "Gitsigns Prev Hunk" },
-                { '<leader>gv', '<cmd>Gitsigns preview_hunk<cr>', desc = "Gitsigns View hunk" },
-                { '<leader>gl', '<cmd>Gitsigns preview_hunk_inline<cr>', desc = "Gitsigns hunk Line" },
-                { '<leader>gs', '<cmd>Gitsigns stage_hunk<cr>', desc = "Gitsigns Stage/unStage hunk" },
-                { '<leader>gr', '<cmd>Gitsigns reset_hunk<cr>', desc = "Gitsigns Reset Hunk" },
-                -- blame
-                { '<leader>gb', '<cmd>Gitsigns blame_line<cr>', desc = "Gitsigns Blame Hunk" },
-                -- toggle
-                { '<leader>gts', '<cmd>Gitsigns toggle_signs<cr>', desc = "Gitsigns Toggle Signs" },
-                { '<leader>gtd', '<cmd>Gitsigns toggle_deleted<cr>', desc = "Gitsigns Toggle Deleted" },
-                { '<leader>gtl', '<cmd>Gitsigns toggle_linehl<cr>', desc = "Gitsigns Toggle Line highlight" },
-                { '<leader>gtn', '<cmd>Gitsigns toggle_numhl<cr>', desc = "Gitsigns Toggle line Numbers" },
-                { '<leader>gtw', '<cmd>Gitsigns toggle_word_diff<cr>', desc = "Gitsigns Toggle Words" },
-            },
-            config = true,
-        },
-        --]==]
+        -- ]==]
         -- [==[ play
         {
             "kawre/leetcode.nvim",
@@ -1250,7 +1265,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 logging = true,
             },
         }
-        --]==]
+        -- ]==]
     },
     -- colorscheme that will be used when installing plugins;
     install = { colorscheme = { "habamax" } },
