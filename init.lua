@@ -452,9 +452,7 @@ local vLazySpec = {
         enabled = true,
         lazy = false,
         cmd = 'Alpha',
-        keys = {
-            { '<leader>vi', "<cmd>Alpha<cr>", desc = "Vim: Intro;" },
-        },
+        keys = { { '<leader>vi', "<cmd>Alpha<cr>", desc = "Vim Intro" } },
         config = function()
             local vModule = require('alpha')
             local function fSetTheme(vThemeName)
@@ -473,7 +471,7 @@ local vLazySpec = {
         'Shatur/neovim-session-manager',
         dependencies = "nvim-lua/plenary.nvim",
         enabled = true,
-        lazy = false,
+        lazy = true,
         cmd = "SessionManager",
         keys = {
             { "<leader>pl", "<cmd>SessionManager load_last_session<cr>", desc = "Project: Last session" },
