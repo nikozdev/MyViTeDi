@@ -1072,21 +1072,6 @@ local vLazySpec = {
     -- ]==]
     -- [==[ organisation and productivity
     {
-        'nvim-orgmode/orgmode',
-        enabled = false,
-        lazy = true,
-        event = 'VeryLazy',
-        ft = 'org',
-        keys = { '<leader>oa', '<leader>oc' },
-        config = function()
-            -- Setup orgmode
-            require('orgmode').setup({
-                org_agenda_files = vim.fn.stdpath('data') .. '/orgfiles/**/*',
-                org_default_notes_file = vim.fn.stdpath("data") .. '/orgfiles/refile.org',
-            })
-        end,
-    },
-    {
         'vimwiki/vimwiki',
         enabled = true,
         lazy = true,
@@ -1129,18 +1114,14 @@ local vLazySpec = {
             }
         end,
         init = function()
-            vim.cmd([[
-            set nocompatible
-            filetype plugin on
-            syntax on
-            ]])
+            vim.opt.compatible = false
+            vim.cmd('filetype plugin on')
+            vim.cmd("syntax on")
             vim.g.vimwiki_list = {
                 {
                     path = vim.fn.stdpath('data') .. "/vimwiki/",
                     --syntax = "wiki",
                     ext = ".wiki",
-                    on_attach = function(vClient, vBufferIndex)
-                    end,
                 },
             }
         end,
@@ -1149,11 +1130,11 @@ local vLazySpec = {
         "epwalsh/obsidian.nvim",
         dependencies = {
             'nvim-lua/plenary.nvim',
+            'nvim-treesitter/nvim-treesitter',
             'nvim-telescope/telescope.nvim',
             'hrsh7th/nvim-cmp',
-            'nvim-treesitter/nvim-treesitter',
         },
-        enabled = false,
+        enabled = true,
         lazy = true,
         keys = {
             { '<leader>no', '<cmd>ObsidianOpen<cr>', desc = "livaNota Open page;" },
@@ -1170,9 +1151,7 @@ local vLazySpec = {
                 {
                     name = "LivaNota",
                     path = "~/Documents/LivaNota",
-                    overrides = {
-                        notes_subdir = 'Nota',
-                    },
+                    overrides = { notes_subdir = 'Nota' },
                 },
             },
             notes_subdir = 'Nota',
@@ -1196,6 +1175,7 @@ local vLazySpec = {
             },
             preferred_link_style = 'markdown',
         },
+        config = true,
     },
     {
         'zk-org/zk-nvim',
@@ -1321,11 +1301,8 @@ local vLazySpec = {
             { '<leader>zp', "<cmd>Telekasten preview_img<cr>", desc = "Telekasten: media Preview" },
             { '<leader>zb', "<cmd>Telekasten insert_img_link<cr>", desc = "Telekasten: media Browsing" },
         },
-        config = function()
-            require('telekasten').setup({
-                home = vim.fn.expand("~/zk"),
-            })
-        end,
+        opts = { home = vim.fn.expand("~/Documents/zk") },
+        config = true,
     },
     -- ]==]
     -- [==[ play
