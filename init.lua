@@ -348,6 +348,10 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     desc = "WhichKey: local keymaps",
                 },
 
+                -- lazy
+
+                { "<leader>vp", "<cmd>Lazy<cr>", desc = "Vim Plugins", },
+
                 -- jumps
 
                 { "<leader>ji", "<c-o>", { desc = "Jump Incoming" } },
@@ -359,18 +363,18 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { "<leader>s,", "<cmd>wincmd W<cr>", { desc = "Split prev" } },
                 { "<leader>s.", "<cmd>wincmd w<cr>", { desc = "Split next" } },
 
-                { "<leader>sj", "<cmd>wincmd h<cr>", { desc = "Split goto Left" } },
+                { "<leader>sh", "<cmd>wincmd h<cr>", { desc = "Split goto Left" } },
                 { "<leader>sl", "<cmd>wincmd l<cr>", { desc = "Split goto Right" } },
-                { "<leader>sk", "<cmd>wincmd j<cr>", { desc = "Split goto Down" } },
-                { "<leader>si", "<cmd>wincmd k<cr>", { desc = "Split goto Up" } },
+                { "<leader>sj", "<cmd>wincmd j<cr>", { desc = "Split goto Down" } },
+                { "<leader>sk", "<cmd>wincmd k<cr>", { desc = "Split goto Up" } },
 
-                { "<leader>sJ", "<cmd>wincmd H<cr>", { desc = "Split move Left" } },
+                { "<leader>sH", "<cmd>wincmd H<cr>", { desc = "Split move Left" } },
                 { "<leader>sL", "<cmd>wincmd L<cr>", { desc = "Split move Right" } },
-                { "<leader>sK", "<cmd>wincmd J<cr>", { desc = "Split move Down" } },
-                { "<leader>sI", "<cmd>wincmd K<cr>", { desc = "Split move Up" } },
+                { "<leader>sJ", "<cmd>wincmd J<cr>", { desc = "Split move Down" } },
+                { "<leader>sK", "<cmd>wincmd K<cr>", { desc = "Split move Up" } },
                 { "<leader>sT", "<cmd>wincmd T<cr>", { desc = "Split move Tab" } },
 
-                { "<leader>sh", "<cmd>sp<cr>", { desc = "Split horizontally" } },
+                { "<leader>ss", "<cmd>sp<cr>", { desc = "Split creation" } },
                 { "<leader>sv", "<cmd>vs<cr>", { desc = "Split Vertically" } },
                 { "<leader>sd", "<cmd>close<cr>", { desc = "Split Deletion" } },
 
