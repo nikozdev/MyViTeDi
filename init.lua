@@ -251,9 +251,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         {
             'junegunn/fzf.vim',
             build = './install --bin',
-            dependencies = {
-                'BurntSushi/ripgrep',
-            },
+            dependencies = 'BurntSushi/ripgrep',
             enabled = true,
             lazy = true,
         },
@@ -261,10 +259,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
             'nvim-telescope/telescope.nvim',
             dependencies = {
                 'nvim-lua/plenary.nvim',
-                {
-                    'nvim-telescope/telescope-fzf-native.nvim',
-                    build = 'make',
-                },
+                { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
             },
             enabled = true,
             lazy = true,
