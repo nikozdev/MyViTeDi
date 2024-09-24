@@ -189,7 +189,7 @@ vim.opt["ignorecase"] = true
 vim.opt["compatible"] = false
 
 local vLazyFpath = vim.fn.stdpath("config") .. "/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(vLazyFpath) then
+if not vim.uv.fs_stat(vLazyFpath) then
     local vLazyWpath = "https://github.com/folke/lazy.nvim.git"
     local vGitOutput = vim.fn.system({
         "git", "clone", "--filter=blob:none", "--branch=stable", vLazyWpath, vLazyFpath
@@ -326,10 +326,7 @@ local vLazySpec = {
     },
     {
         'folke/which-key.nvim',
-        dependencies = {
-            'nvim-tree/nvim-web-devicons',
-            'echasnovski/mini.nvim',
-        },
+        dependencies = { 'nvim-tree/nvim-web-devicons', 'echasnovski/mini.nvim' },
         enabled = true,
         lazy = true,
         event = "VeryLazy",
@@ -345,7 +342,7 @@ local vLazySpec = {
                 desc = "WhichKey: local keymaps",
             },
 
-            -- lazy
+            -- plugins
 
             { "<leader>vp", "<cmd>Lazy<cr>", desc = "Vim Plugins", },
 
@@ -1458,7 +1455,7 @@ local vLazySpec = {
     },
     -- ]==]
 }
-vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
+local vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
     spec = vLazySpec,
     -- colorscheme that will be used when installing plugins;
     install = { colorscheme = { "habamax" } },
