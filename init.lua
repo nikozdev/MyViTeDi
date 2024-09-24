@@ -262,12 +262,12 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 require("mason-lspconfig").setup({
                     automatic_installation = false,
                     ensure_installed = {
-                        "bashls",
+                        --"bashls",
                         "marksman",
-                        "html",
+                        --"html",
                         "lua_ls",
                         "clangd",
-                        "pyright",
+                        --"pyright",
                     },
                 })
                 -- [=[ language server protocol
