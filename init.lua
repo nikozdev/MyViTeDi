@@ -54,14 +54,6 @@ local function fSetCodeFolder()
         vim.wo.foldminlines = 4
     end
 end
---[==[
-vim.api.nvim_create_augroup("CodeFolder", { clear = true })
-vim.api.nvim_create_autocmd("BufWinEnter", {
-  group = "CodeFolder",
-  pattern = "*",
-  callback = fSetCodeFolder,
-})
---]==]
 
 if vim.g.neovide == true then
     vim.g.neovide_fullscreen = true
@@ -410,7 +402,6 @@ local vLazySpec = {
             { "<leader>vr", "<cmd>redo<cr>", desc = "Vim: Redo" },
 
             { "!", ":! ", desc = "System Command Line" },
-            { 'zS', fSetCodeFolder, desc = 'Setup code folding settings' },
             { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
         },
     },
@@ -944,11 +935,6 @@ local vLazySpec = {
                 },
             })
         end,
-    },
-    {
-        'vim-scripts/restore_view.vim',
-        enabled = true,
-        lazy = false,
     },
     -- ]==]
     -- [==[ colors
