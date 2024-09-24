@@ -218,6 +218,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         -- [==[ package management
         {
             "vhyrro/luarocks.nvim",
+            enabled = true,
             lazy = false,
             priority = 1000,
             config = true,
@@ -226,6 +227,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         -- [==[ languages
         {
             "nvim-treesitter/nvim-treesitter",
+            enabled = true,
             lazy = false,
             priority = 100,
             build = ":TSUpdate",
@@ -239,24 +241,24 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             'neovim/nvim-lspconfig',
+            enabled = true,
             lazy = false,
         },
         {
             'williamboman/mason.nvim',
+            enabled = true,
             config = true,
             lazy = true,
         },
         {
             'williamboman/mason-lspconfig.nvim',
+            dependencies = 'williamboman/mason.nvim',
             enabled = true,
             lazy = true,
             event = 'VeryLazy',
             cmd = 'Mason',
             keys = {
                 { '<leader>lm', '<cmd>Mason<cr>', desc = 'LanguageMason interface;' },
-            },
-            dependencies = {
-                'williamboman/mason.nvim',
             },
             config = function()
                 require("mason-lspconfig").setup({
@@ -451,12 +453,10 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         -- [==[ navigation
         {
             'nvim-treesitter/nvim-treesitter-context',
+            dependencies = { 'nvim-treesitter/nvim-treesitter' },
             enabled = true,
             lazy = true,
             event = "VeryLazy",
-            dependencies = {
-                'nvim-treesitter/nvim-treesitter',
-            },
             config = function()
                 require("treesitter-context").setup({
                     enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
@@ -476,18 +476,15 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             'junegunn/fzf.vim',
-            enabled = true,
-            lazy = true,
             dependencies = {
                 'BurntSushi/ripgrep',
                 { 'junegunn/fzf', build = { './install --bin' } }
             },
+            enabled = true,
+            lazy = true,
         },
         {
             'nvim-telescope/telescope.nvim',
-            enabled = true,
-            lazy = true,
-            event = "VeryLazy",
             dependencies = {
                 'nvim-lua/plenary.nvim',
                 {
@@ -495,6 +492,9 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     build = 'make',
                 },
             },
+            enabled = true,
+            lazy = true,
+            event = "VeryLazy",
             config = function()
                 require("telescope").setup({
                     defaults = {
@@ -560,6 +560,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             'folke/which-key.nvim',
+            dependencies = { 'nvim-tree/nvim-web-devicons', 'echasnovski/mini.nvim' },
+            enabled = true,
             lazy = true,
             event = "VeryLazy",
             keys = {
@@ -630,10 +632,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { 'zS', fSetCodeFolder, desc = 'Setup code folding settings' },
                 { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
             },
-            dependencies = {
-                'nvim-tree/nvim-web-devicons',
-                'echasnovski/mini.nvim',
-            },
         },
         {
             'famiu/bufdelete.nvim',
@@ -657,9 +655,9 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             "goolord/alpha-nvim",
+            dependencies = 'nvim-tree/nvim-web-devicons',
             enabled = true,
             lazy = false,
-            dependencies = { 'nvim-tree/nvim-web-devicons' },
             config = function()
                 local startify = require("alpha.themes.startify")
                 startify.file_icons.provider = "devicons"
@@ -670,6 +668,13 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         -- [==[ completion
         {
             'hrsh7th/nvim-cmp',
+            dependencies = {
+                'hrsh7th/cmp-path',
+                'hrsh7th/cmp-buffer',
+                'hrsh7th/cmp-cmdline',
+                'hrsh7th/cmp-nvim-lsp',
+                'hrsh7th/cmp-vsnip',
+            },
             enabled = true,
             lazy = true,
             event = { 'InsertEnter', 'CmdlineEnter' },
@@ -717,23 +722,15 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     },
                 })
             end,
-            dependencies = {
-                'hrsh7th/cmp-path',
-                'hrsh7th/cmp-buffer',
-                'hrsh7th/cmp-cmdline',
-                'hrsh7th/cmp-nvim-lsp',
-                'hrsh7th/cmp-vsnip',
-            },
         },
         --]==]
         -- [==[ visual
         {
             'akinsho/bufferline.nvim',
-            version = "*",
+            dependencies = { 'nvim-tree/nvim-web-devicons',  'shaunsingh/nord.nvim' },
             enabled = true,
             lazy = true,
             event = { 'BufNew', 'TabNew' },
-            dependencies = { 'nvim-tree/nvim-web-devicons',  'shaunsingh/nord.nvim' },
             init = function()
                 fUpdColors()
             end,
@@ -797,6 +794,7 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             'nvim-lualine/lualine.nvim',
+            dependencies = 'shaunsingh/nord.nvim',
             enabled = true,
             lazy = true,
             event = 'VeryLazy',
@@ -825,7 +823,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                     },
                 })
             end,
-            dependencies = { 'shaunsingh/nord.nvim' },
         },
         {
             'vim-scripts/restore_view.vim',
@@ -964,7 +961,12 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         },
         {
             "epwalsh/obsidian.nvim",
-            version = "*",
+            dependencies = {
+                'nvim-lua/plenary.nvim',
+                'nvim-telescope/telescope.nvim',
+                'hrsh7th/nvim-cmp',
+                'nvim-treesitter/nvim-treesitter',
+            },
             enabled = false,
             lazy = true,
             keys = {
@@ -976,12 +978,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { '<leader>nt', '<cmd>ObsidianTemplate<cr>', desc = "livaNota Template;" },
                 { '<leader>ni', '<cmd>ObsidianPasteImg<cr>', desc = "livaNota PasteImage;" },
                 { '<leader>nr', '<cmd>ObsidianRename<cr>', desc = "livaNota Rename;" },
-            },
-            dependencies = {
-                'nvim-lua/plenary.nvim',
-                'nvim-telescope/telescope.nvim',
-                'hrsh7th/nvim-cmp',
-                'nvim-treesitter/nvim-treesitter',
             },
             opts = {
                 workspaces = {
@@ -1149,6 +1145,8 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         -- [==[ localization
         {
             'nativerv/cyrillic.nvim',
+            enabled = true,
+            lazy = true,
             event = 'VeryLazy',
             config = function()
                 require('cyrillic').setup({
@@ -1160,8 +1158,10 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         -- [==[ web and networking
         {
             "oysandvik94/curl.nvim",
-            cmd = "CurlOpen",
             dependencies = "nvim-lua/plenary.nvim",
+            enabled = true,
+            lazy = true,
+            cmd = "CurlOpen",
             config = true,
         },
         --]==]
@@ -1198,6 +1198,14 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
         {
             "kawre/leetcode.nvim",
             build = ":TSUpdate html",
+            dependencies = {
+                "nvim-treesitter/nvim-treesitter",
+                "nvim-lua/plenary.nvim",
+                "nvim-telescope/telescope.nvim",
+                "nvim-tree/nvim-web-devicons",
+                "MunifTanjim/nui.nvim",
+                "rcarriga/nvim-notify",
+            },
             enabled = true,
             lazy = vim.fn.argv()[1] ~= 'leetcode.nvim',
             cmd = 'Leet',
@@ -1209,14 +1217,6 @@ vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
                 { '<leader>cc', "<cmd>Leet console<cr>", "Competition: Console of the question" },
                 { '<leader>cd', "<cmd>Leet desc<cr>", "Competition: Description of the question" },
                 { '<leader>ci', "<cmd>Leet info<cr>", "Competition: Information of the question" },
-            },
-            dependencies = {
-                "nvim-treesitter/nvim-treesitter",
-                "nvim-lua/plenary.nvim",
-                "nvim-telescope/telescope.nvim",
-                "nvim-tree/nvim-web-devicons",
-                "MunifTanjim/nui.nvim",
-                "rcarriga/nvim-notify",
             },
             opts = {
                 arg = 'leetcode.nvim',
