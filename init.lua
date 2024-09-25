@@ -575,7 +575,7 @@ local vLazySpec = {
         'williamboman/mason-lspconfig.nvim',
         dependencies = { 'nvim-lspconfig', 'williamboman/mason.nvim' },
         enabled = true,
-        lazy = true,
+        lazy = false,
         cmd = 'Mason',
         keys = { { '<leader>lm', '<cmd>Mason<cr>', desc = 'Lang-manager Mason interface' } },
         config = function()
