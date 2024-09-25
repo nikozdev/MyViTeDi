@@ -874,7 +874,7 @@ local vLazySpec = {
                 modified_icon = '●',
                 left_trunc_marker = '',
                 right_trunc_marker = '',
-                separator_style = 'slope',
+                separator_style = 'thick',
                 offsets = {
                     {
                         filetype = "NvimTree",
@@ -895,6 +895,7 @@ local vLazySpec = {
                 auto_toggle_bufferline = false,
                 sort_by = 'insert_after_current',
             },
+            highlights = { tab_selected = { fg = "#ffffff", bg = "#888888", bold = true }, },
         },
         config = true,
         init = fUpdColors,
