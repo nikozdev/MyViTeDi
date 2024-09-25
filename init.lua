@@ -847,13 +847,14 @@ local vLazySpec = {
         dependencies = 'nvim-tree/nvim-web-devicons',
         enabled = true,
         lazy = true,
-        event = { 'BufNew', 'TabNew' },
         keys = {
+            -- bufs
+
             { "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buf Goto Picked;" },
-            -- move
+
             { "<leader>b[", "<cmd>BufferLineMovePrev<cr>", desc = "Buf Backward;" },
             { "<leader>b]", "<cmd>BufferLineMoveNext<cr>", desc = "Buf Forward;" },
-            -- goto
+
             { "<leader>b,", "<cmd>BufferLineCyclePrev<cr>", desc = "Buf Prev;" },
             { "<leader>b.", "<cmd>BufferLineCycleNext<cr>", desc = "Buf Next;" },
         },
