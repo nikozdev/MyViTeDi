@@ -961,6 +961,8 @@ local vLazySpec = {
         keys = { { '<leader>vcc', '<cmd>Themery<cr>', desc = 'Visual Colorschemes Choice' } },
         dependencies = {
             { 'shaunsingh/nord.nvim' },
+            { 'cocopon/iceberg.vim' },
+            { 'ellisonleao/gruvbox.nvim' },
             { 'zenbones-theme/zenbones.nvim', dependencies = "rktjmp/lush.nvim" },
             { 'EdenEast/nightfox.nvim' },
             { 'rockerBOO/boo-colorscheme-nvim' },
@@ -968,10 +970,10 @@ local vLazySpec = {
         },
         config = function()
             local themes_ = {
-                ['gruvbox'] = {},
-                ['habamax'] = {},
                 ['nord'] = {},
                 ['iceberg'] = {},
+                ['gruvbox'] = {},
+                ['habamax'] = {},
                 ['blue-moon'] = {},
                 ['nightfox'] = {},
                 ['duskfox'] = {},
