@@ -429,7 +429,7 @@ local vLazySpec = {
             { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
             { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
             { '<leader>vl', '<cmd>lua FReLoad()<cr>', desc = "Vim: reLoad" },
-            { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
+            --{ "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
             { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
 
             { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
@@ -928,13 +928,13 @@ local vLazySpec = {
     {
         'levouh/tint.nvim',
         enabled = true,
-        lazy = true,
+        lazy = false,
         event = 'WinNew',
         config = function()
             local tint = require('tint')
             tint.setup({
-                tint = -75,
-                saturation = 0.25,
+                tint = -50,
+                saturation = 0.5,
                 transforms = tint.transforms.SATURATE_TINT,
                 tint_background_colors = true,
                 highlight_ignore_patterns = { "WinSeparator", "Status.*" },
@@ -949,43 +949,62 @@ local vLazySpec = {
             })
         end,
     },
-    { -- nice, blue, dark, bright, colorful
-        'shaunsingh/nord.nvim',
+    {
+        'zaldih/themery.nvim',
         enabled = true,
         lazy = false,
-        -- config = function() vim.cmd.colorscheme("nord") end
-    },
-    { -- nice, dark, grim, gothic, gray, colorless
-        'zenbones-theme/zenbones.nvim',
-        dependencies = "rktjmp/lush.nvim",
-        enabled = true,
-        lazy = false,
-        init = function() vim.g.zenbones_compat = 1; end,
-        -- config = function() vim.cmd.colorscheme('neobones') end,
-    },
-    { -- nice, dark, pretty, colorful
-        'EdenEast/nightfox.nvim',
-        enabled = true,
-        lazy = false,
-        -- config = function() vim.cmd.colorscheme("nightfox") end
-    },
-    { -- high contrast, dark, colorful
-        'rockerBOO/boo-colorscheme-nvim',
-        enabled = true,
-        lazy = false,
+        cmd = 'Themery',
+        keys = { { '<leader>vc', '<cmd>Themery<cr>', desc = 'Visual Colorschemes' } },
+        dependencies = {
+            { 'shaunsingh/nord.nvim' },
+            { 'zenbones-theme/zenbones.nvim', dependencies = "rktjmp/lush.nvim" },
+            { 'EdenEast/nightfox.nvim' },
+            { 'rockerBOO/boo-colorscheme-nvim' },
+            { 'kyazdani42/blue-moon' },
+        },
         config = function()
-            vim.cmd.colorscheme("boo")
-            --vim.cmd.colorscheme("sunset_cloud")
-            --vim.cmd.colorscheme("crimson_moonlight")
-            --vim.cmd.colorscheme("radioactive_waste")
-            --vim.cmd.colorscheme("forest_stream")
-        end
-    },
-    { -- nice, blue, dark, mild
-        'kyazdani42/blue-moon',
-        enabled = true,
-        lazy = false,
-        -- config = function() vim.cmd.colorscheme("blue-moon") end
+            local themes_ = {
+                ['gruvbox'] = {},
+                ['habamax'] = {},
+                ['nord'] = {},
+                ['iceberg'] = {},
+                ['blue-moon'] = {},
+                ['nightfox'] = {},
+                ['duskfox'] = {},
+                ['nordfox'] = {},
+                ['terafox'] = {},
+                ['carbonfox'] = {},
+                ['zenbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['zenburned'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['zenwritten'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['duckbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['rosebones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['forestbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['nordbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['tokyobones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['seoulbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['kanagawabones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['boo'] = {},
+                ['sunset_cloud'] = {},
+                ['crimson_moonlight'] = {},
+                ['radioactive_waste'] = {},
+                ['forest_stream'] = {},
+            }
+            local vThemeArray = {}
+            for theme_name, theme_spec in pairs(themes_) do
+                local theme_entry = { name = theme_name, colorscheme = theme_name }
+                for spec_index, spec_value in pairs(theme_spec) do
+                    vThemeArray[spec_index] = spec_value
+                end
+                table.insert(vThemeArray, theme_entry)
+            end
+            require('themery').setup({
+                themes = vThemeArray,
+                globalBefore = [[vim.opt.background = "dark"]],
+                livePreview = true,
+            })
+            vim.cmd.colorscheme(vThemeArray[math.random(1, #vThemeArray)]['colorscheme'])
+        end,
     },
     -- ]==]
     -- [==[ specific formats
