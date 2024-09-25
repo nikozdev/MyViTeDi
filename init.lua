@@ -57,6 +57,51 @@ end
 
 if vim.g.neovide == true then
     vim.g.neovide_fullscreen = true
+    vim.g.neovide_show_border = false
+    vim.g.neovide_theme = 'auto'
+
+    vim.opt.linespace = 0
+    vim.g.neovide_scale_factor = 1.0
+
+    vim.g.neovide_transparency = 1.0
+    vim.g.neovide_window_blurred = true
+    if false then
+        vim.g.neovide_floating_shadow = true
+        vim.g.neovide_floating_z_height = 20
+        vim.g.neovide_light_angle_degrees = 45
+        vim.g.neovide_light_radius = 5
+    end
+
+    vim.g.neovide_hide_mouse_when_typing = true
+
+    vim.g.neovide_refresh_rate = 30
+    vim.g.neovide_refresh_rate_idle = 5
+    vim.g.neovide_no_idle = false
+    vim.g.neovide_profiler = false
+
+    if false then
+        vim.g.neovide_position_animation_length = 0.5
+        vim.g.neovide_scroll_animation_length = 0.25
+        vim.g.neovide_scroll_animation_far_lines = 32
+
+        vim.g.neovide_cursor_animate_in_insert_mode = true
+        vim.g.neovide_cursor_animate_command_line = true
+        vim.g.neovide_cursor_animation_length = 0.1
+        vim.g.neovide_cursor_trail_size = 0.8
+        vim.g.neovide_cursor_unfocused_outline_width = 0.125
+        vim.g.neovide_cursor_antialiasing = true
+        vim.g.neovide_cursor_smooth_blink = true
+
+        vim.g.neovide_cursor_vfx_mode = "" -- railgun, torpedo, pixiedust, sonicboom, ripple, wireframe
+        vim.g.neovide_cursor_vfx_opacity = 200.0
+        vim.g.neovide_cursor_vfx_particle_lifetime = 1.2
+        vim.g.neovide_cursor_vfx_particle_density = 7.0
+        vim.g.neovide_cursor_vfx_particle_speed = 10.0
+        vim.g.neovide_cursor_vfx_particle_phase = 1.5
+        vim.g.neovide_cursor_vfx_particle_curl = 1.0
+    end
+
+    vim.g.neovide_confirm_quit = false
 end
 
 -- ]=]
@@ -384,7 +429,7 @@ local vLazySpec = {
             { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
             { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
             { '<leader>vl', '<cmd>lua FReLoad()<cr>', desc = "Vim: reLoad" },
-            { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
+            --{ "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
             { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
 
             { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
@@ -530,7 +575,7 @@ local vLazySpec = {
         'williamboman/mason-lspconfig.nvim',
         dependencies = { 'nvim-lspconfig', 'williamboman/mason.nvim' },
         enabled = true,
-        lazy = true,
+        lazy = false,
         cmd = 'Mason',
         keys = { { '<leader>lm', '<cmd>Mason<cr>', desc = 'Lang-manager Mason interface' } },
         config = function()
@@ -830,7 +875,7 @@ local vLazySpec = {
                 modified_icon = '●',
                 left_trunc_marker = '',
                 right_trunc_marker = '',
-                separator_style = 'slope',
+                separator_style = 'thick',
                 offsets = {
                     {
                         filetype = "NvimTree",
@@ -851,6 +896,7 @@ local vLazySpec = {
                 auto_toggle_bufferline = false,
                 sort_by = 'insert_after_current',
             },
+            highlights = { tab_selected = { fg = "#ffffff", bg = "#888888", bold = true }, },
         },
         config = true,
         init = fUpdColors,
@@ -884,13 +930,14 @@ local vLazySpec = {
     {
         'levouh/tint.nvim',
         enabled = true,
-        lazy = true,
+        lazy = false,
         event = 'WinNew',
+        keys = { { '<leader>vct', function() require('tint').toggle() end, desc = 'Visual Color Tint plugin switch/toggle' } },
         config = function()
             local tint = require('tint')
             tint.setup({
-                tint = -75,
-                saturation = 0.25,
+                tint = -50,
+                saturation = 0.5,
                 transforms = tint.transforms.SATURATE_TINT,
                 tint_background_colors = true,
                 highlight_ignore_patterns = { "WinSeparator", "Status.*" },
@@ -900,48 +947,69 @@ local vLazySpec = {
                     local floating = vim.api.nvim_win_get_config(winid).relative ~= ""
                     -- Do not tint `terminal` or floating windows, tint everything else
                     --return buftype == "terminal" or floating
+                    -- return floating
                     return false
                 end
             })
+            require('tint').toggle()
         end,
     },
-    { -- blue, dark, bright, colorful
-        'shaunsingh/nord.nvim',
+    {
+        'zaldih/themery.nvim',
         enabled = true,
         lazy = false,
-        -- config = function() vim.cmd.colorscheme("nord") end
-    },
-    { -- dark, grim, gothic, gray, colorless
-        'zenbones-theme/zenbones.nvim',
-        dependencies = "rktjmp/lush.nvim",
-        enabled = true,
-        lazy = false,
-        init = function() vim.g.zenbones_compat = 1; end,
-        -- config = function() vim.cmd.colorscheme('neobones') end,
-    },
-    { -- dark, colorful
-        'EdenEast/nightfox.nvim',
-        enabled = true,
-        lazy = false,
-        -- config = function() vim.cmd.colorscheme("nightfox") end
-    },
-    { -- high contrast, dark, colorful
-        'rockerBOO/boo-colorscheme-nvim',
-        enabled = true,
-        lazy = false,
+        cmd = 'Themery',
+        keys = { { '<leader>vcc', '<cmd>Themery<cr>', desc = 'Visual Colorschemes Choice' } },
+        dependencies = {
+            { 'shaunsingh/nord.nvim' },
+            { 'zenbones-theme/zenbones.nvim', dependencies = "rktjmp/lush.nvim" },
+            { 'EdenEast/nightfox.nvim' },
+            { 'rockerBOO/boo-colorscheme-nvim' },
+            { 'kyazdani42/blue-moon' },
+        },
         config = function()
-            vim.cmd.colorscheme("boo")
-            --vim.cmd.colorscheme("sunset_cloud")
-            --vim.cmd.colorscheme("crimson_moonlight")
-            --vim.cmd.colorscheme("radioactive_waste")
-            --vim.cmd.colorscheme("forest_stream")
-        end
-    },
-    { -- blue, dark, mild
-        'kyazdani42/blue-moon',
-        enabled = true,
-        lazy = false,
-        -- config = function() vim.cmd.colorscheme("blue-moon") end
+            local themes_ = {
+                ['gruvbox'] = {},
+                ['habamax'] = {},
+                ['nord'] = {},
+                ['iceberg'] = {},
+                ['blue-moon'] = {},
+                ['nightfox'] = {},
+                ['duskfox'] = {},
+                ['nordfox'] = {},
+                ['terafox'] = {},
+                ['carbonfox'] = {},
+                ['zenbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['zenburned'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['zenwritten'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['duckbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['rosebones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['forestbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['nordbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['tokyobones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['seoulbones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['kanagawabones'] = { before = [[vim.g.zenbones_compat = 1]] },
+                ['boo'] = {},
+                ['sunset_cloud'] = {},
+                ['crimson_moonlight'] = {},
+                ['radioactive_waste'] = {},
+                ['forest_stream'] = {},
+            }
+            local vThemeArray = {}
+            for theme_name, theme_spec in pairs(themes_) do
+                local theme_entry = { name = theme_name, colorscheme = theme_name }
+                for spec_index, spec_value in pairs(theme_spec) do
+                    vThemeArray[spec_index] = spec_value
+                end
+                table.insert(vThemeArray, theme_entry)
+            end
+            require('themery').setup({
+                themes = vThemeArray,
+                globalBefore = [[vim.opt.background = "dark"]],
+                livePreview = true,
+            })
+            vim.cmd.colorscheme(vThemeArray[math.random(1, #vThemeArray)]['colorscheme'])
+        end,
     },
     -- ]==]
     -- [==[ specific formats
