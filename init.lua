@@ -419,7 +419,7 @@ local vLazySpec = {
             { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
             { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
             --{ "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
-            { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
+            { "<leader>vq", "<cmd>confirm quitall<cr>", desc = "Vim: Quit" },
 
             { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
             { "г", "<cmd>undo<cr>", desc = "UnDo the last action" },
