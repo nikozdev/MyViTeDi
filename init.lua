@@ -430,6 +430,8 @@ local vLazySpec = {
 
             { "!", ":! ", desc = "System Command Line" },
             { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
+            -- for some reason, terminal in my neovide interprets it like some kind of "undo" action
+            { '<s-space>', mode = 't', '<space>' },
         },
     },
     {
