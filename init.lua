@@ -955,7 +955,29 @@ local vLazySpec = {
         enabled = true,
         lazy = false,
         cmd = 'Themery',
-        keys = { { '<leader>vcc', '<cmd>Themery<cr>', desc = 'Visual Colorschemes Choice' } },
+        keys = function()
+            local themery = require('themery')
+            return {
+                {
+                    '<leader>vcc',
+                    function()
+                        local theme = themery.getCurrentTheme()
+                        vim.notify('The Theme we get: "' .. (theme and theme.name or '<nil>') .. '"')
+                    end,
+                    desc = 'Visual Colorscheme Check'
+                },
+                {
+                    '<leader>vcs',
+                    function()
+                        FUpdColors()
+                        local theme = themery.getCurrentTheme()
+                        vim.notify('The Theme we had: "' .. (theme and theme.name or '<nil>') .. '"')
+                        vim.cmd("Themery")
+                    end,
+                    desc = 'Visual Colorschemes Selection'
+                },
+            }
+        end,
         dependencies = {
             { 'shaunsingh/nord.nvim' },
             { 'cocopon/iceberg.vim' },
@@ -966,7 +988,7 @@ local vLazySpec = {
             { 'kyazdani42/blue-moon' },
         },
         config = function()
-            local themes_ = {
+            local _ThemeArray = {
                 ['nord'] = {},
                 ['iceberg'] = {},
                 ['gruvbox'] = {},
@@ -994,7 +1016,7 @@ local vLazySpec = {
                 ['forest_stream'] = {},
             }
             local vThemeArray = {}
-            for theme_name, theme_spec in pairs(themes_) do
+            for theme_name, theme_spec in pairs(_ThemeArray) do
                 local theme_entry = { name = theme_name, colorscheme = theme_name }
                 for spec_index, spec_value in pairs(theme_spec) do
                     vThemeArray[spec_index] = spec_value
@@ -1003,7 +1025,7 @@ local vLazySpec = {
             end
             require('themery').setup({
                 themes = vThemeArray,
-                globalBefore = [[vim.opt.background = "dark"]],
+                globalBefore = [=[ vim.opt.background = 'dark' ]=],
                 livePreview = true,
             })
             vim.cmd.colorscheme(vThemeArray[math.random(1, #vThemeArray)]['colorscheme'])
