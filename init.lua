@@ -418,7 +418,6 @@ local vLazySpec = {
 
             { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
             { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
-            { '<leader>vl', '<cmd>lua FReLoad()<cr>', desc = "Vim: reLoad" },
             --{ "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
             { "<leader>vq", "<cmd>quitall<cr>", desc = "Vim: Quit" },
 
