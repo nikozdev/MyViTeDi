@@ -31,6 +31,7 @@ vim.opt.showtabline = 4
 vim.opt["title"] = true
 vim.opt["splitright"] = true
 
+vim.opt["mouse"] = ''
 vim.opt["mousehide"] = true
 
 vim.opt["visualbell"] = true
