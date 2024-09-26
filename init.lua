@@ -923,7 +923,12 @@ local vLazySpec = {
         enabled = true,
         lazy = false,
         event = 'WinNew',
-        keys = { { '<leader>vct', function() require('tint').toggle() end, desc = 'Visual Color Tint plugin switch/toggle' } },
+        keys = function()
+            local tint = require('tint')
+            return {
+                { '<leader>vct', tint.toggle, desc = 'Visual Color Tint plugin switch/toggle' }
+            }
+        end,
         config = function()
             local tint = require('tint')
             tint.setup({
@@ -938,11 +943,11 @@ local vLazySpec = {
                     local floating = vim.api.nvim_win_get_config(winid).relative ~= ""
                     -- Do not tint `terminal` or floating windows, tint everything else
                     --return buftype == "terminal" or floating
-                    -- return floating
-                    return false
+                    return buftype == 'nofile' or floating
+                    -- return false
                 end
             })
-            require('tint').toggle()
+            tint.disable()
         end,
     },
     {
