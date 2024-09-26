@@ -1058,9 +1058,8 @@ local vLazySpec = {
         dependencies = "nvim-lua/plenary.nvim",
         enabled = true,
         lazy = true,
-        cmd = "CurlOpen",
-        ft = 'curl',
-        opts = { default_flags = { '--compressed', '-k' }, open_with = "tab" },
+        cmd = { "CurlOpen" },
+        opts = { default_flags = { '--compressed', '-k' }, open_with = "split" },
         config = true,
     },
     -- ]==]
