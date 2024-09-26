@@ -1,21 +1,10 @@
 -- [[ neovim config by nikozdev
 
-function FReLoad()
-    vim.notify('Reload is being done!', vim.log.levels.INFO)
-    -- Clear cached modules
-    for name, _ in pairs(package.loaded) do
-        package.loaded[name] = nil
-    end
-    -- Source your init.lua file
-    dofile(vim.env.MYVIMRC)
-    vim.notify('Reload has been done!', vim.log.levels.INFO)
-end
-
-local function fUpdLeader()
+function FUpdLeader()
     vim.g.mapleader = ' '
     vim.g.maplocalleader = ' '
 end
-fUpdLeader()
+FUpdLeader()
 
 -- [=[ command line
 
@@ -29,11 +18,11 @@ vim.opt["history"] = 256
 
 -- [=[ visual
 
-local function fUpdColors()
+function FUpdColors()
     vim.opt.termguicolors = (os.getenv('COLORTERM') == '24bit')
     vim.opt.background = 'dark'
 end
-fUpdColors()
+FUpdColors()
 
 vim.opt.conceallevel = 0
 
@@ -619,7 +608,7 @@ local vLazySpec = {
                 only when ls is attached
                 --]===]
                 local fForLspAttach = function(vClient, vBufferIndex)
-                    fUpdLeader()
+                    FUpdLeader()
 
                     local function fKeyMap(vKey, vMap, vInf)
                         vOpt = {}
@@ -899,7 +888,7 @@ local vLazySpec = {
             highlights = { tab_selected = { fg = "#ffffff", bg = "#888888", bold = true }, },
         },
         config = true,
-        init = fUpdColors,
+        init = FUpdColors,
     },
     {
         'nvim-lualine/lualine.nvim',
