@@ -659,10 +659,10 @@ local vLazySpec = {
                 if vLspConfig then
                     local vSuccess, vMessage = pcall(vLspConfig.setup, vConfigTable)
                     if not vSuccess then
-                        vim.api.notify(vMessage)
+                        vim.notify(vMessage)
                     end
                 else
-                    vim.api.notify("The LSP config \"" .. vName .. "\" was not found")
+                    vim.notify("The LSP config \"" .. vName .. "\" was not found")
                 end
             end
             -- [==[ running setup
