@@ -837,7 +837,7 @@ local vLazySpec = {
         'akinsho/bufferline.nvim',
         dependencies = 'nvim-tree/nvim-web-devicons',
         enabled = true,
-        lazy = true,
+        lazy = false,
         keys = {
             -- bufs
 
