@@ -1001,8 +1001,7 @@ local vLazySpec = {
                 {
                     '<leader>vtc',
                     function()
-                        local theme = themery.getCurrentTheme()
-                        vim.notify('The Theme we get: "' .. (theme and theme.name or '<nil>') .. '"')
+                        vim.notify('The Theme we get: "' .. themery.getCurrentTheme().name .. '@' .. vim.o.background .. '"')
                     end,
                     desc = 'Visual Theme Check'
                 },
@@ -1010,11 +1009,23 @@ local vLazySpec = {
                     '<leader>vts',
                     function()
                         FUpdColors()
-                        local theme = themery.getCurrentTheme()
-                        vim.notify('The Theme we had: "' .. (theme and theme.name or '<nil>') .. '"')
-                        vim.cmd("Themery")
+                        vim.notify('The Theme we had: "' .. themery.getCurrentTheme().name .. '@' .. vim.o.background .. '"')
+                        themery.themery()
                     end,
                     desc = 'Visual Theme Selection'
+                },
+                {
+                    '<leader>vtr',
+                    function()
+                        FUpdColors()
+                        vim.notify('The Theme we had: "' .. themery.getCurrentTheme().name .. '@' .. vim.o.background .. '"')
+                        local vThemeArray = themery.getAvailableThemes()
+                        local vThemeEntry = vThemeArray[math.random(1, #vThemeArray)]
+                        local vThemeIdent = vThemeEntry['name']
+                        vim.notify('The Theme we set: "' .. vThemeIdent .. '@' .. vim.o.background .. '"')
+                        themery.setThemeByName(vThemeEntry['name'], true)
+                    end,
+                    desc = 'Visual Theme Randomization'
                 },
             }
         end,
@@ -1028,47 +1039,43 @@ local vLazySpec = {
             { 'kyazdani42/blue-moon' },
         },
         config = function()
-            local _ThemeArray = {
-                ['nord'] = {},
-                ['iceberg'] = {},
-                ['gruvbox'] = {},
-                ['habamax'] = {},
-                ['blue-moon'] = {},
-                ['nightfox'] = {},
-                ['duskfox'] = {},
-                ['nordfox'] = {},
-                ['terafox'] = {},
-                ['carbonfox'] = {},
-                ['zenbones'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['zenburned'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['zenwritten'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['duckbones'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['rosebones'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['forestbones'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['nordbones'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['tokyobones'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['seoulbones'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['kanagawabones'] = { before = [[vim.g.zenbones_compat = 1]] },
-                ['boo'] = {},
-                ['sunset_cloud'] = {},
-                ['crimson_moonlight'] = {},
-                ['radioactive_waste'] = {},
-                ['forest_stream'] = {},
+            local vThemeArray = {
+                { name = 'nord', },
+                { name = 'iceberg', },
+                { name = 'gruvbox', },
+                { name = 'habamax', },
+                { name = 'blue-moon', },
+                { name = 'nightfox', },
+                { name = 'duskfox', },
+                { name = 'nordfox', },
+                { name = 'terafox', },
+                { name = 'carbonfox', },
+                { name = 'zenbones',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'zenburned',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'zenwritten',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'duckbones',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'rosebones',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'forestbones',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'nordbones',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'tokyobones',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'seoulbones',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'kanagawabones',  before = [[vim.g.zenbones_compat = 1]] },
+                { name = 'boo', },
+                { name = 'sunset_cloud', },
+                { name = 'crimson_moonlight', },
+                { name = 'radioactive_waste', },
+                { name = 'forest_stream', },
             }
-            local vThemeArray = {}
-            for theme_name, theme_spec in pairs(_ThemeArray) do
-                local theme_entry = { name = theme_name, colorscheme = theme_name }
-                for spec_index, spec_value in pairs(theme_spec) do
-                    vThemeArray[spec_index] = spec_value
-                end
-                table.insert(vThemeArray, theme_entry)
+            for _,vThemeEntry in pairs(vThemeArray) do
+                vThemeEntry.colorscheme = vThemeEntry.name
             end
-            require('themery').setup({
+            local themery = require('themery')
+            themery.setup({
                 themes = vThemeArray,
                 globalBefore = [=[ vim.opt.background = 'dark' ]=],
                 livePreview = true,
             })
-            vim.cmd.colorscheme(vThemeArray[math.random(1, #vThemeArray)]['colorscheme'])
+            themery.setThemeByIndex(math.random(1, #vThemeArray), true)
         end,
     },
     -- ]==]
