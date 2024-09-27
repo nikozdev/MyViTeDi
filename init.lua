@@ -448,8 +448,8 @@ local vLazySpec = {
     {
         'nvimdev/hlsearch.nvim',
         enabled = true,
-        lazy = true,
-        keys = { '/', '?', 'n', 'N' },
+        lazy = false,
+        --keys = { '/', '?', 'n', 'N' },
         config = true,
     },
     {
