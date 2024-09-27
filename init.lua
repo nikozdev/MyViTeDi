@@ -445,14 +445,6 @@ local vLazySpec = {
         },
     },
     {
-        'notomo/cmdbuf.nvim',
-        enabled = false,
-        lazy = true,
-        keys = {
-            { 'q/', function() require("cmdbuf").split_open(vim.o.cmdwinheight) end, desc = 'CommandLineMode Buffer' },
-        },
-    },
-    {
         "goolord/alpha-nvim",
         dependencies = 'nvim-tree/nvim-web-devicons',
         enabled = true,
