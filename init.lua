@@ -530,6 +530,61 @@ local vLazySpec = {
             })
         end,
     },
+    {
+        'ggandor/leap.nvim',
+        enabled = false,
+        lazy = true, -- loaded by others
+    },
+    {
+        'echasnovski/mini.jump',
+        version = '*',
+        enabled = true,
+        lazy = false,
+        config = function()
+            require('mini.jump').setup({
+                -- Module mappings. Use `''` (empty string) to disable one.
+                mappings = {
+                    forward = 'f',
+                    backward = 'F',
+                    forward_till = 't',
+                    backward_till = 'T',
+                    repeat_jump = ',',
+                },
+
+                delay = {
+                    highlight = 100,
+                    idle_stop = 10000,
+                },
+            })
+        end,
+    },
+    {
+        'liangxianzhe/nap.nvim',
+        enabled = true,
+        lazy = true,
+        keys = { '[', ']' },
+        config = function()
+            local nap = require("nap")
+            nap.setup({
+                prev_prefix = '[',
+                prev_repeat = '<c-p>',
+                next_prefix = ']',
+                next_repeat = '<c-n>',
+
+                exclude_default_operators = {"a", "A"},
+                operators = {
+                    ['t'] = {
+                        prev = { rhs = "<cmd>tabp<cr>", opts = { desc = "Prev tab" } },
+                        next = { rhs = "<cmd>tabn<cr>", opts = { desc = "Next tab" } },
+                    },
+                    ['T'] = {
+                        prev = { rhs = "<cmd>tabfirst<cr>", opts = { desc = "First tab" } },
+                        next = { rhs = "<cmd>tablast<cr>", opts = { desc = "Last tab" } },
+                    },
+                },
+            })
+        end,
+    },
     -- ]==]
     -- [==[ development
     {
