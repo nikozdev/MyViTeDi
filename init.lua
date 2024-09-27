@@ -439,82 +439,29 @@ local vLazySpec = {
         end,
     },
     {
-        'folke/which-key.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons', 'echasnovski/mini.nvim' },
+        'kevinhwang91/nvim-hlslens',
         enabled = true,
         lazy = true,
-        event = "VeryLazy",
-        keys = {
-            {
-                "<leader>/",
-                function() require("which-key").show({ global = true }) end,
-                desc = "WhichKey: global keymaps",
-            },
-            {
-                "<leader>?",
-                function() require("which-key").show({ global = false }) end,
-                desc = "WhichKey: local keymaps",
-            },
-
-            -- plugins
-
-            { "<leader>vp", "<cmd>Lazy<cr>", desc = "Vim Plugins", },
-
-            -- jumps
-
-            { "<leader>ji", "<c-o>", { desc = "Jump Incoming" } },
-            { "<leader>jo", "<c-i>", { desc = "Jump Outgoing" } },
-            { "<leader>jl", "<cmd>jumps<cr>", { desc = "Jump List" } },
-
-            -- splits
-
-            { "<leader>s,", "<cmd>wincmd W<cr>", { desc = "Split prev" } },
-            { "<leader>s.", "<cmd>wincmd w<cr>", { desc = "Split next" } },
-
-            { "<leader>sh", "<cmd>wincmd h<cr>", { desc = "Split goto Left" } },
-            { "<leader>sl", "<cmd>wincmd l<cr>", { desc = "Split goto Right" } },
-            { "<leader>sj", "<cmd>wincmd j<cr>", { desc = "Split goto Down" } },
-            { "<leader>sk", "<cmd>wincmd k<cr>", { desc = "Split goto Up" } },
-
-            { "<leader>sH", "<cmd>wincmd H<cr>", { desc = "Split move Left" } },
-            { "<leader>sL", "<cmd>wincmd L<cr>", { desc = "Split move Right" } },
-            { "<leader>sJ", "<cmd>wincmd J<cr>", { desc = "Split move Down" } },
-            { "<leader>sK", "<cmd>wincmd K<cr>", { desc = "Split move Up" } },
-            { "<leader>sT", "<cmd>wincmd T<cr>", { desc = "Split move Tab" } },
-
-            { "<leader>ss", "<cmd>sp<cr>", { desc = "Split creation" } },
-            { "<leader>sv", "<cmd>vs<cr>", { desc = "Split Vertically" } },
-            { "<leader>sd", "<cmd>close<cr>", { desc = "Split Deletion" } },
-
-            -- tabs
-
-            { "<leader>t,", "<cmd>tabp<cr>", { desc = "Tab goto Prev" } },
-            { "<leader>t.", "<cmd>tabn<cr>", { desc = "Tab goto Next" } },
-
-            { "<leader>t[", "<cmd>tabm -1<cr>", { desc = "Tab move Backward" } },
-            { "<leader>t]", "<cmd>tabm +1<cr>", { desc = "Tab move Forward" } },
-
-            { "<leader>tc", "<cmd>tabnew<cr><cmd>Bdelete<cr>", { desc = "Tab Creation" } },
-            { "<leader>td", "<cmd>close<cr>", { desc = "Tab Deletion" } },
-
-            -- misc
-
-            { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
-            { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
-            { "<leader>vq", "<cmd>confirm quitall<cr>", desc = "Vim: Quit" },
-
-            { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
-            { "г", "<cmd>undo<cr>", desc = "UnDo the last action" },
-            { "<leader>vu", "<cmd>undo<cr>", desc = "Vim: Undo" },
-            { "U", "<cmd>redo<cr>", desc = "ReDo the last action" },
-            { "Г", "<cmd>redo<cr>", desc = "ReDo the last action" },
-            { "<leader>vr", "<cmd>redo<cr>", desc = "Vim: Redo" },
-
-            { "!", ":! ", desc = "System Command Line" },
-            { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
-            -- for some reason, terminal in my neovide interprets it like some kind of "undo" action
-            { '<s-space>', mode = 't', '<space>' },
+        event = { 'CmdwinEnter', 'CmdlineEnter' },
+        config = true,
+    },
+    {
+        'nvimdev/hlsearch.nvim',
+        enabled = true,
+        lazy = true,
+        keys = { '/', '?', 'n', 'N' },
+        config = true,
+    },
+    {
+        'nvim-pack/nvim-spectre',
+        dependencies = 'nvim-lua/plenary.nvim',
+        enabled = true,
+        lazy = true,
+        cmd = 'Spectre',
+        keys = { { '<leader>ft', '<cmd>Spectre<cr>', desc = 'Find Text' } },
+        opts = {
         },
+        config = true,
     },
     {
         'famiu/bufdelete.nvim',
