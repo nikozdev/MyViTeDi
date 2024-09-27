@@ -10,7 +10,7 @@ FUpdLeader()
 
 vim.opt["shell"] = vim.env["SHELL"]
 
-vim.opt["cmdheight"] = 2
+vim.opt["cmdheight"] = 4
 
 vim.opt["history"] = 256
 
