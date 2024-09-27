@@ -1406,6 +1406,37 @@ local vLazySpec = {
             logging = true,
         },
     },
+    {
+        'ThePrimeagen/vim-be-good',
+        enabled = true,
+        lazy = true,
+        cmd = 'VimBeGood',
+        config = false,
+    },
+    {
+        "m4xshen/hardtime.nvim",
+        dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
+        enabled = true,
+        lazy = true,
+        event = 'VeryLazy',
+        cmd = 'HardTime',
+        opts = {
+            enabled = true,
+            disable_mouse = true,
+            notification = true,
+            hint = true,
+            disabled_filetypes = { "qf", "netrw", "NvimTree", "lazy", "mason", "oil" },
+        },
+        config = true,
+    },
+    { -- that shit is interfering with visual mode
+        'antonk52/bad-practices.nvim',
+        enabled = false,
+        lazy = true,
+        event = 'VeryLazy',
+        opts = {},
+        config = true,
+    },
     -- ]==]
 }
 local vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
