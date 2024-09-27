@@ -1490,10 +1490,7 @@ local vLazySpec = {
 }
 local vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
     spec = vLazySpec,
-    -- colorscheme that will be used when installing plugins;
-    install = { colorscheme = { "habamax" } },
-    -- automatically check for plugin updates;
-    checker = { enabled = true },
+    checker = { enabled = false },
 })
 if not vLazyPcallSuccess then
     vim.api.nvim_echo({
