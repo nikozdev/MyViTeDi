@@ -1429,14 +1429,6 @@ local vLazySpec = {
         },
         config = true,
     },
-    { -- that shit is interfering with visual mode
-        'antonk52/bad-practices.nvim',
-        enabled = false,
-        lazy = true,
-        event = 'VeryLazy',
-        opts = {},
-        config = true,
-    },
     -- ]==]
 }
 local vLazyPcallSuccess, vLazyPcallMessage = pcall(require("lazy").setup, {
