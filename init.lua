@@ -1072,7 +1072,6 @@ local vLazySpec = {
             local themery = require('themery')
             themery.setup({
                 themes = vThemeArray,
-                globalBefore = [=[ vim.opt.background = 'dark' ]=],
                 livePreview = true,
             })
             themery.setThemeByIndex(math.random(1, #vThemeArray), true)
