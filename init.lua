@@ -416,8 +416,7 @@ local vLazySpec = {
             -- misc
 
             { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
-            { "<leader>vs", "<cmd>e $MYVIMRC<cr>", desc = "Vim: Settings" },
-            --{ "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
+            { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
             { "<leader>vq", "<cmd>confirm quitall<cr>", desc = "Vim: Quit" },
 
             { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
@@ -866,14 +865,6 @@ local vLazySpec = {
                 left_trunc_marker = '',
                 right_trunc_marker = '',
                 separator_style = 'thick',
-                offsets = {
-                    {
-                        filetype = "NvimTree",
-                        text = "File Explorer",
-                        text_align = "center",
-                        separator = true,
-                    }
-                },
                 hover = { enabled = false },
                 max_name_length = 12,
                 max_prefix_length = 8,
@@ -906,11 +897,11 @@ local vLazySpec = {
                 globalstatus = false,
             },
             sections = {
-                lualine_a = { { "filename", path = 2 } },
-                lualine_b = {
+                lualine_a = {
                     { "mode", fmt = function(str) return "m"..str:sub(1,1) end },
                     { "winnr", fmt = function(str) return "w"..str end },
-                }
+                },
+                lualine_b = { { "filename", path = 2 } },
             },
         },
         config = true,
@@ -958,22 +949,22 @@ local vLazySpec = {
             local themery = require('themery')
             return {
                 {
-                    '<leader>vcc',
+                    '<leader>vtc',
                     function()
                         local theme = themery.getCurrentTheme()
                         vim.notify('The Theme we get: "' .. (theme and theme.name or '<nil>') .. '"')
                     end,
-                    desc = 'Visual Colorscheme Check'
+                    desc = 'Visual Theme Check'
                 },
                 {
-                    '<leader>vcs',
+                    '<leader>vts',
                     function()
                         FUpdColors()
                         local theme = themery.getCurrentTheme()
                         vim.notify('The Theme we had: "' .. (theme and theme.name or '<nil>') .. '"')
                         vim.cmd("Themery")
                     end,
-                    desc = 'Visual Colorschemes Selection'
+                    desc = 'Visual Theme Selection'
                 },
             }
         end,
