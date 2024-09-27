@@ -1034,6 +1034,18 @@ local vLazySpec = {
     -- ]==]
     -- [==[ source control
     {
+        'echasnovski/mini-git',
+        version = '*',
+        main = 'mini.git',
+        enabled = true,
+        lazy = true,
+        cmd = { 'Git' },
+        config = function()
+            local minigit = require('mini.git')
+            minigit.setup({})
+        end,
+    },
+    {
         'lewis6991/gitsigns.nvim',
         enabled = true,
         lazy = true,
@@ -1067,6 +1079,31 @@ local vLazySpec = {
             max_file_length = 16000,
         },
         config = true,
+    },
+    {
+        "NeogitOrg/neogit",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "sindrets/diffview.nvim",
+            "nvim-telescope/telescope.nvim",
+        },
+        enabled = true,
+        lazy = true,
+        keys = function()
+            local neogit = require('neogit')
+            return {
+                {
+                    '<leader>gc',
+                    function() neogit.open({ kind = 'tab' }) end,
+                    desc = "Git Client"
+                }
+            }
+        end,
+        config = function()
+            local neogit = require('neogit')
+            neogit.setup({
+            })
+        end,
     },
     -- ]==]
     -- [==[ networking
