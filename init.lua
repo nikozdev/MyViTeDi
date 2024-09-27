@@ -254,24 +254,23 @@ local vLazySpec = {
     -- [==[ navigation
     {
         'nvim-treesitter/nvim-treesitter-context',
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        dependencies = 'nvim-treesitter/nvim-treesitter',
         enabled = true,
         lazy = true,
         event = "VeryLazy",
-        config = function()
-            require("treesitter-context").setup({
-                enable = true,
-                max_lines = 8,
-                min_window_height = 12,
-                line_numbers = true,
-                multiline_threshold = 8,
-                trim_scope = 'inner',
-                mode = 'cursor',
-                separator = "-",
-                zindex = 20,
-                on_attach = nil,
-            })
-        end,
+        opts = {
+            enable = true,
+            max_lines = 8,
+            min_window_height = 16,
+            line_numbers = true,
+            multiline_threshold = 8,
+            trim_scope = 'inner',
+            mode = 'cursor',
+            separator = "-",
+            zindex = 20,
+            on_attach = nil,
+        },
+        config = true,
     },
     {
         'junegunn/fzf.vim',
