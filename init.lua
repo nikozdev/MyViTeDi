@@ -495,33 +495,6 @@ local vLazySpec = {
             })
         end,
     },
-    {
-        'liangxianzhe/nap.nvim',
-        enabled = true,
-        lazy = true,
-        keys = { '[', ']' },
-        config = function()
-            local nap = require("nap")
-            nap.setup({
-                prev_prefix = '[',
-                prev_repeat = '<c-p>',
-                next_prefix = ']',
-                next_repeat = '<c-n>',
-
-                exclude_default_operators = {"a", "A"},
-                operators = {
-                    ['t'] = {
-                        prev = { rhs = "<cmd>tabp<cr>", opts = { desc = "Prev tab" } },
-                        next = { rhs = "<cmd>tabn<cr>", opts = { desc = "Next tab" } },
-                    },
-                    ['T'] = {
-                        prev = { rhs = "<cmd>tabfirst<cr>", opts = { desc = "First tab" } },
-                        next = { rhs = "<cmd>tablast<cr>", opts = { desc = "Last tab" } },
-                    },
-                },
-            })
-        end,
-    },
     -- ]==]
     -- [==[ development
     {
