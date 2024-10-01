@@ -1092,7 +1092,7 @@ local vLazySpec = {
         cmd = "CurlOpen",
         event = "BufEnter",
         pattern = '*.curl',
-        opts = { default_flags = { '--compressed', '-k' }, open_with = "split" },
+        opts = { default_flags = { '--compressed', '-k' }, open_with = "tab" },
         config = true,
     },
     -- ]==]
