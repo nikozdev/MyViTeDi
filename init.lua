@@ -269,69 +269,6 @@ local vLazySpec = {
                 function() require("which-key").show({ global = false }) end,
                 desc = "WhichKey: local keymaps",
             },
-
-            -- plugins
-
-            { "<leader>vp", "<cmd>Lazy<cr>", desc = "Vim Plugins", },
-
-            -- jumps
-
-            { "<leader>ji", "<c-o>", desc = "Jump Incoming" },
-            { "<leader>jo", "<c-i>", desc = "Jump Outgoing" },
-            { "<leader>jl", "<cmd>jumps<cr>", desc = "Jump List" },
-
-            -- splits
-
-            { "<leader>s,", "<cmd>wincmd W<cr>", desc = "Split prev" },
-            { "<leader>s.", "<cmd>wincmd w<cr>", desc = "Split next" },
-
-            { "<leader>sh", "<cmd>wincmd h<cr>", desc = "Split goto Left" },
-            { "<leader>sl", "<cmd>wincmd l<cr>", desc = "Split goto Right" },
-            { "<leader>sj", "<cmd>wincmd j<cr>", desc = "Split goto Down" },
-            { "<leader>sk", "<cmd>wincmd k<cr>", desc = "Split goto Up" },
-
-            { "<leader>sH", "<cmd>wincmd H<cr>", desc = "Split move Left" },
-            { "<leader>sL", "<cmd>wincmd L<cr>", desc = "Split move Right" },
-            { "<leader>sJ", "<cmd>wincmd J<cr>", desc = "Split move Down" },
-            { "<leader>sK", "<cmd>wincmd K<cr>", desc = "Split move Up" },
-            { "<leader>sT", "<cmd>wincmd T<cr>", desc = "Split move Tab" },
-
-            { "<leader>ss", "<cmd>sp<cr>", desc = "Split creation" },
-            { "<leader>sv", "<cmd>vs<cr>", desc = "Split Vertically" },
-            { "<leader>sd", "<cmd>close<cr>", desc = "Split Deletion" },
-
-            -- tabs
-
-            { "<leader>t,", "<cmd>tabp<cr>", desc = "Tab goto Prev" },
-            { "<leader>t.", "<cmd>tabn<cr>", desc = "Tab goto Next" },
-
-            { "<leader>t[", "<cmd>tabm -1<cr>", desc = "Tab move Backward" },
-            { "<leader>t]", "<cmd>tabm +1<cr>", desc = "Tab move Forward" },
-
-            { "<leader>tc", "<cmd>tabnew<cr><cmd>Bdelete<cr>", desc = "Tab Creation" },
-            { "<leader>td", "<cmd>close<cr>", desc = "Tab Deletion" },
-
-            -- navi
-
-            -- { '', "", desc = "" },
-
-            -- misc
-
-            { "<leader>vw", "<cmd>write<cr>", desc = "Vim: Write" },
-            { "<leader>vc", "<cmd>close<cr>", desc = "Vim: Close" },
-            { "<leader>vq", "<cmd>confirm quitall<cr>", desc = "Vim: Quit" },
-
-            { "u", "<cmd>undo<cr>", desc = "UnDo the last action" },
-            { "г", "<cmd>undo<cr>", desc = "UnDo the last action" },
-            { "<leader>vu", "<cmd>undo<cr>", desc = "Vim: Undo" },
-            { "U", "<cmd>redo<cr>", desc = "ReDo the last action" },
-            { "Г", "<cmd>redo<cr>", desc = "ReDo the last action" },
-            { "<leader>vr", "<cmd>redo<cr>", desc = "Vim: Redo" },
-
-            { "!", ":! ", desc = "System Command Line" },
-            { '<c-]>', mode = 't', '<c-\\><c-n>', desc = "Switch from Terminal to Normal mode" },
-            -- for some reason, terminal in my neovide interprets it like some kind of "undo" action
-            { '<s-space>', mode = 't', '<space>' },
         },
     },
     -- ]==]
@@ -1498,6 +1435,74 @@ if not vLazyPcallSuccess then
         { "\nPress any key to exit..." },
     }, true, {})
 end
+
+-- ]=]
+
+-- [=[ control
+
+vim.keymap.set({ 'n', 'v', 'x', 'i', 't' }, "<a-a>", "<c-u>", { noremap = true, desc = "Ascending half-screen scroll" })
+vim.keymap.set({ 'n', 'v', 'x', 'i', 't' }, "<a-d>", "<c-d>", { noremap = true, desc = "Descending half-screen scroll" })
+
+
+-- plugins
+
+vim.keymap.set('n', "<leader>vp", "<cmd>Lazy<cr>", { desc = "Vim Plugins" })
+
+-- jumps
+
+vim.keymap.set('n', "<leader>ji", "<c-o>", { desc = "Jump Incoming"})
+vim.keymap.set('n', "<leader>jo", "<c-i>", { desc = "Jump Outgoing"})
+vim.keymap.set('n', "<leader>jl", "<cmd>jumps<cr>", { desc = "Jump List"})
+
+-- splits
+
+vim.keymap.set('n', "<leader>s,", "<cmd>wincmd W<cr>", { desc = "Split prev"})
+vim.keymap.set('n', "<leader>s.", "<cmd>wincmd w<cr>", { desc = "Split next"})
+
+vim.keymap.set('n', "<leader>sh", "<cmd>wincmd h<cr>", { desc = "Split goto Left"})
+vim.keymap.set('n', "<leader>sl", "<cmd>wincmd l<cr>", { desc = "Split goto Right"})
+vim.keymap.set('n', "<leader>sj", "<cmd>wincmd j<cr>", { desc = "Split goto Down"})
+vim.keymap.set('n', "<leader>sk", "<cmd>wincmd k<cr>", { desc = "Split goto Up"})
+
+vim.keymap.set('n', "<leader>sH", "<cmd>wincmd H<cr>", { desc = "Split move Left"})
+vim.keymap.set('n', "<leader>sL", "<cmd>wincmd L<cr>", { desc = "Split move Right"})
+vim.keymap.set('n', "<leader>sJ", "<cmd>wincmd J<cr>", { desc = "Split move Down"})
+vim.keymap.set('n', "<leader>sK", "<cmd>wincmd K<cr>", { desc = "Split move Up"})
+vim.keymap.set('n', "<leader>sT", "<cmd>wincmd T<cr>", { desc = "Split move Tab"})
+
+vim.keymap.set('n', "<leader>ss", "<cmd>sp<cr>", { desc = "Split creation"})
+vim.keymap.set('n', "<leader>sv", "<cmd>vs<cr>", { desc = "Split Vertically"})
+vim.keymap.set('n', "<leader>sd", "<cmd>close<cr>", { desc = "Split Deletion"})
+
+-- tabs
+
+vim.keymap.set('n', "<leader>t,", "<cmd>tabp<cr>", { desc = "Tab goto Prev"})
+vim.keymap.set('n', "<leader>t.", "<cmd>tabn<cr>", { desc = "Tab goto Next"})
+
+vim.keymap.set('n', "<leader>t[", "<cmd>tabm -1<cr>", { desc = "Tab move Backward"})
+vim.keymap.set('n', "<leader>t]", "<cmd>tabm +1<cr>", { desc = "Tab move Forward"})
+
+vim.keymap.set('n', "<leader>tc", "<cmd>tabnew<cr><cmd>Bdelete<cr>", { desc = "Tab Creation"})
+vim.keymap.set('n', "<leader>td", "<cmd>close<cr>", { desc = "Tab Deletion"})
+
+-- misc
+
+vim.keymap.set('n', "<leader>vw", "<cmd>write<cr>", { desc = "Vim: Write"})
+vim.keymap.set('n', "<leader>vc", "<cmd>close<cr>", { desc = "Vim: Close"})
+vim.keymap.set('n', "<leader>vq", "<cmd>confirm quitall<cr>", { desc = "Vim: Quit"})
+
+vim.keymap.set('n', "u", "<cmd>undo<cr>", { desc = "UnDo the last action"})
+vim.keymap.set('n', "г", "<cmd>undo<cr>", { desc = "UnDo the last action"})
+vim.keymap.set('n', "<leader>vu", "<cmd>undo<cr>", { desc = "Vim: Undo"})
+vim.keymap.set('n', "U", "<cmd>redo<cr>", { desc = "ReDo the last action"})
+vim.keymap.set('n', "Г", "<cmd>redo<cr>", { desc = "ReDo the last action"})
+vim.keymap.set('n', "<leader>vr", "<cmd>redo<cr>", { desc = "Vim: Redo"})
+
+vim.keymap.set({ 'n' }, "!", ":! ", { noremap = true, desc = "System Command Line"})
+-- vim.keymap.set({ 'n' }, ":", "q:i", { noremap = true, desc = "NeoVim Command Line"})
+
+vim.keymap.set({ 'c', 't', 't' }, "<c-]>", "<c-\\><c-n>", { noremap = true, desc = "Switch from Terminal to Normal mode"})
+vim.keymap.set({ 'c', 'i', 't' }, '<s-space>', '<space>')
 
 -- ]=]
 
