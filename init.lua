@@ -768,6 +768,10 @@ local vLazySpec = {
                 mapping = pCmp.mapping.preset.cmdline(),
                 sources = { { name = "cmdline" }, { name = "path" } },
             })
+            pCmp.setup.filetype('vim', {
+                mapping = pCmp.mapping.preset.cmdline(),
+                sources = { { name = "cmdline" }, { name = "path" } },
+            })
         end,
     },
     -- ]==]
