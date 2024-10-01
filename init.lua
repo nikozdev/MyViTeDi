@@ -503,11 +503,17 @@ local vLazySpec = {
         lazy = false,
         priority = 100,
         build = ":TSUpdate",
-        config = true,
-        opts = {
-            highlight = { enable = true },
-            textobjects = { enable = true },
-        },
+        config = function()
+            require('nvim-treesitter.configs').setup({
+                highlight = { enable = true },
+                textobjects = { enable = true },
+                auto_install = true,
+                sync_install = false,
+                ensure_installed = "all",
+                ignore_install = {},
+                modules = {},
+            })
+        end,
     },
     {
         'neovim/nvim-lspconfig',
