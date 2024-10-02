@@ -511,7 +511,7 @@ local vLazySpec = {
                 auto_install = true,
                 sync_install = false,
                 ensure_installed = "all",
-                ignore_install = {},
+                ignore_install = { 'org' },
                 modules = {},
             })
         end,
@@ -1161,7 +1161,7 @@ local vLazySpec = {
             'nvim-telescope/telescope.nvim',
             'hrsh7th/nvim-cmp',
         },
-        enabled = true,
+        enabled = false,
         lazy = true,
         keys = {
             { '<leader>no', '<cmd>ObsidianOpen<cr>', desc = "livaNota Open page;" },
@@ -1206,7 +1206,7 @@ local vLazySpec = {
     },
     {
         'zk-org/zk-nvim',
-        enabled = true,
+        enabled = false,
         lazy = true,
         keys = function()
             local zkCommands = require("zk.commands")
@@ -1310,7 +1310,8 @@ local vLazySpec = {
     },
     {
         'nvim-telekasten/telekasten.nvim',
-        enabled = false,
+        dependencies = 'nvim-telescope/telescope-media-files.nvim',
+        enabled = true,
         lazy = true,
         cmd = 'Telekasten',
         keys = {
@@ -1328,7 +1329,100 @@ local vLazySpec = {
             { '<leader>zp', "<cmd>Telekasten preview_img<cr>", desc = "Telekasten: media Preview" },
             { '<leader>zb', "<cmd>Telekasten insert_img_link<cr>", desc = "Telekasten: media Browsing" },
         },
-        opts = { home = vim.fn.expand("~/Documents/zk") },
+        opts = {
+            home = vim.fn.expand('~/Documents/zk'),
+
+            templates = vim.fn.expand('~/Documents/zk/temp'),
+            new_note_location = 'smart',
+            template_new_note = vim.fn.expand('~/Documents/zk/temp/note.md'),
+
+            dailies = vim.fn.expand('~/Documents/zk/date'),
+            template_new_daily = vim.fn.expand('~/Documents/zk/temp/date.md'),
+
+            weeklies = vim.fn.expand('~/Documents/zk/week'),
+            template_new_weekly = vim.fn.expand('~/Documents/zk/temp/week.md'),
+
+            image_subdir = "data",
+            image_link_style = 'markdown',
+
+            media_extensions = {
+                ".png",
+                ".jpg",
+                ".bmp",
+                ".gif",
+                ".pdf",
+                ".mp4",
+                ".webm",
+                ".webp",
+            },
+            media_previewer = "telescope-media-files",
+
+            sort = "modified",
+            rename_update_links = true,
+            new_note_filename = 'title-uuid',
+            uuid_type = '%H:%M:%S@%Y-%m-%d',
+            uuid_sep = '@',
+            template_handling = 'smart',
+
+            extension = '.md',
+            filename_space_subst = '=',
+            take_over_my_home = true,
+            auto_set_filetype = true,
+            auto_set_syntax = true,
+
+            subdirs_in_links = true,
+            follow_creates_nonexisting = true,
+            dailies_create_nonexisting = true,
+            weeklies_create_nonexisting = true,
+            enable_create_new = true,
+            journal_auto_open = false,
+
+            install_syntax = true,
+
+            command_palette_theme = 'dropdown', -- 'ivy',
+
+            tag_notation = 'yaml-bare',
+            show_tags_theme = 'get_cursor', -- 'ivy'
+
+            plug_into_calendar = false,
+
+            clipboard_program = 'xclip',
+        },
+        config = true,
+    },
+    {
+        'nvim-orgmode/orgmode',
+        tag = "0.3.4",
+        enabled = true,
+        lazy = true,
+        ft = { 'org' },
+        cmd = 'Orgmode',
+        opts = {
+            org_agenda_files = vim.fn.stdpath("data") .. "/org/mode/agenda/**/*",
+            org_default_notes_file = vim.fn.stdpath("data") .. "/org/mode/notebook.org",
+        },
+        config = true,
+    },
+    {
+        "chipsenkbeil/org-roam.nvim",
+        tag = "0.1.0",
+        dependencies = "nvim-orgmode/orgmode",
+        enabled = true,
+        lazy = true,
+        ft = { 'org' },
+        keys = {
+            {
+                '<leader>org',
+                function()
+                    vim.notify('OrgMode and OrgRoam have been loaded')
+                end,
+                desc = "Org-mode loading",
+            },
+        },
+        opts = {
+            directory = vim.fn.stdpath("data") .. "/org/roam",
+            org_files = { vim.fn.stdpath("data") .. "/org/mode" },
+        },
         config = true,
     },
     -- ]==]
