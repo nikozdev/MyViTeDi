@@ -295,7 +295,8 @@ local vLazySpec = {
     },
     {
         'junegunn/fzf.vim',
-        build = './install --bin',
+        dir = "~/.fzf",
+        run = "./install --all",
         dependencies = 'BurntSushi/ripgrep',
         enabled = true,
         lazy = true,
