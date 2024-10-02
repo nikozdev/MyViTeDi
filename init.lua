@@ -336,6 +336,24 @@ local vLazySpec = {
                         height = 0.95,
                     },
                 },
+                border = true,
+                initial_mode = 'insert',
+                entry_prefix = '  ',
+                multi_icon = '+ ',
+                prompt_prefix = '< ',
+                selection_caret = '> ',
+                selection_strategy = 'closest',
+                scroll_strategy = 'limit',
+                sorting_strategy = 'descending',
+                wrap_results = true,
+                preview = {
+                    check_mime_type = true,
+                    filesize_limit = 2,
+                    highlight_limit = 1,
+                    treesitter = false,
+                    timeout = 256,
+                },
+                path_display = { 'truncate' },
                 file_ignore_patterns = {
                     "Build/",
                     ".git",
@@ -363,6 +381,13 @@ local vLazySpec = {
                     },
                 },
             },
+            extensions = {
+                media_files = {
+                    filetypes = { "png", "jpg", "jpeg", "pdf", "webp", "webm", "mp4" },
+                    find_cmd = "rg",
+                }
+            },
+            color_devicons = true,
         },
         config = true,
         keys = function()
