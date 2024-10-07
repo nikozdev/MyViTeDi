@@ -1457,6 +1457,57 @@ local vLazySpec = {
         opts = {
             directory = vim.fn.stdpath("data") .. "/org/roam",
             org_files = { vim.fn.stdpath("data") .. "/org/mode" },
+            bindings = {
+                add_alias = '<LocalLeader>naa',
+                remove_alias = "<LocalLeader>nar",
+                add_origin = '<LocalLeader>noa',
+                remove_origin = '<LocalLeader>nor',
+                capture = '<LocalLeader>ncc',
+                complete_at_point = '<LocalLeader>n?',
+                find_node = '<LocalLeader>nf',
+                goto_next_node = '<LocalLeader>n,',
+                goto_prev_node = '<LocalLeader>n.',
+                insert_node = '<LocalLeader>ni',
+                quickfix_backlinks = "<LocalLeader>nl",
+            },
+            database = {
+                path = vim.fn.stdpath("data") .. "/org/roam/database",
+                presist = true,
+                update_on_save = false,
+            },
+            templates = {
+                d = {
+                    description = "default",
+                    template = "%?",
+                    target = "%<%Y%m%d%H%M%S>-%[slug].org",
+                },
+            },
+            extensions = {
+                dailies = {
+                    directory = 'liva',
+                    bindings = {
+                        capture_today = "<LocalLeader>nct",
+                        capture_date = "<LocalLeader>ncd",
+                        goto_today = "<LocalLeader>ngt",
+                        goto_date = "<LocalLeader>ngd",
+                        goto_prev_date = "<LocalLeader>ng,",
+                        goto_next_date = "<LocalLeader>ng.",
+                        find_directory = "<LocalLeader>ngg",
+                    },
+                    ui = {
+                        calendar = {
+                            hl_date_exists = "WarningMsg",
+                        },
+                    },
+                },
+            },
+            ui = {
+                node_buffer = {
+                    focus_on_toggle = true,
+                    highlight_previews = true,
+                    unique = true,
+                },
+            },
         },
         config = true,
     },
