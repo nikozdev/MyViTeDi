@@ -679,7 +679,17 @@ local vLazySpec = {
                 },
             })
             fRunLspSetup("clangd", {
-                timeout_ms = 4096,
+                checkUpdates = false,
+                detectExtensionConflicts = true,
+                enableCodeCompletion= true,
+                fallbackFlags = {},
+                inactiveRegions = {
+                    opacity = 0.5,
+                    useBackgroundHighlight = true,
+                },
+                restartAfterCrash = true,
+                semanticHighlighting = true,
+                serverCompletionRanking = false,
                 on_attach = function()
                     if false then -- causing lags
                         vim.api.nvim_create_autocmd("BufWritePost", {
