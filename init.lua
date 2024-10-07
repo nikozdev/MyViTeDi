@@ -603,7 +603,7 @@ local vLazySpec = {
                     FUpdLeader()
 
                     local function fKeyMap(vKey, vMap, vInf)
-                        vOpt = {}
+                        local vOpt = {}
                         vOpt.desc = vInf
                         vim.keymap.set('n', vKey, vMap, vOpt)
                     end
