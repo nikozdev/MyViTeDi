@@ -1334,7 +1334,20 @@ local vLazySpec = {
     {
         "chipsenkbeil/org-roam.nvim",
         tag = "0.1.0",
-        dependencies = "nvim-orgmode/orgmode",
+        dependencies = {
+            {
+                'nvim-orgmode/orgmode',
+                tag = "0.3.4",
+                enabled = true,
+                lazy = true,
+                ft = { 'org' },
+                opts = {
+                    org_agenda_files = vim.fn.stdpath("data") .. "/org/mode/**/*",
+                    org_default_notes_file = vim.fn.stdpath("data") .. "/org/mode/notebook.org",
+                },
+                config = true,
+            },
+        },
         enabled = true,
         lazy = true,
         ft = { 'org' },
@@ -1352,9 +1365,9 @@ local vLazySpec = {
             org_files = { vim.fn.stdpath("data") .. "/org/mode" },
             bindings = {
                 add_alias = '<LocalLeader>naa',
-                remove_alias = "<LocalLeader>nar",
+                remove_alias = "<LocalLeader>nad",
                 add_origin = '<LocalLeader>noa',
-                remove_origin = '<LocalLeader>nor',
+                remove_origin = '<LocalLeader>nod',
                 capture = '<LocalLeader>ncc',
                 complete_at_point = '<LocalLeader>n?',
                 find_node = '<LocalLeader>nf',
@@ -1372,7 +1385,7 @@ local vLazySpec = {
                 d = {
                     description = "default",
                     template = "%?",
-                    target = "%<%Y%m%d%H%M%S>-%[slug].org",
+                    target = "%<%Y-%m-%d@%H:%M:%S>-%[slug].org",
                 },
             },
             extensions = {
@@ -1385,7 +1398,7 @@ local vLazySpec = {
                         goto_date = "<LocalLeader>ngd",
                         goto_prev_date = "<LocalLeader>ng,",
                         goto_next_date = "<LocalLeader>ng.",
-                        find_directory = "<LocalLeader>ngg",
+                        find_directory = "",
                     },
                     ui = {
                         calendar = {
