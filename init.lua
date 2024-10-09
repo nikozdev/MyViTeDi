@@ -1211,21 +1211,21 @@ local vLazySpec = {
         opts = {
             workspaces = {
                 {
-                    name = "LivaNota",
-                    path = "~/Documents/LivaNota",
-                    overrides = { notes_subdir = 'Nota' },
+                    name = "livanota",
+                    path = "~/Documents/obsidian",
+                    overrides = { notes_subdir = 'nota' },
                 },
             },
-            notes_subdir = 'Nota',
-            new_notes_location = "Nota",
+            notes_subdir = 'nota',
+            new_notes_location = "nota",
             daily_notes = {
-                folder = "Liva",
+                folder = "liva",
                 date_format = "%Y-%m-%d",
-                default_tags = { "Liva" },
-                template = 'Liva'
+                default_tags = { "liva" },
+                template = 'liva'
             },
             templates = {
-                folder = "Temp",
+                folder = "temp",
                 date_format = "%Y-%m-%d",
                 time_format = "%H:%M",
                 substitutions = {},
