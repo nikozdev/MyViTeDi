@@ -270,6 +270,15 @@ local vLazySpec = {
                 desc = "WhichKey: local keymaps",
             },
         },
+        opts = {
+            preset = 'classic',
+            delay = 0,
+            keys = {
+                scroll_up = '<a-a>',
+                scroll_down = '<a-d>',
+            },
+        },
+        config = true,
     },
     -- ]==]
     -- [==[ navigation
