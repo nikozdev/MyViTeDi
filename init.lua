@@ -418,13 +418,6 @@ local vLazySpec = {
         config = true,
     },
     {
-        'nvimdev/hlsearch.nvim',
-        enabled = true,
-        lazy = false,
-        --keys = { '/', '?', 'n', 'N' },
-        config = true,
-    },
-    {
         'nvim-pack/nvim-spectre',
         dependencies = 'nvim-lua/plenary.nvim',
         enabled = true,
