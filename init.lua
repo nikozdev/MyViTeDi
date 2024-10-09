@@ -1241,7 +1241,7 @@ local vLazySpec = {
     },
     {
         'zk-org/zk-nvim',
-        enabled = false,
+        enabled = true,
         lazy = true,
         keys = function()
             local zkCommands = require("zk.commands")
@@ -1310,17 +1310,10 @@ local vLazySpec = {
                     end,
                     desc = "Zettelkasten: pick from notes by Tags"
                 },
-                {
-                    '<leader>zd',
-                    mode = 'n',
-                    function()
-                        zkCommands.get('ZkDaily')()
-                    end,
-                    desc = "Zettelkasten: open Daily note"
-                },
             }
         end,
         config = function()
+            vim.env['ZK_NOTEBOOK_DIR'] = vim.env['HOME'] .. '/.local/share/zk'
             local zk = require('zk')
             zk.setup({
                 picker = "telescope",
@@ -1336,107 +1329,7 @@ local vLazySpec = {
                     },
                 },
             })
-            local zkCommands = require("zk.commands")
-            zkCommands.add('ZkDaily', function(opts)
-                opts = vim.tbl_extend("force", {}, opts or {})
-                zk.edit(opts, { title = 'daily' })
-            end)
         end,
-    },
-    {
-        'nvim-telekasten/telekasten.nvim',
-        dependencies = 'nvim-telescope/telescope-media-files.nvim',
-        enabled = true,
-        lazy = true,
-        cmd = 'Telekasten',
-        keys = {
-            { '<leader>zz', "<cmd>Telekasten<cr>", desc = "Telekasten: menu" },
-            { '<leader>zf', "<cmd>Telekasten find_notes<cr>", desc = "Telekasten: Find notes by title (filename)" },
-            { '<leader>zr', "<cmd>Telekasten rename_note<cr>", desc = "Telekasten: Rename the current note" },
-            { '<leader>zg', "<cmd>Telekasten search_notes<cr>", desc = "Telekasten: Grep notes by content" },
-            { '<leader>zt', "<cmd>Telekasten tags<cr>", desc = "Telekasten: Tags" },
-            { '<leader>zd', "<cmd>Telekasten goto_today<cr>", desc = "Telekasten: open Daily note for today" },
-            { '<leader>zw', "<cmd>Telekasten goto_thisweek<cr>", desc = "Telekasten: open Weekly note for today" },
-            { '<leader>zn', "<cmd>Telekasten new_templated_note<cr>", desc = "Telekasten: New note from template" },
-            { '<leader>zl', "<cmd>Telekasten yank_notelink<cr>", desc = "Telekasten: yank Link" },
-            { '<leader>zc', "<cmd>Telekasten show_calendar<cr>", desc = "Telekasten: Calendar" },
-            { '<leader>zm', "<cmd>Telekasten insert_img_link<cr>", desc = "Telekasten: Media link insertion" },
-            { '<leader>zp', "<cmd>Telekasten preview_img<cr>", desc = "Telekasten: media Preview" },
-            { '<leader>zb', "<cmd>Telekasten insert_img_link<cr>", desc = "Telekasten: media Browsing" },
-        },
-        opts = {
-            home = vim.fn.expand('~/Documents/zk'),
-
-            templates = vim.fn.expand('~/Documents/zk/temp'),
-            new_note_location = 'smart',
-            template_new_note = vim.fn.expand('~/Documents/zk/temp/note.md'),
-
-            dailies = vim.fn.expand('~/Documents/zk/date'),
-            template_new_daily = vim.fn.expand('~/Documents/zk/temp/date.md'),
-
-            weeklies = vim.fn.expand('~/Documents/zk/week'),
-            template_new_weekly = vim.fn.expand('~/Documents/zk/temp/week.md'),
-
-            image_subdir = "data",
-            image_link_style = 'markdown',
-
-            media_extensions = {
-                ".png",
-                ".jpg",
-                ".bmp",
-                ".gif",
-                ".pdf",
-                ".mp4",
-                ".webm",
-                ".webp",
-            },
-            media_previewer = "telescope-media-files",
-
-            sort = "modified",
-            rename_update_links = true,
-            new_note_filename = 'title-uuid',
-            uuid_type = '%H:%M:%S@%Y-%m-%d',
-            uuid_sep = '@',
-            template_handling = 'smart',
-
-            extension = '.md',
-            filename_space_subst = '=',
-            take_over_my_home = true,
-            auto_set_filetype = true,
-            auto_set_syntax = true,
-
-            subdirs_in_links = true,
-            follow_creates_nonexisting = true,
-            dailies_create_nonexisting = true,
-            weeklies_create_nonexisting = true,
-            enable_create_new = true,
-            journal_auto_open = false,
-
-            install_syntax = true,
-
-            command_palette_theme = 'dropdown', -- 'ivy',
-
-            tag_notation = 'yaml-bare',
-            show_tags_theme = 'get_cursor', -- 'ivy'
-
-            plug_into_calendar = false,
-
-            clipboard_program = 'xclip',
-        },
-        config = true,
-    },
-    {
-        'nvim-orgmode/orgmode',
-        tag = "0.3.4",
-        enabled = true,
-        lazy = true,
-        ft = { 'org' },
-        cmd = 'Orgmode',
-        opts = {
-            org_agenda_files = vim.fn.stdpath("data") .. "/org/mode/agenda/**/*",
-            org_default_notes_file = vim.fn.stdpath("data") .. "/org/mode/notebook.org",
-        },
-        config = true,
     },
     {
         "chipsenkbeil/org-roam.nvim",
