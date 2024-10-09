@@ -424,9 +424,6 @@ local vLazySpec = {
         lazy = true,
         cmd = 'Spectre',
         keys = { { '<leader>ft', '<cmd>Spectre<cr>', desc = 'Find Text' } },
-        opts = {
-        },
-        config = true,
     },
     {
         'famiu/bufdelete.nvim',
