@@ -1148,7 +1148,7 @@ local vLazySpec = {
             vim.cmd("syntax on")
             vim.g.vimwiki_list = {
                 {
-                    path = vim.fn.stdpath('data') .. "/vimwiki/",
+                    path = vim.fn.expand('~/Documents/vimwiki'),
                     --syntax = "wiki",
                     ext = ".wiki",
                 },
