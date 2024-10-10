@@ -1180,6 +1180,8 @@ local vLazySpec = {
                 '<leader>org',
                 function()
                     vim.notify('OrgMode and OrgRoam have been loaded')
+                    local roam = require('org-roam')
+                    roam.database:save({ force = false })
                 end,
                 desc = "Org-mode loading",
             },
@@ -1205,7 +1207,7 @@ local vLazySpec = {
             database = {
                 path = vim.fn.stdpath("data") .. "/org-roam.nvim/database",
                 presist = true,
-                update_on_save = false,
+                update_on_save = true,
             },
             templates = {
                 d = {
