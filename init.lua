@@ -683,6 +683,10 @@ local vLazySpec = {
                 },
             })
             fRunLspSetup("clangd", {
+                cmd = { 'clangd', '--enable-config' },
+                root_dir = function(fname)
+                    return require('lspconfig.util').root_pattern("compile_commands.json")(fname)
+                end,
                 checkUpdates = false,
                 detectExtensionConflicts = true,
                 enableCodeCompletion= true,
