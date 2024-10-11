@@ -494,13 +494,30 @@ local vLazySpec = {
     },
     {
         'ggandor/leap.nvim',
-        enabled = false,
-        lazy = true, -- loaded by others
+        enabled = true,
+        lazy = true,
+        keys = {
+            { 'f', '<Plug>(leap-forward)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Forward" },
+            { 'F', '<Plug>(leap-backward)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Backward" },
+            { 't', '<Plug>(leap-forward-to)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Forward" },
+            { 'T', '<Plug>(leap-backward-to)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Backward" },
+        },
+        opts = {
+            case_sensitive = true,
+            equivalence_classes = { ' \t\r\n' },
+            substitute_chars = { ['\r'] = ' ' },
+            special_keys = {
+                next_target = '<enter>',
+                prev_target = '<s-enter>',
+            },
+            max_highlighted_traversal_targets = 8,
+        },
+        config = true,
     },
     {
         'echasnovski/mini.jump',
         version = '*',
-        enabled = true,
+        enabled = false,
         lazy = false,
         config = function()
             require('mini.jump').setup({
