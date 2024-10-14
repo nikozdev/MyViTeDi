@@ -1164,6 +1164,111 @@ local vLazySpec = {
             }
         end,
     },
+    {
+        "epwalsh/obsidian.nvim",
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-treesitter/nvim-treesitter',
+            'nvim-telescope/telescope.nvim',
+            'hrsh7th/nvim-cmp',
+        },
+        enabled = true,
+        lazy = true,
+        keys = {
+            { '<leader>of', '<cmd>ObsidianQuickSwitch<cr>', desc = "Obsidian Find page" },
+            { '<leader>of', '<cmd>ObsidianSearch<cr>', desc = "Obsidian Search" },
+
+            { '<leader>oD', '<cmd>ObsidianDaily<cr>', desc = "Obsidian Dialy pages" },
+            { '<leader>od', '<cmd>ObsidianToday<cr>', desc = "Obsidian Diary page for today" },
+
+            { '<leader>on', '<cmd>ObsidianNewFromTemplate<cr>', desc = "Obsidian New page" },
+            { '<leader>or', '<cmd>ObsidianRename<cr>', desc = "Obsidian Rename" },
+
+            { '<leader>ot', '<cmd>ObsidianTemplate<cr>', desc = "Obsidian Template" },
+            { '<leader>oi', '<cmd>ObsidianPasteImg<cr>', desc = "Obsidian PasteImage" },
+
+            { '<leader>ol', '<cmd>ObsidianLink<cr>', mode = { 'v', 'x' }, desc = "Obsidian Link the selected text to a page" },
+        },
+        opts = {
+            workspaces = {
+                {
+                    name = "livanota",
+                    path = "~/Documents/obsidian",
+                    overrides = { notes_subdir = 'nota' },
+                },
+            },
+            note_id_func = function(title)
+                local suffix = ""
+                if title == nil then
+                    for _ = 1, 4 do
+                        suffix = suffix .. string.char(math.random(65, 90))
+                    end
+                end
+                return os.date('y%Y_m%m_d%d-H%H_M%M_S%S', os.time()) .. "-" .. suffix
+            end,
+            notes_subdir = 'nota',
+            new_notes_location = 'nota',
+            daily_notes = {
+                folder = 'liva',
+                date_format = 'y%Y_m%m_d%d',
+                alias_format = nil,
+                default_tags = {},
+                template = 'liva.md'
+            },
+            attachments = {
+                img_folder = 'data',
+            },
+            templates = {
+                folder = "temp",
+                date_format = "y%Y-m%m-d%d",
+                time_format = "H%H-M%M-S%S",
+                substitutions = {
+                    time_date_time = function() return os.date('y%Y_m%m_d%d-H%H_M%M_S%S', os.time()) end,
+                    time_date_read = function() return os.date('%B %-d, %Y', os.time()) end,
+                    time_date_full = function() return os.date("y%Y_m%m_d%d", os.time()) end,
+                    time_date_part_y_order = function() return os.date('%Y', os.time()) end,
+                    time_date_part_m_order_y = function() return os.date('%m', os.time()) end,
+                    time_date_part_m_label = function() return os.date('%b', os.time()) end,
+                    time_date_part_d_order_m = function() return os.date('%d', os.time()) end,
+                    time_date_part_d_order_y = function() return os.date('%j', os.time()) end,
+                    time_date_part_d_label_w = function() return os.date('%a', os.time()) end,
+                    time_date_part_w_order_y = function() return os.date('%W', os.time()) end,
+                    time_full = function() return os.date('H%H_M%M_S%S', os.time()) end,
+                    time_part_h = function() return os.date('%H', os.time()) end,
+                    time_part_m = function() return os.date('%M', os.time()) end,
+                    time_part_s = function() return os.date('%S', os.time()) end,
+                    time_stamp = function() return tostring(os.time()) end,
+                },
+            },
+            completion = {
+                nvim_cmp = true,
+                min_chars = 2,
+            },
+            picker = {
+                name = "telescope.nvim",
+                note_mappings = {
+                    new = "<C-x>",
+                    insert_link = "<C-l>",
+                },
+                tag_mappings = {
+                    tag_note = "<C-x>",
+                    insert_tag = "<C-l>",
+                },
+            },
+            ui = {
+                enable = false,
+                update_debounce = 1024,
+                max_file_length = 1024,
+            },
+            preferred_link_style = 'markdown',
+            disable_frontmatter = false,
+            sort_by = 'accessed',
+            sort_reversed = true,
+            search_max_lines = 1000,
+            open_notes_in = "current",
+        },
+        config = true,
+    },
     -- ]==]
     -- [==[ play
     {
