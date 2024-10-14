@@ -500,10 +500,10 @@ local vLazySpec = {
         enabled = true,
         lazy = true,
         keys = {
-            { 'f', '<Plug>(leap-forward)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Forward on" },
-            { 'F', '<Plug>(leap-backward)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Backward on" },
-            { 't', '<Plug>(leap-forward-to)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Forward to" },
-            { 'T', '<Plug>(leap-backward-to)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Backward to" },
+            { '<leader>sf', '<Plug>(leap-forward)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Forward on" },
+            { '<leader>sb', '<Plug>(leap-backward)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Backward on" },
+            { '<leader>stf', '<Plug>(leap-forward-to)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Forward to" },
+            { '<leader>stb', '<Plug>(leap-backward-to)', mode = { 'n', 'x', 'o', 'v' }, desc = "Leap Backward to" },
         },
         opts = {
             case_sensitive = true,
@@ -516,7 +516,7 @@ local vLazySpec = {
     {
         'echasnovski/mini.jump',
         version = '*',
-        enabled = false,
+        enabled = true,
         lazy = false,
         config = function()
             require('mini.jump').setup({
