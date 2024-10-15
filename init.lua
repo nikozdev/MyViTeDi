@@ -1198,15 +1198,13 @@ local vLazySpec = {
                 },
             },
             note_id_func = function(title)
-                local suffix = ""
-                if title == nil then
+                if not title then
                     for _ = 1, 4 do
-                        suffix = suffix .. string.char(math.random(65, 90))
+                        title = title .. string.char(math.random(65, 90))
                     end
-                else
-                    suffix = title
+                    title = os.date('y%Y_m%m_d%d-H%H_M%M_S%S', os.time()) .. "-" .. title
                 end
-                return os.date('y%Y_m%m_d%d-H%H_M%M_S%S', os.time()) .. "-" .. suffix
+                return title
             end,
             notes_subdir = 'nota',
             new_notes_location = 'nota',
@@ -1218,7 +1216,7 @@ local vLazySpec = {
                 template = 'liva.md'
             },
             attachments = {
-                img_folder = 'data',
+                img_folder = 'data/video',
             },
             templates = {
                 folder = "temp",
