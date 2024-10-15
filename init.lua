@@ -1176,18 +1176,18 @@ local vLazySpec = {
         lazy = true,
         keys = {
             { '<leader>of', '<cmd>ObsidianQuickSwitch<cr>', desc = "Obsidian Find page" },
-            { '<leader>of', '<cmd>ObsidianSearch<cr>', desc = "Obsidian Search" },
+            { '<leader>og', '<cmd>ObsidianSearch<cr>', desc = "Obsidian Grep search" },
 
-            { '<leader>oD', '<cmd>ObsidianDaily<cr>', desc = "Obsidian Dialy pages" },
+            { '<leader>oD', '<cmd>ObsidianDailies<cr>', desc = "Obsidian Dialy pages" },
             { '<leader>od', '<cmd>ObsidianToday<cr>', desc = "Obsidian Diary page for today" },
 
             { '<leader>on', '<cmd>ObsidianNewFromTemplate<cr>', desc = "Obsidian New page" },
             { '<leader>or', '<cmd>ObsidianRename<cr>', desc = "Obsidian Rename" },
 
             { '<leader>ot', '<cmd>ObsidianTemplate<cr>', desc = "Obsidian Template" },
-            { '<leader>oi', '<cmd>ObsidianPasteImg<cr>', desc = "Obsidian PasteImage" },
+            { '<leader>om', '<cmd>ObsidianPasteImg<cr>', desc = "Obsidian insert Media" },
 
-            { '<leader>ol', '<cmd>ObsidianLink<cr>', mode = { 'v', 'x' }, desc = "Obsidian Link the selected text to a page" },
+            { '<leader>ol', '<cmd>ObsidianLinkNew<cr>', mode = { 'v', 'x' }, desc = "Obsidian Link the selected text to a page" },
         },
         opts = {
             workspaces = {
@@ -1203,6 +1203,8 @@ local vLazySpec = {
                     for _ = 1, 4 do
                         suffix = suffix .. string.char(math.random(65, 90))
                     end
+                else
+                    suffix = title
                 end
                 return os.date('y%Y_m%m_d%d-H%H_M%M_S%S', os.time()) .. "-" .. suffix
             end,
