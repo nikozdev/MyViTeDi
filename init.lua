@@ -24,7 +24,7 @@ function FUpdColors()
 end
 FUpdColors()
 
-vim.opt.conceallevel = 0
+vim.opt.conceallevel = 2
 
 vim.opt.showtabline = 4
 
@@ -1174,6 +1174,7 @@ local vLazySpec = {
         },
         enabled = true,
         lazy = true,
+        ft = 'markdown',
         keys = {
             { '<leader>of', '<cmd>ObsidianQuickSwitch<cr>', desc = "Obsidian Find page" },
             { '<leader>og', '<cmd>ObsidianSearch<cr>', desc = "Obsidian Grep search" },
@@ -1206,6 +1207,7 @@ local vLazySpec = {
                 end
                 return title
             end,
+            follow_url_func = vim.ui.open,
             notes_subdir = 'nota',
             new_notes_location = 'nota',
             daily_notes = {
