@@ -1207,11 +1207,15 @@ local vLazySpec = {
                 end
                 return title
             end,
+            markdown_link_func = function(opts)
+                --return require('obsidian.util').markdown_link(opts)
+                return string.format('[%s](%s)', opts.id, opts.id)
+            end,
             follow_url_func = vim.ui.open,
             notes_subdir = 'nota',
             new_notes_location = 'nota',
             daily_notes = {
-                folder = 'liva',
+                folder = 'nota',
                 date_format = 'y%Y_m%m_d%d',
                 alias_format = nil,
                 default_tags = {},
